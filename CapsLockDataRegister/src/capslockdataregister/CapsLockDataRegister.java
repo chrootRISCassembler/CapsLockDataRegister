@@ -1,59 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package capslockdataregister;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.UUID;
 
-import org.json.JSONWriter;
+import javafx.application.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.*;
 
 /**
  *
  * @author RISCassembler
  */
-public class CapsLockDataRegister {
+public class CapsLockDataRegister extends Application {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        FileWriter writer;
-        
-        try{
-            writer = new FileWriter("GamesInfo.json");
-        }catch(IOException e){
-            System.out.println(e);
-            return;
-        }
-        
-        UUID uuid = UUID.randomUUID();
-        
-        JSONWriter JsonWriter = new JSONWriter(writer)
-                .object()
-                    .key("UUID")
-                    .value(uuid.toString())
-                    .key("name")
-                    .value("FooGame")
-                    .key("executable")
-                    .value("FooGame/FooGame.exe")
-                    .key("version")
-                    .value("1")
-                    .key("image")
-                    .value(null)
-                    .key("movie")
-                    .value(null)
-                .endObject();
-        
-        try{
-            writer.close();
-        }catch(IOException e){
-            System.out.println(e);
-        }
+        launch(args);
     }
     
+    @Override
+    public void start(Stage stage) throws Exception {
+    
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("RegisterForm.fxml"));
+        } catch (IOException e) {
+            System.out.println(e);
+            e.printStackTrace();
+            return;
+        }
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 }
