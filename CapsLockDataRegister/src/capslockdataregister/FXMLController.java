@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +41,7 @@ public class FXMLController implements Initializable {
     
     private final JSONArray imagePathArray = new JSONArray();
     private final JSONArray moviePathArray = new JSONArray();
+    private final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -134,13 +136,13 @@ public class FXMLController implements Initializable {
     protected void TextFieldDropped(DragEvent event) {
 	Dragboard board = event.getDragboard();
 	if(board.hasFiles()) {
-            List<String> FileList = new ArrayList();
+            List<Path> RelativePathList = new ArrayList();
             board.getFiles().stream().forEach((f) -> {
                 System.out.println(f.getPath());
-                if(f.isFile())FileList.add(f.getPath());
+                if(f.isFile())RelativePathList.add(CurrentDirectory.relativize(f.toPath()));
             });
-            String ArrayNotation = FileList.toString();
-            System.out.println(ArrayNotation);
+            String ArrayNotation = RelativePathList.toString();
+
             ((TextField)event.getSource()).setText(ArrayNotation.substring(1, ArrayNotation.length() - 1));
             
             event.setDropCompleted(true);
@@ -154,9 +156,8 @@ public class FXMLController implements Initializable {
         Dragboard board = event.getDragboard();
 	if(board.hasFiles()) {
             List<File> files = board.getFiles();
-            if(files.size() == 1 && files.get(0).isFile()){
-                System.out.println(files.get(0).toString());
-                ((TextField)event.getSource()).setText(files.get(0).toString());
+            if(!files.isEmpty()){
+                executableRawString.setText(CurrentDirectory.relativize(files.get(0).toPath()).toString());
             }
             
             event.setDropCompleted(true);
