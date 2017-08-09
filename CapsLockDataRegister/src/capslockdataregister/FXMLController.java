@@ -115,8 +115,6 @@ public class FXMLController implements Initializable {
 
         String[] files = RawString.split(", ");
             
-        //if(files.length == 0)return;
-            
         Arrays.stream(files).forEach(element -> {
             File file = new File(element);
             if(file.exists())target.put(element);
