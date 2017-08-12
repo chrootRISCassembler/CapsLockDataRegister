@@ -11,10 +11,14 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,7 +30,7 @@ import org.json.JSONObject;
  */
 public class MainFormController implements Initializable {
 
-  
+    @FXML Button AddGameButton;
     @FXML TableView<GameRecord> GameInfoView;
     @FXML TableColumn<GameRecord, String> UUIDCol;
     @FXML TableColumn<GameRecord, String> NameCol;
@@ -82,6 +86,24 @@ public class MainFormController implements Initializable {
         System.err.println(DisplayCollection.get(0).movie);
         
         return true;
+    }
+    
+    @FXML
+    protected void onAddButtonClicked(){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterForm.fxml"));
+        Scene scene;
+        try {
+            scene = new Scene(loader.load());
+        } catch (IOException e) {
+            System.out.println(e);
+            e.printStackTrace();
+            return;
+        }
+
+        Stage RegisterWindow = new Stage();
+        RegisterWindow.initOwner(AddGameButton.getScene().getWindow());
+        RegisterWindow.setScene(scene);
+        RegisterWindow.showAndWait();
     }
     
     public static class GameRecord{
