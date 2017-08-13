@@ -29,7 +29,7 @@ import org.json.JSONObject;
  * @author RISCassembler
  */
 public class MainFormController implements Initializable {
-
+    
     @FXML Button AddGameButton;
     @FXML TableView<GameRecord> GameInfoView;
     @FXML TableColumn<GameRecord, String> UUIDCol;
@@ -105,8 +105,8 @@ public class MainFormController implements Initializable {
         Stage RegisterWindow = new Stage();
         RegisterWindow.initOwner(AddGameButton.getScene().getWindow());
         RegisterWindow.setScene(scene);
-        RegisterWindow.setUserData("test");
         RegisterWindow.showAndWait();
+        DisplayCollection.add((GameRecord)RegisterWindow.getUserData());
     }
     
     public static class GameRecord{
@@ -124,6 +124,15 @@ public class MainFormController implements Initializable {
             version = new SimpleStringProperty(record.getString("version"));
             image = new SimpleStringProperty(record.getJSONArray("image").join(","));
             movie = new SimpleStringProperty(record.getJSONArray("movie").join(","));
+        }
+        
+        public GameRecord(String UUIDstr, String Name, String Executable, String Version, String Image, String Movie){
+            uuid = new SimpleStringProperty(UUIDstr);
+            name = new SimpleStringProperty(Name);
+            executable = new SimpleStringProperty(Executable);
+            version = new SimpleStringProperty(Version);
+            image = new SimpleStringProperty(Image);
+            movie = new SimpleStringProperty(Movie);
         }
         
         public StringProperty uuidProperty(){return uuid;}

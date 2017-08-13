@@ -1,8 +1,6 @@
 package capslockdataregister;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 
 import org.json.JSONArray;
-import org.json.JSONWriter;
 
 /**
  * FXML Controller class
@@ -50,40 +47,19 @@ public class FXMLController implements Initializable {
     
     @FXML
     protected void Register(){
-        
-        FileWriter writer;
-        
-        try{
-            writer = new FileWriter("GamesInfo.json");
-        }catch(IOException e){
-            System.out.println(e);
-            return;
-        }
-        
-        System.err.println(AssignedUUID.getScene().getWindow().getUserData());
-
         if(IsValidInput()){
-            JSONWriter JsonWriter = new JSONWriter(writer)
-                .object()
-                .key("UUID")
-                .value(AssignedUUID.getText())
-                .key("name")
-                .value(nameRawString.getText())
-                .key("executable")
-                .value(executableRawString.getText())
-                .key("version")
-                .value(versionRawString.getText().equals("") ? "1" : versionRawString.getText())
-                .key("image")
-                .value(imagePathArray)
-                .key("movie")
-                .value(moviePathArray)
-                .endObject();
-        }
-           
-        try{
-            writer.close();
-        }catch(IOException e){
-            System.out.println(e);
+            
+            final String ImageString = imagePathArray.toString();
+            final String MovieString = moviePathArray.toString();
+            
+            AssignedUUID.getScene().getWindow().setUserData(new MainFormController.GameRecord(
+                    AssignedUUID.getText(),
+                    nameRawString.getText(),
+                    executableRawString.getText(),
+                    versionRawString.getText().equals("") ? "1" : versionRawString.getText(),
+                    ImageString.substring(1, ImageString.length() - 1).replace("\"", ""),
+                    MovieString.substring(1, MovieString.length() - 1).replace("\"", "")
+            ));
         }
     }
     
