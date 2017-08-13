@@ -59,6 +59,8 @@ public class FXMLController implements Initializable {
             System.out.println(e);
             return;
         }
+        
+        System.err.println(AssignedUUID.getScene().getWindow().getUserData());
 
         if(IsValidInput()){
             JSONWriter JsonWriter = new JSONWriter(writer)
@@ -77,7 +79,7 @@ public class FXMLController implements Initializable {
                 .value(moviePathArray)
                 .endObject();
         }
-        
+           
         try{
             writer.close();
         }catch(IOException e){

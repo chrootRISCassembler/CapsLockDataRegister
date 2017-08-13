@@ -74,9 +74,11 @@ public class MainFormController implements Initializable {
         ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
         MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
 
-        new JSONArray(jsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
-        
         GameInfoView.setItems(DisplayCollection);
+         
+        if(jsonString == null)return true; 
+        
+        new JSONArray(jsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
         
         System.err.println(DisplayCollection.get(0).uuid);
         System.err.println(DisplayCollection.get(0).name);
@@ -103,6 +105,7 @@ public class MainFormController implements Initializable {
         Stage RegisterWindow = new Stage();
         RegisterWindow.initOwner(AddGameButton.getScene().getWindow());
         RegisterWindow.setScene(scene);
+        RegisterWindow.setUserData("test");
         RegisterWindow.showAndWait();
     }
     
