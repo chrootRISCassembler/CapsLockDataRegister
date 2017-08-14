@@ -96,8 +96,6 @@ public class MainFormController implements Initializable {
         VersionCol.setCellValueFactory(new PropertyValueFactory<>("version"));
         ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
         MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
-
-        GameInfoView.setItems(DisplayCollection);
          
         if(jsonString == null)return true; 
         
@@ -106,14 +104,6 @@ public class MainFormController implements Initializable {
         }catch(Exception e){
             return true;
         }
-        
-        System.err.println(DisplayCollection.get(0).uuid);
-        System.err.println(DisplayCollection.get(0).name);
-        System.err.println(DisplayCollection.get(0).executable);
-        System.err.println(DisplayCollection.get(0).version);
-        System.err.println(DisplayCollection.get(0).image);
-        System.err.println(DisplayCollection.get(0).movie);
-        
         return true;
     }
     
@@ -148,7 +138,6 @@ public class MainFormController implements Initializable {
     
     @FXML
     protected void onRecordDoubleClicked(){
-        //System.err.println(GameInfoView.getSelectionModel().getSelectedItem().uuidProperty().get());
         RegisterWindow.setUserData(GameInfoView.getSelectionModel().getSelectedItem());
         RegisterWindow.showAndWait();
         RegisterWindow.setUserData(null);
@@ -184,8 +173,6 @@ public class MainFormController implements Initializable {
             
             String MovieString = Movie.toString();
             movie = new SimpleStringProperty(MovieString.substring(1, MovieString.length() - 1).replace("\"", ""));
-            
-
             
             json = new JSONObject()
                     .put("UUID", UUIDstr)
