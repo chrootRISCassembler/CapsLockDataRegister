@@ -97,6 +97,8 @@ public class MainFormController implements Initializable {
         ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
         MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
          
+        GameInfoView.setItems(DisplayCollection);
+         
         if(jsonString == null)return true; 
         
         try{
