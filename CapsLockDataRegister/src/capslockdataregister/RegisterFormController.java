@@ -17,6 +17,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import org.json.JSONArray;
 
@@ -36,27 +38,63 @@ public class RegisterFormController implements Initializable {
     @FXML TextField movieRawString;
     @FXML Button RegisterButton;
     
+    Stage ThisStage;
+    
     private final JSONArray imagePathArray = new JSONArray();
     private final JSONArray moviePathArray = new JSONArray();
     private final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        AssignedUUID.setText((UUID.randomUUID()).toString());
     }
+    
+    public void onLoad(WindowEvent event){
+        MainFormController.GameRecord record;
+        try{
+            record = (MainFormController.GameRecord)ThisStage.getUserData();
+        }catch(NullPointerException e){
+            System.err.println(e);
+            AssignedUUID.setText((UUID.randomUUID()).toString());
+            return;
+        }
+        
+        AssignedUUID.setText(record.uuidProperty().getValue());
+        nameRawString.setText(record.nameProperty().getValue());
+        executableRawString.setText(record.executableProperty().getValue());
+        versionRawString.setText(record.versionProperty().getValue());
+        imageRawString.setText(record.imageProperty().getValue());
+        movieRawString.setText(record.movieProperty().getValue());
+    }
+    
+    public void setOwnStage(Stage stage){ThisStage = stage;}
     
     @FXML
     protected void Register(){
         if(IsValidInput()){
+            MainFormController.GameRecord record;
             
-            AssignedUUID.getScene().getWindow().setUserData(new MainFormController.GameRecord(
+            try{
+                record = (MainFormController.GameRecord)AssignedUUID.getScene().getWindow().getUserData();
+            }catch(Exception e){
+                AssignedUUID.getScene().getWindow().setUserData(new MainFormController.GameRecord(
                     AssignedUUID.getText(),
                     nameRawString.getText(),
                     executableRawString.getText(),
                     versionRawString.getText().equals("") ? "1" : versionRawString.getText(),
                     imagePathArray,
                     moviePathArray
-            ));
+                ));
+                return;
+            }
+            
+            record.Update(
+                AssignedUUID.getText(),
+                nameRawString.getText(),
+                executableRawString.getText(),
+                versionRawString.getText().equals("") ? "1" : versionRawString.getText(),
+                imagePathArray,
+                moviePathArray
+            );
         }
     }
     

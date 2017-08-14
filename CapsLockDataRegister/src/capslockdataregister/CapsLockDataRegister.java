@@ -24,17 +24,22 @@ public class CapsLockDataRegister extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainForm.fxml"));
+        
         Parent root;
+
         try {
-            root = FXMLLoader.load(getClass().getResource("MainForm.fxml"));
+            root = loader.load();
         } catch (IOException e) {
             System.out.println(e);
             e.printStackTrace();
             return;
         }
+        
+        MainFormController controller = (MainFormController)loader.getController();
+        controller.setOwnStage(stage);
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 }

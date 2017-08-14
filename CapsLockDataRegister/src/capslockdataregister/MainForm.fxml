@@ -10,8 +10,8 @@
 
 <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="capslockdataregister.MainFormController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="664.0" minWidth="10.0" prefWidth="601.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="769.0" minWidth="10.0" prefWidth="199.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -21,12 +21,12 @@
    <children>
       <TableView fx:id="GameInfoView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
         <columns>
-          <TableColumn fx:id="UUIDCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="UUID" />
-          <TableColumn fx:id="NameCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="ゲーム名" />
-            <TableColumn fx:id="ExecutableCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="実行ファイルパス" />
-            <TableColumn fx:id="VersionCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="バージョン" />
-            <TableColumn fx:id="ImageCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="画像ファイルパス" />
-            <TableColumn fx:id="MovieCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="動画ファイルパス" />
+          <TableColumn fx:id="UUIDCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="UUID" />
+          <TableColumn fx:id="NameCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="ゲーム名" />
+            <TableColumn fx:id="ExecutableCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="実行ファイルパス" />
+            <TableColumn fx:id="VersionCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="バージョン" />
+            <TableColumn fx:id="ImageCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="画像ファイルパス" />
+            <TableColumn fx:id="MovieCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="動画ファイルパス" />
         </columns>
       </TableView>
       <Button fx:id="AddGameButton" mnemonicParsing="false" onAction="#onAddButtonClicked" text="ゲーム追加" GridPane.columnIndex="1" GridPane.rowIndex="2" />

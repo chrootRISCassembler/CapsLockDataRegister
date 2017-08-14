@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONWriter;
 
 /**
  * FXML Controller class
@@ -42,12 +41,33 @@ public class MainFormController implements Initializable {
     @FXML TableColumn<GameRecord, String> ImageCol;
     @FXML TableColumn<GameRecord, String> MovieCol;
     
+    Stage ThisStage;
+    Stage RegisterWindow = new Stage();
     ObservableList<GameRecord> DisplayCollection = FXCollections.observableArrayList();
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
         if(!LoadJSONDatabase())System.err.println("failed");
-    }    
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterForm.fxml"));
+        Scene scene;
+        try {
+            scene = new Scene(loader.load());
+        } catch (IOException e) {
+            System.out.println(e);
+            e.printStackTrace();
+            return;
+        }
+        
+        RegisterWindow.initOwner(ThisStage);
+        RegisterWindow.setScene(scene);
+        
+        RegisterFormController controller = (RegisterFormController)loader.getController();
+        controller.setOwnStage(RegisterWindow);
+        RegisterWindow.setOnShowing((event) -> controller.onLoad(event));
+    }
+    
+    public void setOwnStage(Stage stage){ThisStage = stage;}
     
     private boolean LoadJSONDatabase(){
         BufferedReader reader;
@@ -99,21 +119,9 @@ public class MainFormController implements Initializable {
     
     @FXML
     protected void onAddButtonClicked(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterForm.fxml"));
-        Scene scene;
-        try {
-            scene = new Scene(loader.load());
-        } catch (IOException e) {
-            System.out.println(e);
-            e.printStackTrace();
-            return;
-        }
-
-        Stage RegisterWindow = new Stage();
-        RegisterWindow.initOwner(AddGameButton.getScene().getWindow());
-        RegisterWindow.setScene(scene);
         RegisterWindow.showAndWait();
         DisplayCollection.add((GameRecord)RegisterWindow.getUserData());
+        RegisterWindow.setUserData(null);
     }
     
     @FXML
@@ -136,6 +144,14 @@ public class MainFormController implements Initializable {
         }catch(IOException e){
             System.out.println(e);
         }
+    }
+    
+    @FXML
+    protected void onRecordDoubleClicked(){
+        //System.err.println(GameInfoView.getSelectionModel().getSelectedItem().uuidProperty().get());
+        RegisterWindow.setUserData(GameInfoView.getSelectionModel().getSelectedItem());
+        RegisterWindow.showAndWait();
+        RegisterWindow.setUserData(null);
     }
     
     public static class GameRecord{
@@ -188,5 +204,25 @@ public class MainFormController implements Initializable {
         public StringProperty imageProperty(){return image;}
         public StringProperty movieProperty(){return movie;}
         public JSONObject geJSON(){return json;}
+        
+        public void Update(String UUIDstr, String Name, String Executable, String Version, JSONArray Image, JSONArray Movie){
+            uuid.setValue(UUIDstr);
+            name.setValue(Name);
+            executable.setValue(Executable);
+            version.setValue(Version);
+            
+            String ImageString = Image.toString();
+            image.setValue(ImageString.substring(1, ImageString.length() - 1).replace("\"", ""));
+            
+            String MovieString = Movie.toString();
+            movie.setValue(MovieString.substring(1, MovieString.length() - 1).replace("\"", ""));
+            
+            json.put("UUID", UUIDstr)
+                .put("name", Name)
+                .put("executable", Executable)
+                .put("version", Version)
+                .put("image", Image)
+                .put("movie", Movie);
+        }
     }
 }
