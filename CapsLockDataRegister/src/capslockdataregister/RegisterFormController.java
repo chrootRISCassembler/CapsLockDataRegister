@@ -25,7 +25,7 @@ import org.json.JSONArray;
  *
  * @author RISCassembler
  */
-public class FXMLController implements Initializable {
+public class RegisterFormController implements Initializable {
 
     @FXML Label AssignedUUID;
     @FXML Label ErrorMsg;
