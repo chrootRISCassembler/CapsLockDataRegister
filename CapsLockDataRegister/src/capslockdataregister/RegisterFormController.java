@@ -49,16 +49,13 @@ public class RegisterFormController implements Initializable {
     protected void Register(){
         if(IsValidInput()){
             
-            final String ImageString = imagePathArray.toString();
-            final String MovieString = moviePathArray.toString();
-            
             AssignedUUID.getScene().getWindow().setUserData(new MainFormController.GameRecord(
                     AssignedUUID.getText(),
                     nameRawString.getText(),
                     executableRawString.getText(),
                     versionRawString.getText().equals("") ? "1" : versionRawString.getText(),
-                    ImageString.substring(1, ImageString.length() - 1).replace("\"", ""),
-                    MovieString.substring(1, MovieString.length() - 1).replace("\"", "")
+                    imagePathArray,
+                    moviePathArray
             ));
         }
     }

@@ -110,6 +110,7 @@ public class MainFormController implements Initializable {
     }
     
     public static class GameRecord{
+        private JSONObject json;
         private final SimpleStringProperty uuid;
         private final SimpleStringProperty name;
         private final SimpleStringProperty executable;
@@ -118,6 +119,7 @@ public class MainFormController implements Initializable {
         private final SimpleStringProperty movie;
         
         private GameRecord(JSONObject record){
+            json = record;
             uuid = new SimpleStringProperty(record.getString("UUID"));
             name = new SimpleStringProperty(record.getString("name"));
             executable = new SimpleStringProperty(record.getString("executable"));
@@ -126,13 +128,28 @@ public class MainFormController implements Initializable {
             movie = new SimpleStringProperty(record.getJSONArray("movie").join(","));
         }
         
-        public GameRecord(String UUIDstr, String Name, String Executable, String Version, String Image, String Movie){
+        public GameRecord(String UUIDstr, String Name, String Executable, String Version, JSONArray Image, JSONArray Movie){
             uuid = new SimpleStringProperty(UUIDstr);
             name = new SimpleStringProperty(Name);
             executable = new SimpleStringProperty(Executable);
             version = new SimpleStringProperty(Version);
-            image = new SimpleStringProperty(Image);
-            movie = new SimpleStringProperty(Movie);
+            
+            String ImageString = Image.toString();
+            image = new SimpleStringProperty(ImageString.substring(1, ImageString.length() - 1).replace("\"", ""));
+            
+            String MovieString = Movie.toString();
+            movie = new SimpleStringProperty(MovieString.substring(1, MovieString.length() - 1).replace("\"", ""));
+            
+
+            
+            json = new JSONObject()
+                    .put("UUID", UUIDstr)
+                    .put("name", Name)
+                    .put("executable", Executable)
+                    .put("version", Version)
+                    .put("image", Image)
+                    .put("movie", Movie);
+            System.err.println(json.toString());
         }
         
         public StringProperty uuidProperty(){return uuid;}
