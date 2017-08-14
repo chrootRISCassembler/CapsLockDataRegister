@@ -3,6 +3,7 @@ package capslockdataregister;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONWriter;
 
 /**
  * FXML Controller class
@@ -31,6 +33,7 @@ import org.json.JSONObject;
 public class MainFormController implements Initializable {
     
     @FXML Button AddGameButton;
+    @FXML Button SaveButton;
     @FXML TableView<GameRecord> GameInfoView;
     @FXML TableColumn<GameRecord, String> UUIDCol;
     @FXML TableColumn<GameRecord, String> NameCol;
@@ -78,7 +81,11 @@ public class MainFormController implements Initializable {
          
         if(jsonString == null)return true; 
         
-        new JSONArray(jsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
+        try{
+            new JSONArray(jsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
+        }catch(Exception e){
+            return true;
+        }
         
         System.err.println(DisplayCollection.get(0).uuid);
         System.err.println(DisplayCollection.get(0).name);
@@ -107,6 +114,28 @@ public class MainFormController implements Initializable {
         RegisterWindow.setScene(scene);
         RegisterWindow.showAndWait();
         DisplayCollection.add((GameRecord)RegisterWindow.getUserData());
+    }
+    
+    @FXML
+    protected void onSaveClicked(){
+        FileWriter writer;
+        
+        try{
+            writer = new FileWriter("GamesInfo.json");
+        }catch(IOException e){
+            System.out.println(e);
+            return;
+        }
+        
+        JSONArray array = new JSONArray();
+        DisplayCollection.forEach(record -> array.put(record.geJSON()));
+        array.write(writer);
+        
+        try{
+            writer.close();
+        }catch(IOException e){
+            System.out.println(e);
+        }
     }
     
     public static class GameRecord{
@@ -158,5 +187,6 @@ public class MainFormController implements Initializable {
         public StringProperty versionProperty(){return version;}
         public StringProperty imageProperty(){return image;}
         public StringProperty movieProperty(){return movie;}
+        public JSONObject geJSON(){return json;}
     }
 }

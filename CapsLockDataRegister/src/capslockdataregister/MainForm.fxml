@@ -33,5 +33,6 @@
       <Label text="Label" GridPane.rowIndex="2" />
       <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
       <MediaView fitHeight="200.0" fitWidth="200.0" GridPane.columnIndex="1" />
+      <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#onSaveClicked" text="登録終了" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
    </children>
 </GridPane>
