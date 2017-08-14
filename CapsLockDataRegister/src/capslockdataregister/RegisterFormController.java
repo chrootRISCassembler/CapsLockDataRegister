@@ -50,14 +50,21 @@ public class RegisterFormController implements Initializable {
     
     public void onLoad(WindowEvent event){
         MainFormController.GameRecord record;
+        
         try{
             record = (MainFormController.GameRecord)ThisStage.getUserData();
-        }catch(NullPointerException e){
+            if(record == null)throw new NullPointerException();
+        }catch(Exception e){
             System.err.println(e);
             AssignedUUID.setText((UUID.randomUUID()).toString());
+            nameRawString.setText("");
+            executableRawString.setText("");
+            versionRawString.setText("");
+            imageRawString.setText("");
+            movieRawString.setText("");
             return;
         }
-        
+         
         AssignedUUID.setText(record.uuidProperty().getValue());
         nameRawString.setText(record.nameProperty().getValue());
         executableRawString.setText(record.executableProperty().getValue());
@@ -75,6 +82,7 @@ public class RegisterFormController implements Initializable {
             
             try{
                 record = (MainFormController.GameRecord)AssignedUUID.getScene().getWindow().getUserData();
+                if(record == null)throw new NullPointerException();
             }catch(Exception e){
                 AssignedUUID.getScene().getWindow().setUserData(new MainFormController.GameRecord(
                     AssignedUUID.getText(),
@@ -95,6 +103,7 @@ public class RegisterFormController implements Initializable {
                 imagePathArray,
                 moviePathArray
             );
+            ThisStage.close();
         }
     }
     

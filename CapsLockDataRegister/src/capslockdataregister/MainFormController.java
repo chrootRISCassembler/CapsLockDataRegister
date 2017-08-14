@@ -112,7 +112,8 @@ public class MainFormController implements Initializable {
     @FXML
     protected void onAddButtonClicked(){
         RegisterWindow.showAndWait();
-        DisplayCollection.add((GameRecord)RegisterWindow.getUserData());
+        GameRecord NewRecord = (GameRecord)RegisterWindow.getUserData();
+        if(NewRecord != null)DisplayCollection.add(NewRecord);
         RegisterWindow.setUserData(null);
     }
     
