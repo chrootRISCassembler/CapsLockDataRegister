@@ -29,13 +29,13 @@ import org.json.JSONArray;
  */
 public class RegisterFormController implements Initializable {
 
-    @FXML Label AssignedUUID;
-    @FXML Label ErrorMsg;
-    @FXML TextField nameRawString;
-    @FXML TextField executableRawString;
-    @FXML TextField versionRawString;
-    @FXML TextField imageRawString;
-    @FXML TextField movieRawString;
+    @FXML Label AssignedUUIDLabel;
+    @FXML Label ErrorMsgLabel;
+    @FXML TextField NameTextField;
+    @FXML TextField ExecutableTextField;
+    @FXML TextField VersionTextField;
+    @FXML TextField ImageTextField;
+    @FXML TextField MovieTextField;
     @FXML Button RegisterButton;
     
     Stage ThisStage;
@@ -56,21 +56,21 @@ public class RegisterFormController implements Initializable {
             if(record == null)throw new NullPointerException();
         }catch(Exception e){
             System.err.println(e);
-            AssignedUUID.setText((UUID.randomUUID()).toString());
-            nameRawString.setText("");
-            executableRawString.setText("");
-            versionRawString.setText("");
-            imageRawString.setText("");
-            movieRawString.setText("");
+            AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
+            NameTextField.setText("");
+            ExecutableTextField.setText("");
+            VersionTextField.setText("");
+            ImageTextField.setText("");
+            MovieTextField.setText("");
             return;
         }
          
-        AssignedUUID.setText(record.uuidProperty().getValue());
-        nameRawString.setText(record.nameProperty().getValue());
-        executableRawString.setText(record.executableProperty().getValue());
-        versionRawString.setText(record.versionProperty().getValue());
-        imageRawString.setText(record.imageProperty().getValue());
-        movieRawString.setText(record.movieProperty().getValue());
+        AssignedUUIDLabel.setText(record.uuidProperty().getValue());
+        NameTextField.setText(record.nameProperty().getValue());
+        ExecutableTextField.setText(record.executableProperty().getValue());
+        VersionTextField.setText(record.versionProperty().getValue());
+        ImageTextField.setText(record.imageProperty().getValue());
+        MovieTextField.setText(record.movieProperty().getValue());
     }
     
     public void setOwnStage(Stage stage){ThisStage = stage;}
@@ -81,25 +81,24 @@ public class RegisterFormController implements Initializable {
             MainFormController.GameRecord record;
             
             try{
-                record = (MainFormController.GameRecord)AssignedUUID.getScene().getWindow().getUserData();
+                record = (MainFormController.GameRecord)AssignedUUIDLabel.getScene().getWindow().getUserData();
                 if(record == null)throw new NullPointerException();
             }catch(Exception e){
-                AssignedUUID.getScene().getWindow().setUserData(new MainFormController.GameRecord(
-                    AssignedUUID.getText(),
-                    nameRawString.getText(),
-                    executableRawString.getText(),
-                    versionRawString.getText().equals("") ? "1" : versionRawString.getText(),
+                AssignedUUIDLabel.getScene().getWindow().setUserData(new MainFormController.GameRecord(
+                    AssignedUUIDLabel.getText(),
+                    NameTextField.getText(),
+                    ExecutableTextField.getText(),
+                    VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
                     imagePathArray,
                     moviePathArray
                 ));
                 return;
             }
             
-            record.Update(
-                AssignedUUID.getText(),
-                nameRawString.getText(),
-                executableRawString.getText(),
-                versionRawString.getText().equals("") ? "1" : versionRawString.getText(),
+            record.Update(AssignedUUIDLabel.getText(),
+                NameTextField.getText(),
+                ExecutableTextField.getText(),
+                VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
                 imagePathArray,
                 moviePathArray
             );
@@ -111,26 +110,26 @@ public class RegisterFormController implements Initializable {
         boolean ReturnValue = true;
         String ErrorMessage = new String();
         
-        if(nameRawString.getText().equals("")){
+        if(NameTextField.getText().equals("")){
             ErrorMessage += "\nname フィールドが未入力";
             ReturnValue = false;
         }
         
-        if(executableRawString.getText().equals("")){
+        if(ExecutableTextField.getText().equals("")){
             ErrorMessage += "\nexecutable フィールドが未入力";
             ReturnValue = false;
         }else{
-            File file = new File(executableRawString.getText());
+            File file = new File(ExecutableTextField.getText());
             if(!file.exists()){
                 ErrorMessage += "\nexecutable に指定されたファイルはありません";
                 ReturnValue = false;
             }
         }
         
-        GenerateJSONArray(imagePathArray, imageRawString.getText());   
-        GenerateJSONArray(moviePathArray, movieRawString.getText());
+        GenerateJSONArray(imagePathArray, ImageTextField.getText());   
+        GenerateJSONArray(moviePathArray, MovieTextField.getText());
         
-        ErrorMsg.setText("Verification " + (ReturnValue ? "pathed" : "rejected") + ErrorMessage);
+        ErrorMsgLabel.setText("Verification " + (ReturnValue ? "pathed" : "rejected") + ErrorMessage);
         
         return ReturnValue;
     }
@@ -179,7 +178,7 @@ public class RegisterFormController implements Initializable {
 	if(board.hasFiles()) {
             List<File> files = board.getFiles();
             if(!files.isEmpty()){
-                executableRawString.setText(CurrentDirectory.relativize(files.get(0).toPath()).toString());
+                ExecutableTextField.setText(CurrentDirectory.relativize(files.get(0).toPath()).toString());
             }
             
             event.setDropCompleted(true);
