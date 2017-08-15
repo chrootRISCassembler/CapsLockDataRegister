@@ -49,10 +49,10 @@ public class RegisterFormController implements Initializable {
     }
     
     public void onLoad(WindowEvent event){
-        MainFormController.GameRecord record;
+        GameRecord record;
         
         try{
-            record = (MainFormController.GameRecord)ThisStage.getUserData();
+            record = (GameRecord)ThisStage.getUserData();
             if(record == null)throw new NullPointerException();
         }catch(Exception e){
             System.err.println(e);
@@ -78,13 +78,13 @@ public class RegisterFormController implements Initializable {
     @FXML
     protected void Register(){
         if(IsValidInput()){
-            MainFormController.GameRecord record;
+            GameRecord record;
             
             try{
-                record = (MainFormController.GameRecord)AssignedUUIDLabel.getScene().getWindow().getUserData();
+                record = (GameRecord)ThisStage.getUserData();
                 if(record == null)throw new NullPointerException();
             }catch(Exception e){
-                AssignedUUIDLabel.getScene().getWindow().setUserData(new MainFormController.GameRecord(
+                ThisStage.setUserData(new GameRecord(
                     AssignedUUIDLabel.getText(),
                     NameTextField.getText(),
                     ExecutableTextField.getText(),
