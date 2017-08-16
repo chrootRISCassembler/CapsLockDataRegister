@@ -40,6 +40,7 @@ public class CapsLockDataRegister extends Application {
         controller.setOwnStage(stage);
 
         stage.setScene(new Scene(root));
+        stage.setTitle("CapsLockDataRegister ランチャー情報登録ツール");
         stage.show();
     }
 }

@@ -109,6 +109,7 @@ public class MainFormController implements Initializable {
     
     @FXML
     protected void onAddButtonClicked(){
+        RegisterWindow.setTitle("ゲーム追加");
         RegisterWindow.showAndWait();
         GameRecord NewRecord = (GameRecord)RegisterWindow.getUserData();
         if(NewRecord != null)DisplayCollection.add(NewRecord);
@@ -140,6 +141,7 @@ public class MainFormController implements Initializable {
     @FXML
     protected void onRecordDoubleClicked(){
         RegisterWindow.setUserData(GameInfoView.getSelectionModel().getSelectedItem());
+        RegisterWindow.setTitle("ゲーム情報変更");
         RegisterWindow.showAndWait();
         RegisterWindow.setUserData(null);
     }
