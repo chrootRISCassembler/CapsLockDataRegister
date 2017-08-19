@@ -140,7 +140,7 @@ public class RegisterFormController implements Initializable {
     
     private void GenerateJSONArray(JSONArray target, String RawString){
 
-        String[] files = RawString.split(", ");
+        String[] files = RawString.split(",");
             
         Arrays.stream(files).forEach(element -> {
             File file = new File(element);
@@ -151,7 +151,7 @@ public class RegisterFormController implements Initializable {
     @FXML
     protected void TextFieldDragOver(DragEvent event){
         //accept only files.
-        Dragboard db = event.getDragboard();
+        final Dragboard db = event.getDragboard();
         if (db.hasFiles()) {
             event.acceptTransferModes(TransferMode.COPY);
         }    
@@ -159,16 +159,14 @@ public class RegisterFormController implements Initializable {
     
     @FXML
     protected void TextFieldDropped(DragEvent event) {
-	Dragboard board = event.getDragboard();
+	final Dragboard board = event.getDragboard();
 	if(board.hasFiles()) {
-            List<Path> RelativePathList = new ArrayList();
-            board.getFiles().stream().forEach((f) -> {
-                System.out.println(f.getPath());
-                if(f.isFile())RelativePathList.add(CurrentDirectory.relativize(f.toPath()));
-            });
-            String ArrayNotation = RelativePathList.toString();
+            String DisplayString =  board.getFiles().stream()
+                    .filter(file -> file.isFile())
+                    .map(file -> CurrentDirectory.relativize(file.toPath()).toString())
+                    .collect(Collectors.joining(","));
 
-            ((TextField)event.getSource()).setText(ArrayNotation.substring(1, ArrayNotation.length() - 1));
+            ((TextField)event.getSource()).setText(DisplayString);
             
             event.setDropCompleted(true);
 	}else{
