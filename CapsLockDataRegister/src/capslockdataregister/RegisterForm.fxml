@@ -8,10 +8,10 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="capslockdataregister.RegisterFormController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="333.0" prefWidth="335.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="capslockdataregister.RegisterFormController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" prefWidth="68.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0" minWidth="74.0" prefWidth="91.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="133.0" prefWidth="224.0" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -25,11 +25,11 @@
   </rowConstraints>
    <children>
       <Label text="UUID" />
-      <Label text="name" GridPane.rowIndex="1" />
-      <Label text="executable" GridPane.rowIndex="2" />
-      <Label text="version" GridPane.rowIndex="3" />
-      <Label text="image" GridPane.rowIndex="4" />
-      <Label text="movie" GridPane.rowIndex="5" />
+      <Label text="ゲーム名" GridPane.rowIndex="1" />
+      <Label text="実行ファイルパス" GridPane.rowIndex="2" />
+      <Label text="バージョン" GridPane.rowIndex="3" />
+      <Label text="画像ファイルパス" GridPane.rowIndex="4" />
+      <Label text="動画ファイルパス" GridPane.rowIndex="5" />
       <Label fx:id="ErrorMsgLabel" text="errmsg" GridPane.rowIndex="6" />
       <Button fx:id="RegisterButton" mnemonicParsing="false" onMouseClicked="#Register" text="登録" GridPane.columnIndex="1" GridPane.rowIndex="7" />
       <TextField fx:id="NameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -42,4 +42,7 @@
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
 </GridPane>

@@ -19,12 +19,12 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TableView fx:id="GameInfoView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+      <TableView fx:id="GameInfoView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2147483647" GridPane.rowSpan="2">
         <columns>
-          <TableColumn fx:id="UUIDCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="UUID" />
-          <TableColumn fx:id="NameCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="ゲーム名" />
-            <TableColumn fx:id="ExecutableCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="実行ファイルパス" />
-            <TableColumn fx:id="VersionCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="バージョン" />
+          <TableColumn fx:id="UUIDCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="250.0" text="UUID" />
+          <TableColumn fx:id="NameCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="148.0" text="ゲーム名" />
+            <TableColumn fx:id="ExecutableCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="150.0" text="実行ファイルパス" />
+            <TableColumn fx:id="VersionCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="50.0" text="バージョン" />
             <TableColumn fx:id="ImageCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="画像ファイルパス" />
             <TableColumn fx:id="MovieCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="100.0" text="動画ファイルパス" />
         </columns>
