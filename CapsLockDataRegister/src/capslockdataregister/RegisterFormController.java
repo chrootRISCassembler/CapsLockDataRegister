@@ -1,13 +1,17 @@
 package capslockdataregister;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -176,11 +180,39 @@ public class RegisterFormController implements Initializable {
     protected void executableDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
 	if(board.hasFiles()) {
-            List<File> files = board.getFiles();
-            if(!files.isEmpty()){
-                ExecutableTextField.setText(CurrentDirectory.relativize(files.get(0).toPath()).toString());
+            final File ExecutablePath = board.getFiles().get(0);
+            if(ExecutablePath != null){
+                ExecutableTextField.setText(CurrentDirectory.relativize(ExecutablePath.toPath()).toString());
             }
             
+            final Path GamesBaseDirectory = CurrentDirectory.relativize(ExecutablePath.toPath()).subpath(0, 2);
+            System.err.println(GamesBaseDirectory.toString());
+            
+            if(ImageTextField.getText().equals("") || MovieTextField.getText().equals("")){
+                try {
+                    final List<Path> Media = Files.walk(GamesBaseDirectory, FileVisitOption.FOLLOW_LINKS)
+                            .filter(file -> file.getFileName().toString().matches("__(image|movie)__.*"))
+                            .collect(Collectors.toList());
+                    
+                    if(ImageTextField.getText().equals("")){
+                        String Images = Media.stream()
+                            .filter(file -> file.getFileName().toString().charAt(2) == 'i')
+                            .map(file -> file.toString())
+                            .collect(Collectors.joining(","));
+                        ImageTextField.setText(Images);
+                    }
+                    
+                    if(MovieTextField.getText().equals("")){
+                        String Movies = Media.stream()
+                            .filter(file -> file.getFileName().toString().charAt(2) == 'm')
+                            .map(file -> file.toString())
+                            .collect(Collectors.joining(","));
+                        MovieTextField.setText(Movies);
+                    }
+                } catch (IOException ex) {
+                    System.err.println(ex);
+                }
+            }
             event.setDropCompleted(true);
 	}else{
             event.setDropCompleted(false);
