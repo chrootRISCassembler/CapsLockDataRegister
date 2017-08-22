@@ -91,8 +91,10 @@ public class RegisterFormController implements Initializable {
                 ThisStage.setUserData(new GameRecord(
                     AssignedUUIDLabel.getText(),
                     NameTextField.getText(),
+                    "",
                     ExecutableTextField.getText(),
                     VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
+                    "",
                     imagePathArray,
                     moviePathArray
                 ));
@@ -101,8 +103,10 @@ public class RegisterFormController implements Initializable {
             
             record.Update(AssignedUUIDLabel.getText(),
                 NameTextField.getText(),
+                "",
                 ExecutableTextField.getText(),
                 VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
+                "",
                 imagePathArray,
                 moviePathArray
             );

@@ -13,8 +13,10 @@ public final class GameRecord{
     private JSONObject json;
     private final SimpleStringProperty uuid;
     private final SimpleStringProperty name;
+    private final SimpleStringProperty description;
     private final SimpleStringProperty executable;
     private final SimpleStringProperty version;
+    private final SimpleStringProperty panel;
     private final SimpleStringProperty image;
     private final SimpleStringProperty movie;
 
@@ -26,50 +28,82 @@ public final class GameRecord{
         json = record;
         uuid = new SimpleStringProperty(record.getString("UUID"));
         name = new SimpleStringProperty(record.getString("name"));
+        //description = new SimpleStringProperty(record.getString("description"));
+        description = new SimpleStringProperty("");
         executable = new SimpleStringProperty(record.getString("executable"));
         version = new SimpleStringProperty(record.getString("version"));
+        //panel = new SimpleStringProperty(record.getString("panel"));
+        panel = new SimpleStringProperty("");
         image = new SimpleStringProperty(record.getJSONArray("image").join(","));
         movie = new SimpleStringProperty(record.getJSONArray("movie").join(","));
     }
 
-    public GameRecord(String UUIDstr, String Name, String Executable, String Version, JSONArray Image, JSONArray Movie){
-        uuid = new SimpleStringProperty(UUIDstr);
-        name = new SimpleStringProperty(Name);
-        executable = new SimpleStringProperty(Executable);
-        version = new SimpleStringProperty(Version);
-        image = new SimpleStringProperty(toTextFieldString(Image.toString()));
-        movie = new SimpleStringProperty(toTextFieldString(Movie.toString()));
+    public GameRecord(
+            String UUIDString,
+            String NameString,
+            String DescriptionString,
+            String ExecutableString,
+            String VersionString,
+            String PanelString,
+            JSONArray ImageArray,
+            JSONArray MovieArray
+    ){
+        uuid = new SimpleStringProperty(UUIDString);
+        name = new SimpleStringProperty(NameString);
+        description = new SimpleStringProperty(DescriptionString);
+        executable = new SimpleStringProperty(ExecutableString);
+        version = new SimpleStringProperty(VersionString);
+        panel = new SimpleStringProperty(PanelString);
+        image = new SimpleStringProperty(toTextFieldString(ImageArray.toString()));
+        movie = new SimpleStringProperty(toTextFieldString(MovieArray.toString()));
 
         json = new JSONObject()
-                .put("UUID", UUIDstr)
-                .put("name", Name)
-                .put("executable", Executable)
-                .put("version", Version)
-                .put("image", Image)
-                .put("movie", Movie);
+            .put("UUID", UUIDString)
+            .put("name", NameString)
+            .put("description", DescriptionString)
+            .put("executable", ExecutableString)
+            .put("version", VersionString)
+            .put("panel", PanelString)
+            .put("image", ImageArray)
+            .put("movie", MovieArray);
         System.err.println(json.toString());
     }
     
-    public void Update(String UUIDstr, String Name, String Executable, String Version, JSONArray Image, JSONArray Movie){
-        uuid.setValue(UUIDstr);
-        name.setValue(Name);
-        executable.setValue(Executable);
-        version.setValue(Version);
-        image.setValue(toTextFieldString(Image.toString()));
-        movie.setValue(toTextFieldString(Movie.toString()));
+    public void Update(
+            String UUIDString,
+            String NameString,
+            String DescriptionString,
+            String ExecutableString,
+            String VersionString,
+            String PanelString,
+            JSONArray ImageArray,
+            JSONArray MovieArray
+    ){
+        uuid.setValue(UUIDString);
+        name.setValue(NameString);
+        description.setValue(DescriptionString);
+        executable.setValue(ExecutableString);
+        version.setValue(VersionString);
+        panel.setValue(PanelString);
+        image.setValue(toTextFieldString(ImageArray.toString()));
+        movie.setValue(toTextFieldString(MovieArray.toString()));
 
-        json.put("UUID", UUIDstr)
-            .put("name", Name)
-            .put("executable", Executable)
-            .put("version", Version)
-            .put("image", Image)
-            .put("movie", Movie);
+        json.put("UUID", UUIDString)
+            .put("name", NameString)
+            .put("description", DescriptionString)
+            .put("executable", ExecutableString)
+            .put("version", VersionString)
+            .put("panel", PanelString)
+            .put("image", ImageArray)
+            .put("movie", MovieArray);
     }
     
     public StringProperty uuidProperty(){return uuid;}
     public StringProperty nameProperty(){return name;}
+    public StringProperty descriptionProperty(){return description;}
     public StringProperty executableProperty(){return executable;}
     public StringProperty versionProperty(){return version;}
+    public StringProperty panelProperty(){return panel;}
     public StringProperty imageProperty(){return image;}
     public StringProperty movieProperty(){return movie;}
     public JSONObject geJSON(){return json;}

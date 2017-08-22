@@ -102,6 +102,7 @@ public class MainFormController implements Initializable {
         try{
             new JSONArray(jsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
         }catch(Exception e){
+            System.out.println(e);
             return true;
         }
         return true;
