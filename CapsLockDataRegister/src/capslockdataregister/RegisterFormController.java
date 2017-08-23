@@ -188,116 +188,118 @@ public class RegisterFormController implements Initializable {
     @FXML
     protected void executableDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
-	if(board.hasFiles()) {
-            final File ExecutablePath = board.getFiles().get(0);
-            if(ExecutablePath != null){
-                ExecutableTextField.setText(CurrentDirectory.relativize(ExecutablePath.toPath()).toString());
-            }
-            
-            final Path GamesBaseDirectory = CurrentDirectory.relativize(ExecutablePath.toPath()).subpath(0, 2);
-            System.err.println(GamesBaseDirectory.toString());
-            
-            if(ImageTextField.getText().equals("") || MovieTextField.getText().equals("")){
-                try {
-                    final List<Path> Media = Files.walk(GamesBaseDirectory, FileVisitOption.FOLLOW_LINKS)
-                            .parallel()
-                            .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
-                            .collect(Collectors.toList());
-                    
-                    if(NameTextField.getText().equals("") || DescriptionTextField.getText().equals("")){
-                        Optional<Path> DescriptionFile = Media.stream()
-                                .parallel()
-                                .filter(file -> file.getFileName().toString().charAt(2) == 'd')
-                                .findAny();
-                        if(DescriptionFile.isPresent()){
-                            final BufferedReader LineReader = new BufferedReader(new FileReader(DescriptionFile.get().toFile()));
-                            {
-                                String name = LineReader.readLine();
-                                if(NameTextField.getText().equals(""))NameTextField.setText(name);
-                            }
-                            StringBuilder description = new StringBuilder();
-                            String line;
-                            while((line = LineReader.readLine()) != null){
-                                description.append(line);
-                            }
-                            DescriptionTextField.setText(description.toString());
-                        }
+	if(!board.hasFiles()){
+            event.setDropCompleted(false);
+            return;
+        }
+        
+        final File ExecutablePath = board.getFiles().get(0);
+        if(ExecutablePath != null){
+            ExecutableTextField.setText(CurrentDirectory.relativize(ExecutablePath.toPath()).toString());
+        }
+
+        final Path GamesBaseDirectory = CurrentDirectory.relativize(ExecutablePath.toPath()).subpath(0, 2);
+        System.err.println(GamesBaseDirectory.toString());
+
+        try {
+            final List<Path> Media = Files.walk(GamesBaseDirectory, FileVisitOption.FOLLOW_LINKS)
+                    .parallel()
+                    .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
+                    .collect(Collectors.toList());
+
+            if(NameTextField.getText().equals("") || DescriptionTextField.getText().equals("")){
+                Optional<Path> DescriptionFile = Media.stream()
+                        .parallel()
+                        .filter(file -> file.getFileName().toString().charAt(2) == 'd')
+                        .findAny();
+                if(DescriptionFile.isPresent()){
+                    final BufferedReader LineReader = new BufferedReader(new FileReader(DescriptionFile.get().toFile()));
+                    {
+                        String name = LineReader.readLine();
+                        if(NameTextField.getText().equals(""))NameTextField.setText(name);
                     }
-                    
-                    if(PanelTextField.getText().equals("")){
-                        Optional<Path> PanelFile = Media.stream()
-                                .parallel()
-                                .filter(file -> file.getFileName().toString().charAt(2) == 'p')
-                                .findAny();
-                        if(PanelFile.isPresent())PanelTextField.setText(PanelFile.get().toString());
+                    StringBuilder description = new StringBuilder();
+                    String line;
+                    while((line = LineReader.readLine()) != null){
+                        description.append(line);
                     }
-                    
-                    if(ImageTextField.getText().equals("")){
-                        String Images = Media.stream()
-                            .parallel()
-                            .filter(file -> file.getFileName().toString().charAt(2) == 'i')
-                            .map(file -> file.toString())
-                            .collect(Collectors.joining(","));
-                        ImageTextField.setText(Images);
-                    }
-                    
-                    if(MovieTextField.getText().equals("")){
-                        String Movies = Media.stream()
-                            .parallel()
-                            .filter(file -> file.getFileName().toString().charAt(2) == 'm')
-                            .map(file -> file.toString())
-                            .collect(Collectors.joining(","));
-                        MovieTextField.setText(Movies);
-                    }
-                } catch (IOException ex) {
-                    System.err.println(ex);
+                    DescriptionTextField.setText(description.toString());
                 }
             }
-            event.setDropCompleted(true);
-	}else{
-            event.setDropCompleted(false);
-	}
+
+            if(PanelTextField.getText().equals("")){
+                Optional<Path> PanelFile = Media.stream()
+                        .parallel()
+                        .filter(file -> file.getFileName().toString().charAt(2) == 'p')
+                        .findAny();
+                if(PanelFile.isPresent())PanelTextField.setText(PanelFile.get().toString());
+            }
+
+            if(ImageTextField.getText().equals("")){
+                String Images = Media.stream()
+                    .parallel()
+                    .filter(file -> file.getFileName().toString().charAt(2) == 'i')
+                    .map(file -> file.toString())
+                    .collect(Collectors.joining(","));
+                ImageTextField.setText(Images);
+            }
+
+            if(MovieTextField.getText().equals("")){
+                String Movies = Media.stream()
+                    .parallel()
+                    .filter(file -> file.getFileName().toString().charAt(2) == 'm')
+                    .map(file -> file.toString())
+                    .collect(Collectors.joining(","));
+                MovieTextField.setText(Movies);
+            }
+            
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+        event.setDropCompleted(true);
     }
     
-     @FXML
+    @FXML
     protected void DescriptionFileDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
-	if(board.hasFiles()) {
-            final File DescriptionFile = board.getFiles().get(0);
-            final BufferedReader LineReader;
+	if(!board.hasFiles()){
+            event.setDropCompleted(false);
+            return;
+        }
+        final File DescriptionFile = board.getFiles().get(0);
+        final BufferedReader LineReader;
+        try {
+            LineReader = new BufferedReader(new FileReader(DescriptionFile));
+        } catch (FileNotFoundException ex) {
+            event.setDropCompleted(false);
+            System.err.println(ex);
+            return;
+        }
+
+        {
+            String name;
             try {
-                LineReader = new BufferedReader(new FileReader(DescriptionFile));
-            } catch (FileNotFoundException ex) {
-                event.setDropCompleted(false);
-                System.err.println(ex);
-                return;
-            }
-            
-            {
-                String name;
-                try {
-                    name = LineReader.readLine();
-                } catch (IOException ex) {
-                    event.setDropCompleted(false);
-                    System.err.println(ex);
-                    return;
-                }
-                NameTextField.setText(name);
-            }
-            
-            StringBuilder description = new StringBuilder();
-            String line;
-            try {
-                while((line = LineReader.readLine()) != null){
-                    description.append(line);
-                }
+                name = LineReader.readLine();
             } catch (IOException ex) {
                 event.setDropCompleted(false);
                 System.err.println(ex);
                 return;
             }
-            DescriptionTextField.setText(description.toString());
+            NameTextField.setText(name);
         }
+
+        StringBuilder description = new StringBuilder();
+        String line;
+        try {
+            while((line = LineReader.readLine()) != null){
+                description.append(line);
+            }
+        } catch (IOException ex) {
+            event.setDropCompleted(false);
+            System.err.println(ex);
+            return;
+        }
+        DescriptionTextField.setText(description.toString());
         event.setDropCompleted(true);
     }
     
