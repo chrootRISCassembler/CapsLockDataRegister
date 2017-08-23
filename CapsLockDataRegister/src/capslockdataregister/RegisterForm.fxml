@@ -42,7 +42,7 @@
       <Label fx:id="AssignedUUIDLabel" text="uuid" GridPane.columnIndex="1" />
       <Label text="説明" GridPane.rowIndex="2" />
       <Label text="パネル画像ファイルパス" GridPane.rowIndex="5" />
-      <TextField fx:id="PanelTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextField fx:id="PanelTextField" onDragDropped="#PanelFileDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <TextField fx:id="DescriptionTextField" onDragDropped="#DescriptionFileDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="2" />
    </children>
    <padding>

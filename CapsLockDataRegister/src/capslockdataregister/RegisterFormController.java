@@ -301,6 +301,18 @@ public class RegisterFormController implements Initializable {
         event.setDropCompleted(true);
     }
     
+    @FXML
+    protected void PanelFileDropped(DragEvent event) {
+        Dragboard board = event.getDragboard();
+	if(board.hasFiles()) {
+            final File PanelImage = board.getFiles().get(0);
+            PanelTextField.setText(CurrentDirectory.relativize(PanelImage.toPath()).toString());
+            event.setDropCompleted(true);
+            return;
+        }
+        event.setDropCompleted(false);
+    }
+    
     private void ClearAllTextField(){
         Stream.of(
             NameTextField,
