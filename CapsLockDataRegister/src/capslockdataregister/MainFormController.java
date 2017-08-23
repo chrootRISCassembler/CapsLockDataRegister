@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import org.json.JSONArray;
@@ -61,6 +62,7 @@ public class MainFormController implements Initializable {
         }
         
         RegisterWindow.initOwner(ThisStage);
+        RegisterWindow.initModality(Modality.APPLICATION_MODAL);
         RegisterWindow.setScene(scene);
         
         RegisterFormController controller = (RegisterFormController)loader.getController();
