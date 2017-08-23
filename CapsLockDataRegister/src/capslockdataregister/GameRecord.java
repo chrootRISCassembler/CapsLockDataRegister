@@ -28,12 +28,10 @@ public final class GameRecord{
         json = record;
         uuid = new SimpleStringProperty(record.getString("UUID"));
         name = new SimpleStringProperty(record.getString("name"));
-        //description = new SimpleStringProperty(record.getString("description"));
-        description = new SimpleStringProperty("");
+        description = new SimpleStringProperty(record.getString("description"));
         executable = new SimpleStringProperty(record.getString("executable"));
         version = new SimpleStringProperty(record.getString("version"));
-        //panel = new SimpleStringProperty(record.getString("panel"));
-        panel = new SimpleStringProperty("");
+        panel = new SimpleStringProperty(record.getString("panel"));
         image = new SimpleStringProperty(record.getJSONArray("image").join(","));
         movie = new SimpleStringProperty(record.getJSONArray("movie").join(","));
     }

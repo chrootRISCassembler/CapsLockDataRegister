@@ -6,12 +6,12 @@ import java.net.URL;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,8 +36,10 @@ public class RegisterFormController implements Initializable {
     @FXML Label AssignedUUIDLabel;
     @FXML Label ErrorMsgLabel;
     @FXML TextField NameTextField;
+    @FXML TextField DescriptionTextField;
     @FXML TextField ExecutableTextField;
     @FXML TextField VersionTextField;
+    @FXML TextField PanelTextField;
     @FXML TextField ImageTextField;
     @FXML TextField MovieTextField;
     @FXML Button RegisterButton;
@@ -61,18 +63,16 @@ public class RegisterFormController implements Initializable {
         }catch(Exception e){
             System.err.println(e);
             AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
-            NameTextField.setText("");
-            ExecutableTextField.setText("");
-            VersionTextField.setText("");
-            ImageTextField.setText("");
-            MovieTextField.setText("");
+            ClearAllTextField();
             return;
         }
          
         AssignedUUIDLabel.setText(record.uuidProperty().getValue());
         NameTextField.setText(record.nameProperty().getValue());
+        DescriptionTextField.setText(record.descriptionProperty().getValue());
         ExecutableTextField.setText(record.executableProperty().getValue());
         VersionTextField.setText(record.versionProperty().getValue());
+        PanelTextField.setText(record.panelProperty().getValue());
         ImageTextField.setText(record.imageProperty().getValue());
         MovieTextField.setText(record.movieProperty().getValue());
     }
@@ -91,22 +91,23 @@ public class RegisterFormController implements Initializable {
                 ThisStage.setUserData(new GameRecord(
                     AssignedUUIDLabel.getText(),
                     NameTextField.getText(),
-                    "",
+                    DescriptionTextField.getText(),
                     ExecutableTextField.getText(),
                     VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
-                    "",
+                    PanelTextField.getText(),
                     imagePathArray,
                     moviePathArray
                 ));
+                ThisStage.close();
                 return;
             }
             
             record.Update(AssignedUUIDLabel.getText(),
                 NameTextField.getText(),
-                "",
+                DescriptionTextField.getText(),
                 ExecutableTextField.getText(),
                 VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
-                "",
+                PanelTextField.getText(),
                 imagePathArray,
                 moviePathArray
             );
@@ -117,6 +118,8 @@ public class RegisterFormController implements Initializable {
     private boolean IsValidInput(){
         boolean ReturnValue = true;
         String ErrorMessage = new String();
+        
+        System.err.println(NameTextField.getText());
         
         if(NameTextField.getText().equals("")){
             ErrorMessage += "\nname フィールドが未入力";
@@ -219,5 +222,18 @@ public class RegisterFormController implements Initializable {
 	}else{
             event.setDropCompleted(false);
 	}
+    }
+    
+    private void ClearAllTextField(){
+        Stream.of(
+            NameTextField,
+            DescriptionTextField,
+            ExecutableTextField,
+            VersionTextField,
+            PanelTextField,
+            ImageTextField,
+            MovieTextField)
+        .parallel()
+        .forEach(field -> field.setText(""));
     }
 }

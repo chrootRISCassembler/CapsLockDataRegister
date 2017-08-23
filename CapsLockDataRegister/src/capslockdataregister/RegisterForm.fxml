@@ -8,36 +8,42 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="333.0" prefWidth="335.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="capslockdataregister.RegisterFormController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="344.0" prefWidth="388.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="capslockdataregister.RegisterFormController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0" minWidth="74.0" prefWidth="91.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="133.0" prefWidth="224.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="74.0" prefWidth="117.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="133.0" prefWidth="251.0" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <Label text="UUID" />
       <Label text="ゲーム名" GridPane.rowIndex="1" />
-      <Label text="実行ファイルパス" GridPane.rowIndex="2" />
-      <Label text="バージョン" GridPane.rowIndex="3" />
-      <Label text="画像ファイルパス" GridPane.rowIndex="4" />
-      <Label text="動画ファイルパス" GridPane.rowIndex="5" />
-      <Label fx:id="ErrorMsgLabel" text="errmsg" GridPane.rowIndex="6" />
-      <Button fx:id="RegisterButton" mnemonicParsing="false" onMouseClicked="#Register" text="登録" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <Label text="実行ファイルパス" GridPane.rowIndex="3" />
+      <Label text="バージョン" GridPane.rowIndex="4" />
+      <Label text="画像ファイルパス" GridPane.rowIndex="6" />
+      <Label text="動画ファイルパス" GridPane.rowIndex="7" />
+      <Label fx:id="ErrorMsgLabel" text="errmsg" GridPane.rowIndex="8" />
+      <Button fx:id="RegisterButton" mnemonicParsing="false" onMouseClicked="#Register" text="登録" GridPane.columnIndex="1" GridPane.rowIndex="9" />
       <TextField fx:id="NameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField fx:id="ExecutableTextField" onDragDropped="#executableDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <TextField fx:id="VersionTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <TextField fx:id="ImageTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <TextField fx:id="MovieTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextField fx:id="ExecutableTextField" onDragDropped="#executableDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <TextField fx:id="VersionTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <TextField fx:id="ImageTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <TextField fx:id="MovieTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="7" />
       <Label fx:id="AssignedUUIDLabel" text="uuid" GridPane.columnIndex="1" />
+      <Label text="説明" GridPane.rowIndex="2" />
+      <Label text="パネル画像ファイルパス" GridPane.rowIndex="5" />
+      <TextField fx:id="PanelTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextField fx:id="DescriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

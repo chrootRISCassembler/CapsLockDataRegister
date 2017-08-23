@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -34,8 +35,10 @@ public class MainFormController implements Initializable {
     @FXML TableView<GameRecord> GameInfoView;
     @FXML TableColumn<GameRecord, String> UUIDCol;
     @FXML TableColumn<GameRecord, String> NameCol;
+    @FXML TableColumn<GameRecord, String> DescriptionCol;
     @FXML TableColumn<GameRecord, String> ExecutableCol;
     @FXML TableColumn<GameRecord, String> VersionCol;
+    @FXML TableColumn<GameRecord, String> PanelCol;
     @FXML TableColumn<GameRecord, String> ImageCol;
     @FXML TableColumn<GameRecord, String> MovieCol;
     
@@ -101,8 +104,8 @@ public class MainFormController implements Initializable {
         
         try{
             new JSONArray(jsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
-        }catch(Exception e){
-            System.out.println(e);
+        }catch(JSONException exception){
+            System.out.println(exception);
             return true;
         }
         return true;
