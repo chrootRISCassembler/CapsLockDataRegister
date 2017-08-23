@@ -2,6 +2,7 @@ package capslockdataregister;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
@@ -256,6 +257,48 @@ public class RegisterFormController implements Initializable {
 	}else{
             event.setDropCompleted(false);
 	}
+    }
+    
+     @FXML
+    protected void DescriptionFileDropped(DragEvent event) {
+        Dragboard board = event.getDragboard();
+	if(board.hasFiles()) {
+            final File DescriptionFile = board.getFiles().get(0);
+            final BufferedReader LineReader;
+            try {
+                LineReader = new BufferedReader(new FileReader(DescriptionFile));
+            } catch (FileNotFoundException ex) {
+                event.setDropCompleted(false);
+                System.err.println(ex);
+                return;
+            }
+            
+            {
+                String name;
+                try {
+                    name = LineReader.readLine();
+                } catch (IOException ex) {
+                    event.setDropCompleted(false);
+                    System.err.println(ex);
+                    return;
+                }
+                NameTextField.setText(name);
+            }
+            
+            StringBuilder description = new StringBuilder();
+            String line;
+            try {
+                while((line = LineReader.readLine()) != null){
+                    description.append(line);
+                }
+            } catch (IOException ex) {
+                event.setDropCompleted(false);
+                System.err.println(ex);
+                return;
+            }
+            DescriptionTextField.setText(description.toString());
+        }
+        event.setDropCompleted(true);
     }
     
     private void ClearAllTextField(){
