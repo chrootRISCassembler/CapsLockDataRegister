@@ -1,6 +1,8 @@
 package capslockdataregister;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileVisitOption;
@@ -8,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -196,11 +199,41 @@ public class RegisterFormController implements Initializable {
             if(ImageTextField.getText().equals("") || MovieTextField.getText().equals("")){
                 try {
                     final List<Path> Media = Files.walk(GamesBaseDirectory, FileVisitOption.FOLLOW_LINKS)
-                            .filter(file -> file.getFileName().toString().matches("__(image|movie)__.*"))
+                            .parallel()
+                            .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
                             .collect(Collectors.toList());
+                    
+                    if(NameTextField.getText().equals("") || DescriptionTextField.getText().equals("")){
+                        Optional<Path> DescriptionFile = Media.stream()
+                                .parallel()
+                                .filter(file -> file.getFileName().toString().charAt(2) == 'd')
+                                .findAny();
+                        if(DescriptionFile.isPresent()){
+                            final BufferedReader LineReader = new BufferedReader(new FileReader(DescriptionFile.get().toFile()));
+                            {
+                                String name = LineReader.readLine();
+                                if(NameTextField.getText().equals(""))NameTextField.setText(name);
+                            }
+                            StringBuilder description = new StringBuilder();
+                            String line;
+                            while((line = LineReader.readLine()) != null){
+                                description.append(line);
+                            }
+                            DescriptionTextField.setText(description.toString());
+                        }
+                    }
+                    
+                    if(PanelTextField.getText().equals("")){
+                        Optional<Path> PanelFile = Media.stream()
+                                .parallel()
+                                .filter(file -> file.getFileName().toString().charAt(2) == 'p')
+                                .findAny();
+                        if(PanelFile.isPresent())PanelTextField.setText(PanelFile.get().toString());
+                    }
                     
                     if(ImageTextField.getText().equals("")){
                         String Images = Media.stream()
+                            .parallel()
                             .filter(file -> file.getFileName().toString().charAt(2) == 'i')
                             .map(file -> file.toString())
                             .collect(Collectors.joining(","));
@@ -209,6 +242,7 @@ public class RegisterFormController implements Initializable {
                     
                     if(MovieTextField.getText().equals("")){
                         String Movies = Media.stream()
+                            .parallel()
                             .filter(file -> file.getFileName().toString().charAt(2) == 'm')
                             .map(file -> file.toString())
                             .collect(Collectors.joining(","));
