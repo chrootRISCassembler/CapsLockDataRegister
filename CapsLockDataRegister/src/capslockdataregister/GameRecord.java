@@ -96,13 +96,13 @@ public final class GameRecord{
             .put("movie", MovieArray);
     }
     
-    public StringProperty uuidProperty(){return uuid;}
-    public StringProperty nameProperty(){return name;}
-    public StringProperty descriptionProperty(){return description;}
-    public StringProperty executableProperty(){return executable;}
-    public StringProperty versionProperty(){return version;}
-    public StringProperty panelProperty(){return panel;}
-    public StringProperty imageProperty(){return image;}
-    public StringProperty movieProperty(){return movie;}
-    public JSONObject geJSON(){return json;}
+    public final StringProperty uuidProperty(){return uuid;}
+    public final StringProperty nameProperty(){return name;}
+    public final StringProperty descriptionProperty(){return description;}
+    public final StringProperty executableProperty(){return executable;}
+    public final StringProperty versionProperty(){return version;}
+    public final StringProperty panelProperty(){return panel;}
+    public final StringProperty imageProperty(){return image;}
+    public final StringProperty movieProperty(){return movie;}
+    public final JSONObject geJSON(){return json;}
 }
