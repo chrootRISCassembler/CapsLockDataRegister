@@ -64,7 +64,7 @@ public class RegisterFormController implements Initializable {
         try{
             record = (GameRecord)ThisStage.getUserData();
             if(record == null)throw new NullPointerException();
-        }catch(Exception e){
+        }catch(NullPointerException e){
             System.err.println(e);
             AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
             ClearAllTextField();
@@ -91,7 +91,7 @@ public class RegisterFormController implements Initializable {
             try{
                 record = (GameRecord)ThisStage.getUserData();
                 if(record == null)throw new NullPointerException();
-            }catch(Exception e){
+            }catch(NullPointerException e){
                 ThisStage.setUserData(new GameRecord(
                     AssignedUUIDLabel.getText(),
                     NameTextField.getText(),
