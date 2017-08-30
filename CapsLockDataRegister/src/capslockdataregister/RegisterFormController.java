@@ -202,13 +202,13 @@ public class RegisterFormController implements Initializable {
         System.err.println(GamesBaseDirectory.toString());
 
         try {
-            final List<Path> Media = Files.walk(GamesBaseDirectory, FileVisitOption.FOLLOW_LINKS)
+            final List<Path> CollectedFiles = Files.walk(GamesBaseDirectory, FileVisitOption.FOLLOW_LINKS)
                     .parallel()
                     .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
                     .collect(Collectors.toList());
 
             if(NameTextField.getText().equals("") || DescriptionTextField.getText().equals("")){
-                Optional<Path> DescriptionFile = Media.stream()
+                Optional<Path> DescriptionFile = CollectedFiles.stream()
                         .parallel()
                         .filter(file -> file.getFileName().toString().charAt(2) == 'd')
                         .findAny();
@@ -228,7 +228,7 @@ public class RegisterFormController implements Initializable {
             }
 
             if(PanelTextField.getText().equals("")){
-                Optional<Path> PanelFile = Media.stream()
+                Optional<Path> PanelFile = CollectedFiles.stream()
                         .parallel()
                         .filter(file -> file.getFileName().toString().charAt(2) == 'p')
                         .findAny();
@@ -236,21 +236,11 @@ public class RegisterFormController implements Initializable {
             }
 
             if(ImageTextField.getText().equals("")){
-                String Images = Media.stream()
-                    .parallel()
-                    .filter(file -> file.getFileName().toString().charAt(2) == 'i')
-                    .map(file -> file.toString())
-                    .collect(Collectors.joining(","));
-                ImageTextField.setText(Images);
+                ImageTextField.setText(ExtractAndToString(CollectedFiles, 'i'));
             }
 
             if(MovieTextField.getText().equals("")){
-                String Movies = Media.stream()
-                    .parallel()
-                    .filter(file -> file.getFileName().toString().charAt(2) == 'm')
-                    .map(file -> file.toString())
-                    .collect(Collectors.joining(","));
-                MovieTextField.setText(Movies);
+                MovieTextField.setText(ExtractAndToString(CollectedFiles, 'm'));
             }
             
         } catch (IOException ex) {
@@ -326,5 +316,13 @@ public class RegisterFormController implements Initializable {
             MovieTextField)
         .parallel()
         .forEach(field -> field.setText(""));
+    }
+    
+    private String ExtractAndToString(List<Path>PathList, char SecondChar){
+        return PathList.stream()
+                    .parallel()
+                    .filter(file -> file.getFileName().toString().charAt(2) == SecondChar)
+                    .map(file -> file.toString())
+                    .collect(Collectors.joining(","));
     }
 }
