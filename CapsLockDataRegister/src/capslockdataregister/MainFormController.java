@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -42,6 +43,7 @@ public class MainFormController implements Initializable {
     @FXML TableColumn<GameRecord, String> PanelCol;
     @FXML TableColumn<GameRecord, String> ImageCol;
     @FXML TableColumn<GameRecord, String> MovieCol;
+    @FXML Label RecordNumLabel;
     
     Stage ThisStage;
     Stage RegisterWindow = new Stage();
@@ -110,6 +112,7 @@ public class MainFormController implements Initializable {
             System.out.println(exception);
             return true;
         }
+        UpdateNumberDisplay();
         return true;
     }
     
@@ -120,6 +123,7 @@ public class MainFormController implements Initializable {
         GameRecord NewRecord = (GameRecord)RegisterWindow.getUserData();
         if(NewRecord != null)DisplayCollection.add(NewRecord);
         RegisterWindow.setUserData(null);
+        UpdateNumberDisplay();
     }
     
     @FXML
@@ -150,5 +154,10 @@ public class MainFormController implements Initializable {
         RegisterWindow.setTitle("ゲーム情報変更");
         RegisterWindow.showAndWait();
         RegisterWindow.setUserData(null);
+        UpdateNumberDisplay();
+    }
+    
+    private final void UpdateNumberDisplay(){
+        RecordNumLabel.setText("登録済みゲーム " + DisplayCollection.size() + "件");
     }
 }
