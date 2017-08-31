@@ -1,12 +1,21 @@
 package capslockdataregister;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,6 +43,7 @@ public class MainFormController implements Initializable {
     
     @FXML Button AddGameButton;
     @FXML Button SaveButton;
+    @FXML Button AutoRegisterButton;
     @FXML TableView<GameRecord> GameInfoView;
     @FXML TableColumn<GameRecord, String> UUIDCol;
     @FXML TableColumn<GameRecord, String> NameCol;
@@ -70,6 +80,15 @@ public class MainFormController implements Initializable {
         RegisterFormController controller = (RegisterFormController)loader.getController();
         controller.setOwnStage(RegisterWindow);
         RegisterWindow.setOnShowing((event) -> controller.onLoad(event));
+        
+        UUIDCol.setCellValueFactory(new PropertyValueFactory<>("uuid"));
+        NameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        ExecutableCol.setCellValueFactory(new PropertyValueFactory<>("executable"));
+        VersionCol.setCellValueFactory(new PropertyValueFactory<>("version"));
+        ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
+        MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
+         
+        GameInfoView.setItems(DisplayCollection);
     }
     
     public void setOwnStage(Stage stage){ThisStage = stage;}
@@ -94,15 +113,6 @@ public class MainFormController implements Initializable {
         }
         
         System.out.println(jsonString);
-        
-        UUIDCol.setCellValueFactory(new PropertyValueFactory<>("uuid"));
-        NameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        ExecutableCol.setCellValueFactory(new PropertyValueFactory<>("executable"));
-        VersionCol.setCellValueFactory(new PropertyValueFactory<>("version"));
-        ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
-        MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
-         
-        GameInfoView.setItems(DisplayCollection);
          
         if(jsonString == null)return true; 
         
@@ -154,6 +164,84 @@ public class MainFormController implements Initializable {
         RegisterWindow.setTitle("ゲーム情報変更");
         RegisterWindow.showAndWait();
         RegisterWindow.setUserData(null);
+        UpdateNumberDisplay();
+    }
+    
+    @FXML
+    protected void onAutoRegisterClicked(){
+        final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
+
+        final List<Path> CollectedFiles;
+        try {
+            CollectedFiles = Files.walk(new File("Games").toPath(), FileVisitOption.FOLLOW_LINKS)
+                    .parallel()
+                    .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*|.*\\.bat"))
+                    .peek(file -> System.err.println(file))
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            System.err.println(e);
+            return;
+        }
+        
+        ArrayList<Path> executables = new ArrayList();
+        
+        Iterator<Path> ite = CollectedFiles.iterator();
+        while(ite.hasNext()){
+            final Path CheckFile = ite.next();
+            if(CheckFile.getFileName().toString().endsWith(".bat")){
+                executables.add(CheckFile);
+                ite.remove();
+            }
+        }
+        
+        for(Path exe : executables){
+            final Path GamesBaseDirectory = CurrentDirectory.relativize(exe.toAbsolutePath()).subpath(0, 2);
+            
+            String name = "";
+            String description = "";
+            String panel = "";
+            List<Path> Images = new ArrayList();
+            List<Path> Movies = new ArrayList();
+            
+            for(Path file : CollectedFiles){
+                if(!file.startsWith(GamesBaseDirectory))continue;
+                String FileName = file.getFileName().toString();
+                switch(FileName.charAt(2)){
+                    case 'd':
+                        try{
+                            final BufferedReader LineReader = new BufferedReader(new FileReader(file.toFile()));
+                            name = LineReader.readLine();
+                            StringBuilder DescriptionBuilder = new StringBuilder();
+                            String line;
+                            while((line = LineReader.readLine()) != null){
+                                DescriptionBuilder.append(line);
+                            }
+                            description = DescriptionBuilder.toString();
+                        }catch(Exception e){
+                        }
+                        break;
+                    case 'p':
+                        panel = file.toString();
+                        break;
+                    case 'i':
+                        Images.add(file);
+                        break;
+                    case 'm':
+                        Movies.add(file);
+                        break;
+                }
+            }
+            DisplayCollection.add(new GameRecord(
+                    UUID.randomUUID().toString(),
+                    name,
+                    description,
+                    exe.toString(),
+                    "1",
+                    panel,
+                    new JSONArray(Images), 
+                    new JSONArray(Movies)
+            ));
+        }
         UpdateNumberDisplay();
     }
     

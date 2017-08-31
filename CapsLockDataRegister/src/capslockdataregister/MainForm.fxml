@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.media.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
@@ -36,5 +37,10 @@
       <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
       <MediaView fitHeight="200.0" fitWidth="200.0" GridPane.columnIndex="1" />
       <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#onSaveClicked" text="登録終了" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+      <Button fx:id="AutoRegisterButton" mnemonicParsing="false" onAction="#onAutoRegisterClicked" text="一括登録" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Button>
    </children>
 </GridPane>
