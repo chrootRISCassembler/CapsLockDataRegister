@@ -9,7 +9,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <VBox prefHeight="600.0" prefWidth="799.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="capslockdataregister.MainFormController">
    <children>
       <TableView fx:id="GameInfoView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
@@ -24,12 +23,18 @@
             <TableColumn fx:id="MovieCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="90.0" text="動画ファイルパス" />
         </columns>
       </TableView>
-      <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+      <Label fx:id="RecordNumLabel" text="Label">
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+      </Label>
+      <HBox spacing="20.0">
          <children>
-            <Label fx:id="RecordNumLabel" text="Label" />
             <Button fx:id="AutoRegisterButton" mnemonicParsing="false" onAction="#onAutoRegisterClicked" text="一括登録" />
+            <Button fx:id="ReloadButton" mnemonicParsing="false" onAction="#onReloadClicked" text="ロールバック/再読み込み" />
             <Button fx:id="AddGameButton" mnemonicParsing="false" onAction="#onAddButtonClicked" text="ゲーム追加" />
-            <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#onSaveClicked" text="登録終了" />
+            <Button fx:id="RemoveGameButton" mnemonicParsing="false" onAction="#onRemoveClicked" text="ゲーム削除" />
+            <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#onSaveClicked" text="登録終了(JSONファイル書き出し)" />
          </children>
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

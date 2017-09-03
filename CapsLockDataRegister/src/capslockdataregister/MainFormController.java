@@ -54,6 +54,8 @@ public class MainFormController implements Initializable {
     @FXML TableColumn<GameRecord, String> ImageCol;
     @FXML TableColumn<GameRecord, String> MovieCol;
     @FXML Label RecordNumLabel;
+    @FXML Button RemoveGameButton;
+    @FXML Button ReloadButton;
     
     Stage ThisStage;
     Stage RegisterWindow = new Stage();
@@ -243,6 +245,23 @@ public class MainFormController implements Initializable {
             ));
         }
         UpdateNumberDisplay();
+    }
+    
+    @FXML
+    protected void onRemoveClicked(){
+        try{
+            final int RecordIndex = GameInfoView.getSelectionModel().getSelectedIndex();
+            DisplayCollection.remove(RecordIndex);
+        }catch(Exception e){
+            return;
+        }
+        UpdateNumberDisplay();
+    }
+    
+    @FXML
+    protected void onReloadClicked(){
+        DisplayCollection.clear();
+        LoadJSONDatabase();
     }
     
     private final void UpdateNumberDisplay(){
