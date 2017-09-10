@@ -82,28 +82,15 @@ public class RegisterFormController implements Initializable {
     
     @FXML
     protected void Register(){
-        if(IsValidInput()){
-            GameRecord record;
-            
-            try{
-                record = (GameRecord)ThisStage.getUserData();
-                if(record == null)throw new NullPointerException();
-            }catch(NullPointerException e){
-                ThisStage.setUserData(new GameRecord(
-                    AssignedUUIDLabel.getText(),
-                    NameTextField.getText(),
-                    DescriptionTextField.getText(),
-                    ExecutableTextField.getText(),
-                    VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
-                    PanelTextField.getText(),
-                    imagePathArray,
-                    moviePathArray
-                ));
-                ThisStage.close();
-                return;
-            }
-            
-            record.Update(AssignedUUIDLabel.getText(),
+        if(!IsValidInput())return;
+        
+        GameRecord record;
+        try{
+            record = (GameRecord)ThisStage.getUserData();
+            if(record == null)throw new NullPointerException();
+        }catch(NullPointerException e){
+            ThisStage.setUserData(new GameRecord(
+                AssignedUUIDLabel.getText(),
                 NameTextField.getText(),
                 DescriptionTextField.getText(),
                 ExecutableTextField.getText(),
@@ -111,9 +98,21 @@ public class RegisterFormController implements Initializable {
                 PanelTextField.getText(),
                 imagePathArray,
                 moviePathArray
-            );
+            ));
             ThisStage.close();
+            return;
         }
+
+        record.Update(AssignedUUIDLabel.getText(),
+            NameTextField.getText(),
+            DescriptionTextField.getText(),
+            ExecutableTextField.getText(),
+            VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
+            PanelTextField.getText(),
+            imagePathArray,
+            moviePathArray
+        );
+        ThisStage.close();
     }
     
     private boolean IsValidInput(){
