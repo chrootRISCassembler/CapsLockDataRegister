@@ -96,34 +96,17 @@ public class MainFormController implements Initializable {
     public void setOwnStage(Stage stage){ThisStage = stage;}
     
     private boolean LoadJSONDatabase(){
-        BufferedReader reader;
-        
-        try {
-            reader = new BufferedReader(new FileReader("GamesInfo.json"));
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
-            return false;
-        }
-        
-        String jsonString;
-        
-        try {
-            jsonString = reader.readLine();
-        } catch (IOException ex) {
-            System.out.println(ex);
-            return false;
-        }
-        
-        System.out.println(jsonString);
-         
-        if(jsonString == null)return true; 
-        
-        try{
-            new JSONArray(jsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
-        }catch(JSONException exception){
-            System.out.println(exception);
+        try(final BufferedReader reader = new BufferedReader(new FileReader("GamesInfo.json"))){
+            final String JsonString = reader.readLine();
+            new JSONArray(JsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
+        }catch(FileNotFoundException ex){
+            System.err.println(ex);
             return true;
+        }catch(IOException ex){
+            System.err.println(ex);
+            return false;
         }
+        
         UpdateNumberDisplay();
         return true;
     }
