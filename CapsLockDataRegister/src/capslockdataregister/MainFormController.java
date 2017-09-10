@@ -201,6 +201,7 @@ public class MainFormController implements Initializable {
             
             String name = "";
             String description = "";
+            String version = "1";
             String panel = "";
             List<Path> Images = new ArrayList();
             List<Path> Movies = new ArrayList();
@@ -210,17 +211,11 @@ public class MainFormController implements Initializable {
                 String FileName = file.getFileName().toString();
                 switch(FileName.charAt(2)){
                     case 'd':
-                        try{
-                            final BufferedReader LineReader = new BufferedReader(new FileReader(file.toFile()));
-                            name = LineReader.readLine();
-                            StringBuilder DescriptionBuilder = new StringBuilder();
-                            String line;
-                            while((line = LineReader.readLine()) != null){
-                                DescriptionBuilder.append(line);
-                            }
-                            description = DescriptionBuilder.toString();
-                        }catch(Exception e){
-                        }
+                        DescriptionFileParser FileParser =  new DescriptionFileParser(file.toFile());
+                        name = FileParser.getName();
+                        description = FileParser.getDescription();
+                        version = FileParser.getVersion();
+                        
                         break;
                     case 'p':
                         panel = file.toString();
@@ -238,7 +233,7 @@ public class MainFormController implements Initializable {
                     name,
                     description,
                     exe.toString(),
-                    "1",
+                    version,
                     panel,
                     new JSONArray(Images), 
                     new JSONArray(Movies)

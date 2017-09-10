@@ -1,9 +1,6 @@
 package capslockdataregister;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileVisitOption;
@@ -206,24 +203,22 @@ public class RegisterFormController implements Initializable {
                     .parallel()
                     .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
                     .collect(Collectors.toList());
-
-            if(NameTextField.getText().equals("") || DescriptionTextField.getText().equals("")){
-                Optional<Path> DescriptionFile = CollectedFiles.stream()
-                        .parallel()
-                        .filter(file -> file.getFileName().toString().charAt(2) == 'd')
-                        .findAny();
-                if(DescriptionFile.isPresent()){
-                    final BufferedReader LineReader = new BufferedReader(new FileReader(DescriptionFile.get().toFile()));
-                    {
-                        String name = LineReader.readLine();
-                        if(NameTextField.getText().equals(""))NameTextField.setText(name);
+            
+            {
+                final boolean IsNameNull = NameTextField.getText().equals("");
+                final boolean IsDescriptionNull = DescriptionTextField.getText().equals("");
+                final boolean IsVersionNull = VersionTextField.getText().equals("");
+                if(IsNameNull || IsDescriptionNull || IsVersionNull){
+                    Optional<Path> DescriptionFile = CollectedFiles.stream()
+                            .parallel()
+                            .filter(file -> file.getFileName().toString().charAt(2) == 'd')
+                            .findAny();
+                    if(DescriptionFile.isPresent()){
+                        final DescriptionFileParser FileParser = new DescriptionFileParser(DescriptionFile.get().toFile());
+                        if(IsNameNull)NameTextField.setText(FileParser.getName());
+                        if(IsDescriptionNull)DescriptionTextField.setText(FileParser.getDescription());
+                        if(IsVersionNull)VersionTextField.setText(FileParser.getVersion());
                     }
-                    StringBuilder description = new StringBuilder();
-                    String line;
-                    while((line = LineReader.readLine()) != null){
-                        description.append(line);
-                    }
-                    DescriptionTextField.setText(description.toString());
                 }
             }
 
@@ -256,40 +251,12 @@ public class RegisterFormController implements Initializable {
             event.setDropCompleted(false);
             return;
         }
-        final File DescriptionFile = board.getFiles().get(0);
-        final BufferedReader LineReader;
-        try {
-            LineReader = new BufferedReader(new FileReader(DescriptionFile));
-        } catch (FileNotFoundException ex) {
-            event.setDropCompleted(false);
-            System.err.println(ex);
-            return;
+        final DescriptionFileParser FileParser = new DescriptionFileParser(board.getFiles().get(0));
+        if(FileParser.isFine()){
+            NameTextField.setText(FileParser.getName());
+            DescriptionTextField.setText(FileParser.getDescription());
+            VersionTextField.setText(FileParser.getVersion());
         }
-
-        {
-            String name;
-            try {
-                name = LineReader.readLine();
-            } catch (IOException ex) {
-                event.setDropCompleted(false);
-                System.err.println(ex);
-                return;
-            }
-            NameTextField.setText(name);
-        }
-
-        StringBuilder description = new StringBuilder();
-        String line;
-        try {
-            while((line = LineReader.readLine()) != null){
-                description.append(line);
-            }
-        } catch (IOException ex) {
-            event.setDropCompleted(false);
-            System.err.println(ex);
-            return;
-        }
-        DescriptionTextField.setText(description.toString());
         event.setDropCompleted(true);
     }
     
