@@ -1,7 +1,7 @@
 package capslockdataregister;
 
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -96,13 +96,13 @@ public final class GameRecord{
             .put("movie", MovieArray);
     }
     
-    public final StringProperty uuidProperty(){return uuid;}
-    public final StringProperty nameProperty(){return name;}
-    public final StringProperty descriptionProperty(){return description;}
-    public final StringProperty executableProperty(){return executable;}
-    public final StringProperty versionProperty(){return version;}
-    public final StringProperty panelProperty(){return panel;}
-    public final StringProperty imageProperty(){return image;}
-    public final StringProperty movieProperty(){return movie;}
+    public final ReadOnlyStringProperty uuidProperty(){return uuid;}
+    public final ReadOnlyStringProperty nameProperty(){return name;}
+    public final ReadOnlyStringProperty descriptionProperty(){return description;}
+    public final ReadOnlyStringProperty executableProperty(){return executable;}
+    public final ReadOnlyStringProperty versionProperty(){return version;}
+    public final ReadOnlyStringProperty panelProperty(){return panel;}
+    public final ReadOnlyStringProperty imageProperty(){return image;}
+    public final ReadOnlyStringProperty movieProperty(){return movie;}
     public final JSONObject geJSON(){return json;}
 }
