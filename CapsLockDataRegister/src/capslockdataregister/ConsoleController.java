@@ -49,7 +49,7 @@ public class ConsoleController implements Initializable {
     }   
     
     @FXML
-    protected void onEnter(ActionEvent event){
+    private void onEnter(ActionEvent event){
         System.err.println("event");
     }
     

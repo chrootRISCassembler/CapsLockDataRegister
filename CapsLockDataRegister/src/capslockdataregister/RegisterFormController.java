@@ -45,7 +45,7 @@ public class RegisterFormController implements Initializable {
     @FXML TextField MovieTextField;
     @FXML Button RegisterButton;
     
-    Stage ThisStage;
+    private Stage ThisStage;
     
     private final JSONArray imagePathArray = new JSONArray();
     private final JSONArray moviePathArray = new JSONArray();
@@ -55,7 +55,7 @@ public class RegisterFormController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
     
-    public void onLoad(WindowEvent event){
+    void onLoad(WindowEvent event){
         GameRecord record;
         
         try{
@@ -78,10 +78,10 @@ public class RegisterFormController implements Initializable {
         MovieTextField.setText(record.movieProperty().getValue());
     }
     
-    public void setOwnStage(Stage stage){ThisStage = stage;}
+    void setOwnStage(Stage stage){ThisStage = stage;}
     
     @FXML
-    protected void Register(){
+    private void Register(){
         if(!IsValidInput())return;
         
         GameRecord record;
@@ -156,7 +156,7 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    protected void TextFieldDragOver(DragEvent event){
+    private void TextFieldDragOver(DragEvent event){
         //accept only files.
         final Dragboard db = event.getDragboard();
         if (db.hasFiles()) {
@@ -165,7 +165,7 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    protected void TextFieldDropped(DragEvent event) {
+    private void TextFieldDropped(DragEvent event) {
 	final Dragboard board = event.getDragboard();
 	if(board.hasFiles()) {
             String DisplayString =  board.getFiles().stream()
@@ -182,7 +182,7 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    protected void executableDropped(DragEvent event) {
+    private void executableDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
 	if(!board.hasFiles()){
             event.setDropCompleted(false);
@@ -244,7 +244,7 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    protected void DescriptionFileDropped(DragEvent event) {
+    private void DescriptionFileDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
 	if(!board.hasFiles()){
             event.setDropCompleted(false);
@@ -260,7 +260,7 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    protected void PanelFileDropped(DragEvent event) {
+    private void PanelFileDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
 	if(board.hasFiles()) {
             final File PanelImage = board.getFiles().get(0);

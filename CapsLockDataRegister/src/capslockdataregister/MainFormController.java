@@ -62,8 +62,8 @@ public class MainFormController implements Initializable {
     
     private final KeyCombination ConsoleKeys = new KeyCodeCombination(KeyCode.C, KeyCombination.SHIFT_DOWN, KeyCodeCombination.CONTROL_DOWN);
     
-    Stage ThisStage;
-    Stage RegisterWindow = new Stage();
+    private Stage ThisStage;
+    private Stage RegisterWindow = new Stage();
     ObservableList<GameRecord> DisplayCollection = FXCollections.observableArrayList();
     private boolean hasConsole = false;
     
@@ -99,7 +99,7 @@ public class MainFormController implements Initializable {
         GameInfoView.setItems(DisplayCollection);
     }
     
-    public void setOwnStage(Stage stage){ThisStage = stage;}
+    void setOwnStage(Stage stage){ThisStage = stage;}
     
     private boolean LoadJSONDatabase(){
         try(final BufferedReader reader = new BufferedReader(new FileReader("GamesInfo.json"))){
@@ -118,7 +118,7 @@ public class MainFormController implements Initializable {
     }
     
     @FXML
-    protected void onAddButtonClicked(){
+    private void onAddButtonClicked(){
         RegisterWindow.setTitle("ゲーム追加");
         RegisterWindow.showAndWait();
         GameRecord NewRecord = (GameRecord)RegisterWindow.getUserData();
@@ -128,7 +128,7 @@ public class MainFormController implements Initializable {
     }
     
     @FXML
-    protected void onSaveClicked(){
+    private void onSaveClicked(){
         FileWriter writer;
         
         try{
@@ -150,7 +150,7 @@ public class MainFormController implements Initializable {
     }
     
     @FXML
-    protected void onRecordDoubleClicked(){
+    private void onRecordDoubleClicked(){
         RegisterWindow.setUserData(GameInfoView.getSelectionModel().getSelectedItem());
         RegisterWindow.setTitle("ゲーム情報変更");
         RegisterWindow.showAndWait();
@@ -159,7 +159,7 @@ public class MainFormController implements Initializable {
     }
     
     @FXML
-    protected void onAutoRegisterClicked(){
+    private void onAutoRegisterClicked(){
         final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
 
         final List<Path> CollectedFiles;
@@ -232,7 +232,7 @@ public class MainFormController implements Initializable {
     }
     
     @FXML
-    protected void onRemoveClicked(){
+    private void onRemoveClicked(){
         try{
             final int RecordIndex = GameInfoView.getSelectionModel().getSelectedIndex();
             DisplayCollection.remove(RecordIndex);
@@ -243,13 +243,13 @@ public class MainFormController implements Initializable {
     }
     
     @FXML
-    protected void onReloadClicked(){
+    private void onReloadClicked(){
         DisplayCollection.clear();
         LoadJSONDatabase();
     }
     
     @FXML
-    protected void onKeyPressed(KeyEvent event){
+    private void onKeyPressed(KeyEvent event){
         if(hasConsole)return;
         
         if(ConsoleKeys.match(event)){

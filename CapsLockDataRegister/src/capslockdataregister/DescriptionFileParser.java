@@ -10,13 +10,13 @@ import java.io.IOException;
  *
  * @author RISCassembler
  */
-public final class DescriptionFileParser {
+final class DescriptionFileParser {
     private String GameName = "";
     private String GameVersion = "";
     private String GameDescription = "1";
     private boolean FineFlag = true;
     
-    public DescriptionFileParser(File file){
+    DescriptionFileParser(File file){
         try(final BufferedReader LineReader = new BufferedReader(new FileReader(file))){
             GameName = LineReader.readLine();
             GameVersion = LineReader.readLine();
@@ -36,8 +36,8 @@ public final class DescriptionFileParser {
         }
     }
     
-    public final boolean isFine(){return FineFlag;}
-    public final String getName(){return GameName;}
-    public final String getVersion(){return GameVersion;}
-    public final String getDescription(){return GameDescription;}
+    final boolean isFine(){return FineFlag;}
+    final String getName(){return GameName;}
+    final String getVersion(){return GameVersion;}
+    final String getDescription(){return GameDescription;}
 }

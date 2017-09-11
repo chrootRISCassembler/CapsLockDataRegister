@@ -24,7 +24,7 @@ public final class GameRecord{
         return JSONArrayString.substring(1, JSONArrayString.length() - 1).replace("\"", "");
     }
     
-    public GameRecord(JSONObject record){
+    GameRecord(JSONObject record){
         json = record;
         uuid = new SimpleStringProperty(record.getString("UUID"));
         name = new SimpleStringProperty(record.getString("name"));
@@ -36,7 +36,7 @@ public final class GameRecord{
         movie = new SimpleStringProperty(record.getJSONArray("movie").join(","));
     }
 
-    public GameRecord(
+    GameRecord(
             String UUIDString,
             String NameString,
             String DescriptionString,
@@ -67,7 +67,7 @@ public final class GameRecord{
         System.err.println(json.toString());
     }
     
-    public void Update(
+    void Update(
             String UUIDString,
             String NameString,
             String DescriptionString,
