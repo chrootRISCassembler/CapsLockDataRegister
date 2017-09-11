@@ -27,11 +27,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -57,9 +60,12 @@ public class MainFormController implements Initializable {
     @FXML Button RemoveGameButton;
     @FXML Button ReloadButton;
     
+    private final KeyCombination ConsoleKeys = new KeyCodeCombination(KeyCode.C, KeyCombination.SHIFT_DOWN, KeyCodeCombination.CONTROL_DOWN);
+    
     Stage ThisStage;
     Stage RegisterWindow = new Stage();
     ObservableList<GameRecord> DisplayCollection = FXCollections.observableArrayList();
+    private boolean hasConsole = false;
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
@@ -240,6 +246,38 @@ public class MainFormController implements Initializable {
     protected void onReloadClicked(){
         DisplayCollection.clear();
         LoadJSONDatabase();
+    }
+    
+    @FXML
+    protected void onKeyPressed(KeyEvent event){
+        if(hasConsole)return;
+        
+        if(ConsoleKeys.match(event)){
+            hasConsole = true;
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Console.fxml"));
+            Scene scene;
+            try {
+                scene = new Scene(loader.load());
+            } catch (IOException e) {
+                System.out.println(e);
+                e.printStackTrace();
+                return;
+            }
+
+            Stage Console = new Stage();
+            
+            Console.initOwner(ThisStage);
+            Console.setScene(scene);
+
+            ConsoleController controller = (ConsoleController)loader.getController();
+            Console.setOnCloseRequest(ev -> {
+                controller.beforeCloseWindow(ev);
+                hasConsole = false;
+            });
+            
+            Console.show();
+        }
     }
     
     private final void UpdateNumberDisplay(){
