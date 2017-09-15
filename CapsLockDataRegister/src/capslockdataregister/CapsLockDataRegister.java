@@ -12,17 +12,17 @@ import javafx.stage.*;
  *
  * @author RISCassembler
  */
-public class CapsLockDataRegister extends Application {
+public final class CapsLockDataRegister extends Application {
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static final void main(String[] args) {
         launch(args);
     }
     
     @Override
-    public void start(Stage stage) throws Exception {
+    public final void start(Stage stage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainForm.fxml"));
         
