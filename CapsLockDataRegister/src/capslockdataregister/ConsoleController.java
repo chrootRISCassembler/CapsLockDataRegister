@@ -52,7 +52,19 @@ public class ConsoleController implements Initializable {
     
     @FXML
     private void onEnter(ActionEvent event){
-        System.err.println("event");
+        final String SpaceParsedStringArray[] = InputField.getText().split(" ");
+        InputField.setText("");
+
+        switch(SpaceParsedStringArray[0]){
+            case "":
+                break;
+            case "dump":
+                Command.dump(SpaceParsedStringArray, ParentController);
+                break;
+            default:
+                System.err.println('\"' + SpaceParsedStringArray[0] + "\" is invalid command");
+                break;
+        }
     }
     
     public void beforeCloseWindow(WindowEvent event){
