@@ -67,12 +67,12 @@ public class ConsoleController implements Initializable {
         }
     }
     
-    public void beforeCloseWindow(WindowEvent event){
+    final void beforeCloseWindow(WindowEvent event){
         System.setOut(stdout);
         System.setErr(stderr);
     }
 
-    public final void setParentController(MainFormController controller) {
+    final void setParentController(MainFormController controller) {
         ParentController = controller;
     }
 }

@@ -63,8 +63,8 @@ public class MainFormController implements Initializable {
     private final KeyCombination ConsoleKeys = new KeyCodeCombination(KeyCode.C, KeyCombination.SHIFT_DOWN, KeyCodeCombination.CONTROL_DOWN);
     
     private Stage ThisStage;
-    private Stage RegisterWindow = new Stage();
-    ObservableList<GameRecord> DisplayCollection = FXCollections.observableArrayList();
+    private final Stage RegisterWindow = new Stage();
+    final ObservableList<GameRecord> DisplayCollection = FXCollections.observableArrayList();
     private boolean hasConsole = false;
     
     @Override
@@ -99,7 +99,7 @@ public class MainFormController implements Initializable {
         GameInfoView.setItems(DisplayCollection);
     }
     
-    void setOwnStage(Stage stage){ThisStage = stage;}
+    final void setOwnStage(Stage stage){ThisStage = stage;}
     
     private boolean LoadJSONDatabase(){
         try(final BufferedReader reader = new BufferedReader(new FileReader("GamesInfo.json"))){
@@ -281,7 +281,7 @@ public class MainFormController implements Initializable {
         }
     }
     
-    private final void UpdateNumberDisplay(){
+    private void UpdateNumberDisplay(){
         RecordNumLabel.setText("登録済みゲーム " + DisplayCollection.size() + "件");
     }
 

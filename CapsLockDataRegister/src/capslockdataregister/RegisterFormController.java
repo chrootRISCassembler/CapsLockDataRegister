@@ -78,7 +78,7 @@ public class RegisterFormController implements Initializable {
         MovieTextField.setText(record.movieProperty().getValue());
     }
     
-    void setOwnStage(Stage stage){ThisStage = stage;}
+    final void setOwnStage(Stage stage){ThisStage = stage;}
     
     @FXML
     private void Register(){
