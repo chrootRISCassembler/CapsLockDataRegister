@@ -34,16 +34,16 @@ import org.json.JSONArray;
  */
 public class RegisterFormController implements Initializable {
 
-    @FXML Label AssignedUUIDLabel;
-    @FXML Label ErrorMsgLabel;
-    @FXML TextField NameTextField;
-    @FXML TextField DescriptionTextField;
-    @FXML TextField ExecutableTextField;
-    @FXML TextField VersionTextField;
-    @FXML TextField PanelTextField;
-    @FXML TextField ImageTextField;
-    @FXML TextField MovieTextField;
-    @FXML Button RegisterButton;
+    @FXML private Label AssignedUUIDLabel;
+    @FXML private Label ErrorMsgLabel;
+    @FXML private TextField NameTextField;
+    @FXML private TextField DescriptionTextField;
+    @FXML private TextField ExecutableTextField;
+    @FXML private TextField VersionTextField;
+    @FXML private TextField PanelTextField;
+    @FXML private TextField ImageTextField;
+    @FXML private TextField MovieTextField;
+    @FXML private Button RegisterButton;
     
     private Stage ThisStage;
     

@@ -44,21 +44,21 @@ import org.json.JSONObject;
  */
 public class MainFormController implements Initializable {
     
-    @FXML Button AddGameButton;
-    @FXML Button SaveButton;
-    @FXML Button AutoRegisterButton;
-    @FXML TableView<GameRecord> GameInfoView;
-    @FXML TableColumn<GameRecord, String> UUIDCol;
-    @FXML TableColumn<GameRecord, String> NameCol;
-    @FXML TableColumn<GameRecord, String> DescriptionCol;
-    @FXML TableColumn<GameRecord, String> ExecutableCol;
-    @FXML TableColumn<GameRecord, String> VersionCol;
-    @FXML TableColumn<GameRecord, String> PanelCol;
-    @FXML TableColumn<GameRecord, String> ImageCol;
-    @FXML TableColumn<GameRecord, String> MovieCol;
-    @FXML Label RecordNumLabel;
-    @FXML Button RemoveGameButton;
-    @FXML Button ReloadButton;
+    @FXML private Button AddGameButton;
+    @FXML private Button SaveButton;
+    @FXML private Button AutoRegisterButton;
+    @FXML private TableView<GameRecord> GameInfoView;
+    @FXML private TableColumn<GameRecord, String> UUIDCol;
+    @FXML private TableColumn<GameRecord, String> NameCol;
+    @FXML private TableColumn<GameRecord, String> DescriptionCol;
+    @FXML private TableColumn<GameRecord, String> ExecutableCol;
+    @FXML private TableColumn<GameRecord, String> VersionCol;
+    @FXML private TableColumn<GameRecord, String> PanelCol;
+    @FXML private TableColumn<GameRecord, String> ImageCol;
+    @FXML private TableColumn<GameRecord, String> MovieCol;
+    @FXML private Label RecordNumLabel;
+    @FXML private Button RemoveGameButton;
+    @FXML private Button ReloadButton;
     
     private final KeyCombination ConsoleKeys = new KeyCodeCombination(KeyCode.C, KeyCombination.SHIFT_DOWN, KeyCodeCombination.CONTROL_DOWN);
     
