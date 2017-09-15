@@ -19,6 +19,8 @@ import javafx.stage.WindowEvent;
  */
 public class ConsoleController implements Initializable {
     
+    private MainFormController ParentController;
+    
     @FXML
     private TextField InputField;
     @FXML
@@ -56,5 +58,9 @@ public class ConsoleController implements Initializable {
     public void beforeCloseWindow(WindowEvent event){
         System.setOut(stdout);
         System.setErr(stderr);
+    }
+
+    public final void setParentController(MainFormController controller) {
+        ParentController = controller;
     }
 }

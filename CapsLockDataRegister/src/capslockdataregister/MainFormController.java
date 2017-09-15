@@ -271,6 +271,7 @@ public class MainFormController implements Initializable {
             Console.setScene(scene);
 
             ConsoleController controller = (ConsoleController)loader.getController();
+            controller.setParentController(this);
             Console.setOnCloseRequest(ev -> {
                 controller.beforeCloseWindow(ev);
                 hasConsole = false;
@@ -282,5 +283,9 @@ public class MainFormController implements Initializable {
     
     private final void UpdateNumberDisplay(){
         RecordNumLabel.setText("登録済みゲーム " + DisplayCollection.size() + "件");
+    }
+
+    public ObservableList<GameRecord> getDisplayCollection() {
+        return DisplayCollection;
     }
 }
