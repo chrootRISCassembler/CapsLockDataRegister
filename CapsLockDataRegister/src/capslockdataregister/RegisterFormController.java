@@ -6,6 +6,7 @@ import java.net.URL;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -84,14 +85,21 @@ public class RegisterFormController implements Initializable {
     private void Register(){
         if(!IsValidInput())return;
         
-        GameRecord record;
+        String GameName = NameTextField.getText();
+        if(!GameName.equals("")){
+            final String ExeFileName = Paths.get(ExecutableTextField.getText()).getFileName().toString();
+            GameName = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
+        }
+       
+        final GameRecord record;
+        
         try{
             record = (GameRecord)ThisStage.getUserData();
             if(record == null)throw new NullPointerException();
         }catch(NullPointerException e){
             ThisStage.setUserData(new GameRecord(
                 AssignedUUIDLabel.getText(),
-                NameTextField.getText(),
+                GameName,
                 DescriptionTextField.getText(),
                 ExecutableTextField.getText(),
                 VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
@@ -104,7 +112,7 @@ public class RegisterFormController implements Initializable {
         }
 
         record.Update(AssignedUUIDLabel.getText(),
-            NameTextField.getText(),
+            GameName,
             DescriptionTextField.getText(),
             ExecutableTextField.getText(),
             VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
@@ -118,13 +126,6 @@ public class RegisterFormController implements Initializable {
     private boolean IsValidInput(){
         boolean ReturnValue = true;
         String ErrorMessage = new String();
-        
-        System.err.println(NameTextField.getText());
-        
-        if(NameTextField.getText().equals("")){
-            ErrorMessage += "\nname フィールドが未入力";
-            ReturnValue = false;
-        }
         
         if(ExecutableTextField.getText().equals("")){
             ErrorMessage += "\nexecutable フィールドが未入力";
