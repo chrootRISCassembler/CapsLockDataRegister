@@ -214,7 +214,7 @@ public class RegisterFormController implements Initializable {
                             .filter(file -> file.getFileName().toString().charAt(2) == 'd')
                             .findAny();
                     if(DescriptionFile.isPresent()){
-                        final DescriptionFileParser FileParser = new DescriptionFileParser(DescriptionFile.get().toFile());
+                        final DescriptionFileParser FileParser = new DescriptionFileParser(DescriptionFile.get());
                         if(IsNameNull)NameTextField.setText(FileParser.getName());
                         if(IsDescriptionNull)DescriptionTextField.setText(FileParser.getDescription());
                         if(IsVersionNull)VersionTextField.setText(FileParser.getVersion());
@@ -251,7 +251,7 @@ public class RegisterFormController implements Initializable {
             event.setDropCompleted(false);
             return;
         }
-        final DescriptionFileParser FileParser = new DescriptionFileParser(board.getFiles().get(0));
+        final DescriptionFileParser FileParser = new DescriptionFileParser(board.getFiles().get(0).toPath());
         if(FileParser.isFine()){
             NameTextField.setText(FileParser.getName());
             DescriptionTextField.setText(FileParser.getDescription());

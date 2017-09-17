@@ -1,10 +1,10 @@
 package capslockdataregister;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  *
@@ -16,8 +16,8 @@ final class DescriptionFileParser {
     private String GameDescription = "1";
     private boolean FineFlag = true;
     
-    DescriptionFileParser(File file){
-        try(final BufferedReader LineReader = new BufferedReader(new FileReader(file))){
+    DescriptionFileParser(Path path){
+        try(final BufferedReader LineReader = Files.newBufferedReader(path)){
             GameName = LineReader.readLine();
             GameVersion = LineReader.readLine();
 

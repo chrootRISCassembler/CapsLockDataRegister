@@ -200,7 +200,7 @@ public class MainFormController implements Initializable {
                 String FileName = file.getFileName().toString();
                 switch(FileName.charAt(2)){
                     case 'd':
-                        DescriptionFileParser FileParser =  new DescriptionFileParser(file.toFile());
+                        DescriptionFileParser FileParser =  new DescriptionFileParser(file);
                         name = FileParser.getName();
                         description = FileParser.getDescription();
                         version = FileParser.getVersion();
