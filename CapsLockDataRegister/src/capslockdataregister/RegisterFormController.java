@@ -86,7 +86,7 @@ public class RegisterFormController implements Initializable {
         if(!IsValidInput())return;
         
         String GameName = NameTextField.getText();
-        if(!GameName.equals("")){
+        if(GameName.equals("")){
             final String ExeFileName = Paths.get(ExecutableTextField.getText()).getFileName().toString();
             GameName = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
         }
