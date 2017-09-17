@@ -217,6 +217,12 @@ public class MainFormController implements Initializable {
                         break;
                 }
             }
+            
+            if(name.equals("")){
+                final String ExeFileName = exe.getFileName().toString();
+                name = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
+            }
+            
             DisplayCollection.add(new GameRecord(
                     UUID.randomUUID().toString(),
                     name,
