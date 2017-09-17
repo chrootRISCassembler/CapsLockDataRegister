@@ -283,6 +283,7 @@ public class MainFormController implements Initializable {
                 hasConsole = false;
             });
             
+            Console.setTitle("開発者向けコンソール");
             Console.show();
         }
     }
