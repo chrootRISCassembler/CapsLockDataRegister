@@ -1,5 +1,6 @@
 .text-field{
     -fx-background-color: black;
+    -fx-background-radius: 0;
     -fx-text-fill: white;
 }
 
@@ -9,5 +10,6 @@
 
 .text-area .content{
     -fx-background-color: black;
+    -fx-background-radius: 0;
 }
 
