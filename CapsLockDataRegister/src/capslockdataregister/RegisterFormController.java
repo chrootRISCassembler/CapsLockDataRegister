@@ -57,28 +57,66 @@ public class RegisterFormController implements Initializable {
     
     private Stage ThisStage;
     
-    private final Image OKIcon = new Image(RegisterFormController.class.getResource("ok.png").toString());
-    private final Image NGIcon = new Image(RegisterFormController.class.getResource("ng.png").toString());
-    private final Image WarnIcon = new Image(RegisterFormController.class.getResource("warn.png").toString());
-    
     private final JSONArray imagePathArray = new JSONArray();
     private final JSONArray moviePathArray = new JSONArray();
     private final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
     
+    static private final class FieldSet{
+        private final Image OKIcon = new Image(RegisterFormController.class.getResource("ok.png").toString());
+        private final Image NGIcon = new Image(RegisterFormController.class.getResource("ng.png").toString());
+        private final Image WarnIcon = new Image(RegisterFormController.class.getResource("warn.png").toString());
+        
+        private static enum State{
+            OK,
+            NG,
+            WARN
+        }
+        private final TextField InputField;
+        private final ImageView StateView;
+        private State state;
+
+        public FieldSet(State state, TextField InputField, ImageView StateView) {
+            this.InputField = InputField;
+            this.StateView = StateView;
+            setState(state);
+        }
+        
+        private void setState(State NewState){
+            state = NewState;
+            switch(state){
+                case OK:
+                    StateView.setImage(OKIcon);
+                    return;
+                case NG:
+                    StateView.setImage(NGIcon);
+                    return;
+                case WARN:
+                    StateView.setImage(WarnIcon);
+            }
+        }
+    }
+
+    private FieldSet NameFieldSet;
+    private FieldSet DescriptionFieldSet;
+    private FieldSet ExecutableFieldSet;
+    private FieldSet VersionFieldSet;
+    private FieldSet PanelFieldSet;
+    private FieldSet ImageFieldSet;
+    private FieldSet MovieFieldSet;
+    
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb){
+        NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView);
+        DescriptionFieldSet = new FieldSet(FieldSet.State.WARN, DescriptionTextField, DescriptionStateView);
+        ExecutableFieldSet = new FieldSet(FieldSet.State.NG, ExecutableTextField, ExecutableStateView);
+        VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView);
+        PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView);
+        ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView);
+        MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView);
     }
     
     void onLoad(WindowEvent event){
         GameRecord record;
-        
-        NameStateView.setImage(OKIcon);
-        DescriptionStateView.setImage(OKIcon);
-        ExecutableStateView.setImage(OKIcon);
-        VersionStateView.setImage(OKIcon);
-        PanelStateView.setImage(OKIcon);
-        ImageStateView.setImage(OKIcon);
-        MovieStateView.setImage(OKIcon);
         
         try{
             record = (GameRecord)ThisStage.getUserData();
