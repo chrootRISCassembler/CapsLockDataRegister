@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -44,6 +45,13 @@ public class RegisterFormController implements Initializable {
     @FXML private TextField PanelTextField;
     @FXML private TextField ImageTextField;
     @FXML private TextField MovieTextField;
+    @FXML private ImageView NameStateView;
+    @FXML private ImageView DescriptionStateView;
+    @FXML private ImageView ExecutableStateView;
+    @FXML private ImageView VersionStateView;
+    @FXML private ImageView PanelStateView;
+    @FXML private ImageView ImageStateView;
+    @FXML private ImageView MovieStateView;
     @FXML private Button RegisterButton;
     
     private Stage ThisStage;
