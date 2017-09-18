@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -56,6 +57,10 @@ public class RegisterFormController implements Initializable {
     
     private Stage ThisStage;
     
+    private final Image OKIcon = new Image(RegisterFormController.class.getResource("ok.png").toString());
+    private final Image NGIcon = new Image(RegisterFormController.class.getResource("ng.png").toString());
+    private final Image WarnIcon = new Image(RegisterFormController.class.getResource("warn.png").toString());
+    
     private final JSONArray imagePathArray = new JSONArray();
     private final JSONArray moviePathArray = new JSONArray();
     private final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
@@ -66,6 +71,14 @@ public class RegisterFormController implements Initializable {
     
     void onLoad(WindowEvent event){
         GameRecord record;
+        
+        NameStateView.setImage(OKIcon);
+        DescriptionStateView.setImage(OKIcon);
+        ExecutableStateView.setImage(OKIcon);
+        VersionStateView.setImage(OKIcon);
+        PanelStateView.setImage(OKIcon);
+        ImageStateView.setImage(OKIcon);
+        MovieStateView.setImage(OKIcon);
         
         try{
             record = (GameRecord)ThisStage.getUserData();
