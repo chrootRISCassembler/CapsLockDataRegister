@@ -24,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -271,6 +272,9 @@ public class RegisterFormController implements Initializable {
         final File ExecutablePath = board.getFiles().get(0);
         if(ExecutablePath != null){
             ExecutableTextField.setText(CurrentDirectory.relativize(ExecutablePath.toPath()).toString());
+            ExecutableFieldSet.setState(FieldSet.State.OK);
+        }else{
+            ExecutableFieldSet.setState(FieldSet.State.NG);
         }
 
         final Path GamesBaseDirectory = CurrentDirectory.relativize(ExecutablePath.toPath()).subpath(0, 2);
@@ -320,6 +324,16 @@ public class RegisterFormController implements Initializable {
             System.err.println(ex);
         }
         event.setDropCompleted(true);
+    }
+    
+    @FXML
+    private void onKeyReleased_Executable(KeyEvent event){
+        final Path ExecutablePath = Paths.get(ExecutableTextField.getText());
+        if(Files.isExecutable(ExecutablePath)){//add path check.
+            ExecutableFieldSet.setState(FieldSet.State.OK);
+        }else{
+            ExecutableFieldSet.setState(FieldSet.State.NG);
+        }
     }
     
     @FXML
