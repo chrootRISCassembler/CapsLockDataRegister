@@ -94,6 +94,10 @@ public class RegisterFormController implements Initializable {
                     StateView.setImage(WarnIcon);
             }
         }
+        
+        public final boolean isValid(){
+            return state != State.NG;
+        }
     }
 
     private FieldSet NameFieldSet;
@@ -184,23 +188,38 @@ public class RegisterFormController implements Initializable {
     
     private boolean IsValidInput(){
         boolean ReturnValue = true;
-        String ErrorMessage = new String();
+//        String ErrorMessage = new String();
+//
+//        if(ExecutableTextField.getText().equals("")){
+//            ErrorMessage += "\nexecutable フィールドが未入力";
+//            ReturnValue = false;
+//        }else{
+//            File file = new File(ExecutableTextField.getText());
+//            if(!file.exists()){
+//                ErrorMessage += "\nexecutable に指定されたファイルはありません";
+//                ReturnValue = false;
+//            }
+//        }
+
+        Optional<FieldSet> InvalidField = Stream.of(
+                NameFieldSet,
+                DescriptionFieldSet,
+                ExecutableFieldSet,
+                VersionFieldSet,
+                PanelFieldSet,
+                ImageFieldSet,
+                MovieFieldSet)
+            .parallel()
+            .filter(field -> !field.isValid())
+            .findAny();
         
-        if(ExecutableTextField.getText().equals("")){
-            ErrorMessage += "\nexecutable フィールドが未入力";
+        if(InvalidField.isPresent()){
+            ErrorMsgLabel.setText("不正な入力項目があります");
             ReturnValue = false;
-        }else{
-            File file = new File(ExecutableTextField.getText());
-            if(!file.exists()){
-                ErrorMessage += "\nexecutable に指定されたファイルはありません";
-                ReturnValue = false;
-            }
         }
         
         GenerateJSONArray(imagePathArray, ImageTextField.getText());   
         GenerateJSONArray(moviePathArray, MovieTextField.getText());
-        
-        ErrorMsgLabel.setText("Verification " + (ReturnValue ? "pathed" : "rejected") + ErrorMessage);
         
         return ReturnValue;
     }
