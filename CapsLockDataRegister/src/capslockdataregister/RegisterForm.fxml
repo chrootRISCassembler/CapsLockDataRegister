@@ -36,7 +36,7 @@
       <Label fx:id="ErrorMsgLabel" text="errmsg" GridPane.rowIndex="8" />
       <Button fx:id="RegisterButton" mnemonicParsing="false" onMouseClicked="#Register" text="登録" GridPane.columnIndex="1" GridPane.rowIndex="9" />
       <TextField fx:id="NameTextField" onDragDropped="#DescriptionFileDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField fx:id="ExecutableTextField" onDragDropped="#executableDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <TextField fx:id="ExecutableTextField" onDragDropped="#executableDropped" onDragOver="#TextFieldDragOver" onKeyReleased="#onKeyReleased_Executable" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <TextField fx:id="VersionTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <TextField fx:id="ImageTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <TextField fx:id="MovieTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="7" />

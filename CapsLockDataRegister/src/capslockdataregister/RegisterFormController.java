@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -75,11 +76,13 @@ public class RegisterFormController implements Initializable {
         private final TextField InputField;
         private final ImageView StateView;
         private State state;
+        private final Function<String, State> ValidatingFunction;
 
-        public FieldSet(State state, TextField InputField, ImageView StateView) {
+        public FieldSet(State state, TextField InputField, ImageView StateView, Function<String, State> validator) {
             this.InputField = InputField;
             this.StateView = StateView;
             setState(state);
+            ValidatingFunction = validator;
         }
         
         private void setState(State NewState){
@@ -94,6 +97,10 @@ public class RegisterFormController implements Initializable {
                 case WARN:
                     StateView.setImage(WarnIcon);
             }
+        }
+        
+        public final void validate(){
+            setState(ValidatingFunction.apply(InputField.getText()));
         }
         
         public final boolean isValid(){
@@ -111,13 +118,20 @@ public class RegisterFormController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView);
-        DescriptionFieldSet = new FieldSet(FieldSet.State.WARN, DescriptionTextField, DescriptionStateView);
-        ExecutableFieldSet = new FieldSet(FieldSet.State.NG, ExecutableTextField, ExecutableStateView);
-        VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView);
-        PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView);
-        ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView);
-        MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView);
+        NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView, (unuse) -> FieldSet.State.OK);
+        DescriptionFieldSet = new FieldSet(FieldSet.State.WARN, DescriptionTextField, DescriptionStateView, (unuse) -> FieldSet.State.OK);
+        
+        ExecutableFieldSet = new FieldSet(FieldSet.State.NG, ExecutableTextField, ExecutableStateView, 
+                (FileName) -> {
+                    final Path ExecutablePath = Paths.get(FileName);
+                    return Files.isExecutable(ExecutablePath) ? FieldSet.State.OK : FieldSet.State.NG;
+                }
+        );
+        
+        VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView, (unuse) -> FieldSet.State.OK);
+        PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView, (unuse) -> FieldSet.State.OK);
+        ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, (unuse) -> FieldSet.State.OK);
+        MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView, (unuse) -> FieldSet.State.OK);
     }
     
     void onLoad(WindowEvent event){
@@ -141,6 +155,17 @@ public class RegisterFormController implements Initializable {
         PanelTextField.setText(record.panelProperty().getValue());
         ImageTextField.setText(record.imageProperty().getValue());
         MovieTextField.setText(record.movieProperty().getValue());
+        
+        Stream.of(
+                NameFieldSet,
+                DescriptionFieldSet,
+                ExecutableFieldSet,
+                VersionFieldSet,
+                PanelFieldSet,
+                ImageFieldSet,
+                MovieFieldSet)
+            .parallel()
+            .forEach(field -> field.validate());
     }
     
     final void setOwnStage(Stage stage){ThisStage = stage;}
@@ -328,12 +353,7 @@ public class RegisterFormController implements Initializable {
     
     @FXML
     private void onKeyReleased_Executable(KeyEvent event){
-        final Path ExecutablePath = Paths.get(ExecutableTextField.getText());
-        if(Files.isExecutable(ExecutablePath)){//add path check.
-            ExecutableFieldSet.setState(FieldSet.State.OK);
-        }else{
-            ExecutableFieldSet.setState(FieldSet.State.NG);
-        }
+        ExecutableFieldSet.validate();
     }
     
     @FXML
