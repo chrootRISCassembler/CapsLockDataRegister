@@ -120,17 +120,18 @@ public class RegisterFormController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView, (unuse) -> FieldSet.State.OK);
-        DescriptionFieldSet = new FieldSet(FieldSet.State.WARN, DescriptionTextField, DescriptionStateView, (unuse) -> FieldSet.State.OK);
+        NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView, name -> name.equals("") ? FieldSet.State.WARN : FieldSet.State.OK);
+        DescriptionFieldSet = new FieldSet(FieldSet.State.WARN, DescriptionTextField, DescriptionStateView, text -> text.equals("") ? FieldSet.State.WARN : FieldSet.State.OK);
         
         ExecutableFieldSet = new FieldSet(FieldSet.State.NG, ExecutableTextField, ExecutableStateView, 
-                (FileName) -> {
+                FileName -> {
                     final Path ExecutablePath = Paths.get(FileName);
                     return Files.isExecutable(ExecutablePath) ? FieldSet.State.OK : FieldSet.State.NG;
                 }
         );
         
-        VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView, (unuse) -> FieldSet.State.OK);
+        VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView, ver -> ver.equals("") ? FieldSet.State.WARN : FieldSet.State.OK);
+        
         PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView, (unuse) -> FieldSet.State.OK);
         ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, (unuse) -> FieldSet.State.OK);
         MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView, (unuse) -> FieldSet.State.OK);
