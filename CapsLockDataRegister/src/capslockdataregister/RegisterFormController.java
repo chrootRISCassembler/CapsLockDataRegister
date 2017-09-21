@@ -64,9 +64,9 @@ public class RegisterFormController implements Initializable {
     private final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
     
     static private final class FieldSet{
-        private final Image OKIcon = new Image(RegisterFormController.class.getResource("ok.png").toString());
-        private final Image NGIcon = new Image(RegisterFormController.class.getResource("ng.png").toString());
-        private final Image WarnIcon = new Image(RegisterFormController.class.getResource("warn.png").toString());
+        private final static Image OKIcon = new Image(RegisterFormController.class.getResource("ok.png").toString());
+        private final static Image NGIcon = new Image(RegisterFormController.class.getResource("ng.png").toString());
+        private final static Image WarnIcon = new Image(RegisterFormController.class.getResource("warn.png").toString());
         
         private static enum State{
             OK,
