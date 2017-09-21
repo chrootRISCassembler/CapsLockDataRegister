@@ -8,13 +8,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -116,7 +116,7 @@ public class RegisterFormController implements Initializable {
     private FieldSet ImageFieldSet;
     private FieldSet MovieFieldSet;
     
-    private Stream<FieldSet> ParallelFieldSetStream;
+    private List<FieldSet> FieldSetList;
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
@@ -136,15 +136,15 @@ public class RegisterFormController implements Initializable {
         ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, (unuse) -> FieldSet.State.OK);
         MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView, (unuse) -> FieldSet.State.OK);
         
-        ParallelFieldSetStream = Stream.of(
+        FieldSetList = Collections.unmodifiableList(Arrays.asList(
                 NameFieldSet,
                 DescriptionFieldSet,
                 ExecutableFieldSet,
                 VersionFieldSet,
                 PanelFieldSet,
                 ImageFieldSet,
-                MovieFieldSet)
-            .parallel();
+                MovieFieldSet
+        ));
     }
     
     void onLoad(WindowEvent event){
@@ -156,7 +156,7 @@ public class RegisterFormController implements Initializable {
         }catch(NullPointerException e){
             System.err.println(e);
             AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
-            ParallelFieldSetStream.forEach(field -> field.InputField.clear());
+            FieldSetList.parallelStream().forEach(field -> field.InputField.clear());
             return;
         }
          
@@ -169,7 +169,7 @@ public class RegisterFormController implements Initializable {
         ImageTextField.setText(record.imageProperty().getValue());
         MovieTextField.setText(record.movieProperty().getValue());
         
-        ParallelFieldSetStream.forEach(field -> field.validate());
+        FieldSetList.parallelStream().forEach(field -> field.validate());
     }
     
     final void setOwnStage(Stage stage){ThisStage = stage;}
@@ -219,7 +219,7 @@ public class RegisterFormController implements Initializable {
     private boolean IsValidInput(){
         boolean ReturnValue = true;
 
-        final Optional<FieldSet> InvalidField = ParallelFieldSetStream
+        final Optional<FieldSet> InvalidField = FieldSetList.parallelStream()
             .filter(field -> !field.isValid())
             .findAny();
         
