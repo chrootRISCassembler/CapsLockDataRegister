@@ -116,6 +116,8 @@ public class RegisterFormController implements Initializable {
     private FieldSet ImageFieldSet;
     private FieldSet MovieFieldSet;
     
+    private Stream<FieldSet> ParallelFieldSetStream;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb){
         NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView, (unuse) -> FieldSet.State.OK);
@@ -132,6 +134,16 @@ public class RegisterFormController implements Initializable {
         PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView, (unuse) -> FieldSet.State.OK);
         ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, (unuse) -> FieldSet.State.OK);
         MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView, (unuse) -> FieldSet.State.OK);
+        
+        ParallelFieldSetStream = Stream.of(
+                NameFieldSet,
+                DescriptionFieldSet,
+                ExecutableFieldSet,
+                VersionFieldSet,
+                PanelFieldSet,
+                ImageFieldSet,
+                MovieFieldSet)
+            .parallel();
     }
     
     void onLoad(WindowEvent event){
@@ -143,7 +155,7 @@ public class RegisterFormController implements Initializable {
         }catch(NullPointerException e){
             System.err.println(e);
             AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
-            ClearAllTextField();
+            ParallelFieldSetStream.forEach(field -> field.InputField.clear());
             return;
         }
          
@@ -156,16 +168,7 @@ public class RegisterFormController implements Initializable {
         ImageTextField.setText(record.imageProperty().getValue());
         MovieTextField.setText(record.movieProperty().getValue());
         
-        Stream.of(
-                NameFieldSet,
-                DescriptionFieldSet,
-                ExecutableFieldSet,
-                VersionFieldSet,
-                PanelFieldSet,
-                ImageFieldSet,
-                MovieFieldSet)
-            .parallel()
-            .forEach(field -> field.validate());
+        ParallelFieldSetStream.forEach(field -> field.validate());
     }
     
     final void setOwnStage(Stage stage){ThisStage = stage;}
@@ -215,15 +218,7 @@ public class RegisterFormController implements Initializable {
     private boolean IsValidInput(){
         boolean ReturnValue = true;
 
-        Optional<FieldSet> InvalidField = Stream.of(
-                NameFieldSet,
-                DescriptionFieldSet,
-                ExecutableFieldSet,
-                VersionFieldSet,
-                PanelFieldSet,
-                ImageFieldSet,
-                MovieFieldSet)
-            .parallel()
+        final Optional<FieldSet> InvalidField = ParallelFieldSetStream
             .filter(field -> !field.isValid())
             .findAny();
         
@@ -370,19 +365,6 @@ public class RegisterFormController implements Initializable {
             return;
         }
         event.setDropCompleted(false);
-    }
-    
-    private void ClearAllTextField(){
-        Stream.of(
-            NameTextField,
-            DescriptionTextField,
-            ExecutableTextField,
-            VersionTextField,
-            PanelTextField,
-            ImageTextField,
-            MovieTextField)
-        .parallel()
-        .forEach(field -> field.setText(""));
     }
     
     private String ExtractAndToString(List<Path>PathList, char SecondChar){
