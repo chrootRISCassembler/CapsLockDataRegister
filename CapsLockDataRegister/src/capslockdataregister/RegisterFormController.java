@@ -214,18 +214,6 @@ public class RegisterFormController implements Initializable {
     
     private boolean IsValidInput(){
         boolean ReturnValue = true;
-//        String ErrorMessage = new String();
-//
-//        if(ExecutableTextField.getText().equals("")){
-//            ErrorMessage += "\nexecutable フィールドが未入力";
-//            ReturnValue = false;
-//        }else{
-//            File file = new File(ExecutableTextField.getText());
-//            if(!file.exists()){
-//                ErrorMessage += "\nexecutable に指定されたファイルはありません";
-//                ReturnValue = false;
-//            }
-//        }
 
         Optional<FieldSet> InvalidField = Stream.of(
                 NameFieldSet,
