@@ -174,7 +174,7 @@ public class MainFormController implements Initializable {
             return;
         }
         
-        ArrayList<Path> executables = new ArrayList();
+        ArrayList<Path> executables = new ArrayList<>();
         
         Iterator<Path> ite = CollectedFiles.iterator();
         while(ite.hasNext()){
@@ -192,8 +192,8 @@ public class MainFormController implements Initializable {
             String description = "";
             String version = "1";
             String panel = "";
-            List<Path> Images = new ArrayList();
-            List<Path> Movies = new ArrayList();
+            List<Path> Images = new ArrayList<>();
+            List<Path> Movies = new ArrayList<>();
             
             for(Path file : CollectedFiles){
                 if(!file.startsWith(GamesBaseDirectory))continue;
