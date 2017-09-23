@@ -148,7 +148,25 @@ public class RegisterFormController implements Initializable {
                 }
         );
         
-        ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, (unuse) -> FieldSet.State.OK);
+        ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, 
+                Images -> {
+                    final String[] ImageStringArray = Images.split(",");
+                    for(final String ImageString : ImageStringArray){
+                        final Path ImagePath;
+                        try{
+                            ImagePath = Paths.get(ImageString.substring(1, ImageString.length() - 1));
+                        }catch(IndexOutOfBoundsException e){
+                            return FieldSet.State.WARN;
+                        }
+                        if(!Files.isRegularFile(ImagePath))return FieldSet.State.WARN;
+                        try{
+                            new Image(ImagePath.toUri().toString());
+                        }catch(NullPointerException | IllegalArgumentException e){
+                            return FieldSet.State.WARN;
+                        }
+                    }
+                    return FieldSet.State.OK;
+                });
         
         MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView,
                 Movies -> {
