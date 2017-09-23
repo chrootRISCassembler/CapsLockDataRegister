@@ -27,6 +27,8 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -147,7 +149,26 @@ public class RegisterFormController implements Initializable {
         );
         
         ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, (unuse) -> FieldSet.State.OK);
-        MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView, (unuse) -> FieldSet.State.OK);
+        
+        MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView,
+                Movies -> {
+                    final String[] MovieStringArray = Movies.split(",");
+                    for(final String MovieString : MovieStringArray){
+                        final Path MoviePath;
+                        try{
+                            MoviePath = Paths.get(MovieString.substring(1, MovieString.length() - 1));
+                        }catch(IndexOutOfBoundsException e){
+                            return FieldSet.State.WARN;
+                        }
+                        if(!Files.isRegularFile(MoviePath))return FieldSet.State.WARN;
+                        try{
+                            new Media(MoviePath.toUri().toString());
+                        }catch(NullPointerException | IllegalArgumentException | UnsupportedOperationException | MediaException e){
+                            return FieldSet.State.WARN;
+                        }
+                    }
+                    return FieldSet.State.OK;
+                });
         
         FieldSetList = Collections.unmodifiableList(Arrays.asList(
                 NameFieldSet,
