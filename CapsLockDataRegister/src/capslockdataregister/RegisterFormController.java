@@ -64,6 +64,7 @@ public class RegisterFormController implements Initializable {
     private final JSONArray imagePathArray = new JSONArray();
     private final JSONArray moviePathArray = new JSONArray();
     private final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
+    private LauncherResourceFilesValidator validator;
     
     static private final class FieldSet{
         private final static Image OKIcon = new Image(RegisterFormController.class.getResource("ok.png").toString());
@@ -205,6 +206,10 @@ public class RegisterFormController implements Initializable {
         try{
             record = (GameRecord)ThisStage.getUserData();
             if(record == null)throw new NullPointerException();
+            validator = ResourceFilesInputWrapper.instance.add(
+                    UUID.fromString(record.uuidProperty().get()),
+                    () -> new LauncherResourceFilesValidator(record.executableProperty().get())
+            );
         }catch(NullPointerException e){
             System.err.println(e);
             AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
