@@ -15,6 +15,13 @@ class ThreadSafeLRU_list<K, V> extends LinkedHashMap<K, V>{
     
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return size() > MAX_SIZE;
+        if(size() > MAX_SIZE){
+            onRemoveEntry(eldest);
+            return true;
+        }
+        return false;
     }
+    
+    
+    protected void onRemoveEntry(Map.Entry<K, V> eldest){}
 }
