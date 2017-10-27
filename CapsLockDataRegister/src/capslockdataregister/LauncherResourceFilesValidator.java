@@ -34,8 +34,7 @@ class LauncherResourceFilesValidator extends Thread{
     
     private Path GameRootPath;
     private ConcurrentHashMap<Path, ResourceType> PathDB = new ConcurrentHashMap<>();
-    private WatchService Watcher;
-    
+    private WatchService watchdog;
     
     LauncherResourceFilesValidator(String ExePath){
         GameRootPath = ResourceFilesInputWrapper.instance.CurrentDirectory.relativize(Paths.get(ExePath).toAbsolutePath()).subpath(0, 2);
@@ -51,8 +50,8 @@ class LauncherResourceFilesValidator extends Thread{
         }
         
         try {
-            Watcher = FileSystems.getDefault().newWatchService();
-            GameRootPath.register(Watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            watchdog = FileSystems.getDefault().newWatchService();
+            GameRootPath.register(watchdog, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
         } catch (IOException ex) {
             Logger.getLogger(LauncherResourceFilesValidator.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,7 +89,7 @@ class LauncherResourceFilesValidator extends Thread{
     public void run() {
         while(true){
             try{
-                final WatchKey watchKey = Watcher.take();
+                final WatchKey watchKey = watchdog.take();
                 for (WatchEvent<?> event: watchKey.pollEvents()) {
                     if (event.kind() == OVERFLOW)continue;
 
@@ -106,8 +105,11 @@ class LauncherResourceFilesValidator extends Thread{
                 }
                 watchKey.reset();
             }
-            catch(ClosedWatchServiceException ex){return;}
-            catch(InterruptedException ex){}
+            catch(ClosedWatchServiceException | InterruptedException ex){break;}
         }
+    }
+    
+    void killWatchdog(){
+        this.interrupt();
     }
 }
