@@ -18,6 +18,7 @@ public final class CapsLockDataRegister extends Application {
      */
     public static final void main(String[] args) {
         launch(args);
+        ResourceFilesInputWrapper.instance.destroy();
     }
     
     @Override
