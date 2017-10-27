@@ -218,7 +218,7 @@ public class MainFormController implements Initializable {
                 }
             }
             
-            if(name.equals("")){
+            if(name.isEmpty()){
                 final String ExeFileName = exe.getFileName().toString();
                 name = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
             }

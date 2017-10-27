@@ -123,8 +123,8 @@ public class RegisterFormController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView, name -> name.equals("") ? FieldSet.State.WARN : FieldSet.State.OK);
-        DescriptionFieldSet = new FieldSet(FieldSet.State.WARN, DescriptionTextField, DescriptionStateView, text -> text.equals("") ? FieldSet.State.WARN : FieldSet.State.OK);
+        NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView, name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
+        DescriptionFieldSet = new FieldSet(FieldSet.State.WARN, DescriptionTextField, DescriptionStateView, text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
         
         ExecutableFieldSet = new FieldSet(FieldSet.State.NG, ExecutableTextField, ExecutableStateView, 
                 FileName -> {
@@ -133,7 +133,7 @@ public class RegisterFormController implements Initializable {
                 }
         );
         
-        VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView, ver -> ver.equals("") ? FieldSet.State.WARN : FieldSet.State.OK);
+        VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView, ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
         
         PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView,
                 FileName -> {
@@ -236,7 +236,7 @@ public class RegisterFormController implements Initializable {
         if(!IsValidInput())return;
         
         String GameName = NameTextField.getText();
-        if(GameName.equals("")){
+        if(GameName.isEmpty()){
             final String ExeFileName = Paths.get(ExecutableTextField.getText()).getFileName().toString();
             GameName = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
         }
@@ -252,7 +252,7 @@ public class RegisterFormController implements Initializable {
                 GameName,
                 DescriptionTextField.getText(),
                 ExecutableTextField.getText(),
-                VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
+                VersionTextField.getText().isEmpty() ? "1" : VersionTextField.getText(),
                 PanelTextField.getText(),
                 imagePathArray,
                 moviePathArray
@@ -265,7 +265,7 @@ public class RegisterFormController implements Initializable {
             GameName,
             DescriptionTextField.getText(),
             ExecutableTextField.getText(),
-            VersionTextField.getText().equals("") ? "1" : VersionTextField.getText(),
+            VersionTextField.getText().isEmpty() ? "1" : VersionTextField.getText(),
             PanelTextField.getText(),
             imagePathArray,
             moviePathArray
@@ -353,9 +353,9 @@ public class RegisterFormController implements Initializable {
                     .collect(Collectors.toList());
             
             {
-                final boolean IsNameNull = NameTextField.getText().equals("");
-                final boolean IsDescriptionNull = DescriptionTextField.getText().equals("");
-                final boolean IsVersionNull = VersionTextField.getText().equals("");
+                final boolean IsNameNull = NameTextField.getText().isEmpty();
+                final boolean IsDescriptionNull = DescriptionTextField.getText().isEmpty();
+                final boolean IsVersionNull = VersionTextField.getText().isEmpty();
                 if(IsNameNull || IsDescriptionNull || IsVersionNull){
                     Optional<Path> DescriptionFile = CollectedFiles.stream()
                             .parallel()
@@ -370,7 +370,7 @@ public class RegisterFormController implements Initializable {
                 }
             }
 
-            if(PanelTextField.getText().equals("")){
+            if(PanelTextField.getText().isEmpty()){
                 Optional<Path> PanelFile = CollectedFiles.stream()
                         .parallel()
                         .filter(file -> file.getFileName().toString().charAt(2) == 'p')
@@ -378,11 +378,11 @@ public class RegisterFormController implements Initializable {
                 if(PanelFile.isPresent())PanelTextField.setText(PanelFile.get().toString());
             }
 
-            if(ImageTextField.getText().equals("")){
+            if(ImageTextField.getText().isEmpty()){
                 ImageTextField.setText(ExtractAndToString(CollectedFiles, 'i'));
             }
 
-            if(MovieTextField.getText().equals("")){
+            if(MovieTextField.getText().isEmpty()){
                 MovieTextField.setText(ExtractAndToString(CollectedFiles, 'm'));
             }
             
