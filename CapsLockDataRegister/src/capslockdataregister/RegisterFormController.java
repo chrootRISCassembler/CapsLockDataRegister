@@ -136,18 +136,7 @@ public class RegisterFormController implements Initializable {
         VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView, ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
         
         PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView,
-                FileName -> {
-                    final Path PanelPath = Paths.get(FileName);
-                    if(!Files.isRegularFile(PanelPath))return FieldSet.State.WARN;
-                    
-                    try{
-                        final Image panel = new Image(PanelPath.toUri().toString());
-                        return panel.getHeight() == panel.getWidth() ? FieldSet.State.OK : FieldSet.State.WARN;
-                    }catch(NullPointerException | IllegalArgumentException e){
-                    }
-                    return FieldSet.State.WARN;
-                }
-        );
+                panel -> LauncherResourceFilesValidator.isSquareImage(panel) ? FieldSet.State.OK : FieldSet.State.WARN);
         
         ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, 
                 Images -> {
