@@ -17,6 +17,7 @@ import java.nio.file.WatchService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -111,5 +112,17 @@ class LauncherResourceFilesValidator extends Thread{
     
     void killWatchdog(){
         this.interrupt();
+    }
+    
+    static final boolean isSquareImage(String ImagePath){
+        final Path PanelPath = Paths.get(ImagePath);
+        if(!Files.isRegularFile(PanelPath))return false;
+        
+        try{
+            final Image panel = new Image(PanelPath.toUri().toString());
+            return panel.getHeight() == panel.getWidth();
+        }catch(NullPointerException | IllegalArgumentException e){
+        }
+        return false;
     }
 }
