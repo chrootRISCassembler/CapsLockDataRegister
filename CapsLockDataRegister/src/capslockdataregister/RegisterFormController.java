@@ -35,25 +35,29 @@ import javafx.stage.WindowEvent;
 import org.json.JSONArray;
 
 /**
- * FXML Controller class
- *
- * @author RISCassembler
+ * ゲーム登録フォームのFXMLコントローラーclass.
+ * <p>短縮規則</p>
+ * <ul>
+ * <li>description --&gt; desc</li>
+ * <li>executable --&gt; exe</li>
+ * <li>version --&gt; ver</li>
+ * </ul>
  */
 public class RegisterFormController implements Initializable {
 
     @FXML private Label AssignedUUIDLabel;
     @FXML private Label ErrorMsgLabel;
     @FXML private TextField NameTextField;
-    @FXML private TextField DescriptionTextField;
-    @FXML private TextField ExecutableTextField;
-    @FXML private TextField VersionTextField;
+    @FXML private TextField DescTextField;
+    @FXML private TextField ExeTextField;
+    @FXML private TextField VerTextField;
     @FXML private TextField PanelTextField;
     @FXML private TextField ImageTextField;
     @FXML private TextField MovieTextField;
     @FXML private ImageView NameStateView;
-    @FXML private ImageView DescriptionStateView;
-    @FXML private ImageView ExecutableStateView;
-    @FXML private ImageView VersionStateView;
+    @FXML private ImageView DescStateView;
+    @FXML private ImageView ExeStateView;
+    @FXML private ImageView VerStateView;
     @FXML private ImageView PanelStateView;
     @FXML private ImageView ImageStateView;
     @FXML private ImageView MovieStateView;
@@ -112,9 +116,9 @@ public class RegisterFormController implements Initializable {
     }
 
     private FieldSet NameFieldSet;
-    private FieldSet DescriptionFieldSet;
-    private FieldSet ExecutableFieldSet;
-    private FieldSet VersionFieldSet;
+    private FieldSet DescFieldSet;
+    private FieldSet ExeFieldSet;
+    private FieldSet VerFieldSet;
     private FieldSet PanelFieldSet;
     private FieldSet ImageFieldSet;
     private FieldSet MovieFieldSet;
@@ -124,16 +128,16 @@ public class RegisterFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb){
         NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView, name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
-        DescriptionFieldSet = new FieldSet(FieldSet.State.WARN, DescriptionTextField, DescriptionStateView, text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
+        DescFieldSet = new FieldSet(FieldSet.State.WARN, DescTextField, DescStateView, text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
         
-        ExecutableFieldSet = new FieldSet(FieldSet.State.NG, ExecutableTextField, ExecutableStateView, 
+        ExeFieldSet = new FieldSet(FieldSet.State.NG, ExeTextField, ExeStateView, 
                 FileName -> {
-                    final Path ExecutablePath = Paths.get(FileName);
-                    return Files.isExecutable(ExecutablePath) ? FieldSet.State.OK : FieldSet.State.NG;
+                    final Path ExePath = Paths.get(FileName);
+                    return Files.isExecutable(ExePath) ? FieldSet.State.OK : FieldSet.State.NG;
                 }
         );
         
-        VersionFieldSet = new FieldSet(FieldSet.State.WARN, VersionTextField, VersionStateView, ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
+        VerFieldSet = new FieldSet(FieldSet.State.WARN, VerTextField, VerStateView, ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
         
         PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView,
                 panel -> LauncherResourceFilesValidator.isSquareImage(panel) ? FieldSet.State.OK : FieldSet.State.WARN);
@@ -180,9 +184,9 @@ public class RegisterFormController implements Initializable {
         
         FieldSetList = Collections.unmodifiableList(Arrays.asList(
                 NameFieldSet,
-                DescriptionFieldSet,
-                ExecutableFieldSet,
-                VersionFieldSet,
+                DescFieldSet,
+                ExeFieldSet,
+                VerFieldSet,
                 PanelFieldSet,
                 ImageFieldSet,
                 MovieFieldSet
@@ -208,9 +212,9 @@ public class RegisterFormController implements Initializable {
          
         AssignedUUIDLabel.setText(record.uuidProperty().getValue());
         NameTextField.setText(record.nameProperty().getValue());
-        DescriptionTextField.setText(record.descriptionProperty().getValue());
-        ExecutableTextField.setText(record.executableProperty().getValue());
-        VersionTextField.setText(record.versionProperty().getValue());
+        DescTextField.setText(record.descriptionProperty().getValue());
+        ExeTextField.setText(record.executableProperty().getValue());
+        VerTextField.setText(record.versionProperty().getValue());
         PanelTextField.setText(record.panelProperty().getValue());
         ImageTextField.setText(record.imageProperty().getValue());
         MovieTextField.setText(record.movieProperty().getValue());
@@ -226,7 +230,7 @@ public class RegisterFormController implements Initializable {
         
         String GameName = NameTextField.getText();
         if(GameName.isEmpty()){
-            final String ExeFileName = Paths.get(ExecutableTextField.getText()).getFileName().toString();
+            final String ExeFileName = Paths.get(ExeTextField.getText()).getFileName().toString();
             GameName = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
         }
        
@@ -239,9 +243,9 @@ public class RegisterFormController implements Initializable {
             ThisStage.setUserData(new GameRecord(
                 AssignedUUIDLabel.getText(),
                 GameName,
-                DescriptionTextField.getText(),
-                ExecutableTextField.getText(),
-                VersionTextField.getText().isEmpty() ? "1" : VersionTextField.getText(),
+                DescTextField.getText(),
+                ExeTextField.getText(),
+                VerTextField.getText().isEmpty() ? "1" : VerTextField.getText(),
                 PanelTextField.getText(),
                 imagePathArray,
                 moviePathArray
@@ -252,9 +256,9 @@ public class RegisterFormController implements Initializable {
 
         record.Update(AssignedUUIDLabel.getText(),
             GameName,
-            DescriptionTextField.getText(),
-            ExecutableTextField.getText(),
-            VersionTextField.getText().isEmpty() ? "1" : VersionTextField.getText(),
+            DescTextField.getText(),
+            ExeTextField.getText(),
+            VerTextField.getText().isEmpty() ? "1" : VerTextField.getText(),
             PanelTextField.getText(),
             imagePathArray,
             moviePathArray
@@ -317,22 +321,22 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    private void executableDropped(DragEvent event) {
+    private void ExeDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
 	if(!board.hasFiles()){
             event.setDropCompleted(false);
             return;
         }
         
-        final File ExecutablePath = board.getFiles().get(0);
-        if(ExecutablePath != null){
-            ExecutableTextField.setText(CurrentDirectory.relativize(ExecutablePath.toPath()).toString());
-            ExecutableFieldSet.setState(FieldSet.State.OK);
+        final File ExePath = board.getFiles().get(0);
+        if(ExePath != null){
+            ExeTextField.setText(CurrentDirectory.relativize(ExePath.toPath()).toString());
+            ExeFieldSet.setState(FieldSet.State.OK);
         }else{
-            ExecutableFieldSet.setState(FieldSet.State.NG);
+            ExeFieldSet.setState(FieldSet.State.NG);
         }
 
-        final Path GamesBaseDirectory = CurrentDirectory.relativize(ExecutablePath.toPath()).subpath(0, 2);
+        final Path GamesBaseDirectory = CurrentDirectory.relativize(ExePath.toPath()).subpath(0, 2);
         System.err.println(GamesBaseDirectory.toString());
 
         try {
@@ -343,8 +347,8 @@ public class RegisterFormController implements Initializable {
             
             {
                 final boolean IsNameNull = NameTextField.getText().isEmpty();
-                final boolean IsDescriptionNull = DescriptionTextField.getText().isEmpty();
-                final boolean IsVersionNull = VersionTextField.getText().isEmpty();
+                final boolean IsDescriptionNull = DescTextField.getText().isEmpty();
+                final boolean IsVersionNull = VerTextField.getText().isEmpty();
                 if(IsNameNull || IsDescriptionNull || IsVersionNull){
                     Optional<Path> DescriptionFile = CollectedFiles.stream()
                             .parallel()
@@ -353,8 +357,8 @@ public class RegisterFormController implements Initializable {
                     if(DescriptionFile.isPresent()){
                         final DescriptionFileParser FileParser = new DescriptionFileParser(DescriptionFile.get());
                         if(IsNameNull)NameTextField.setText(FileParser.getName());
-                        if(IsDescriptionNull)DescriptionTextField.setText(FileParser.getDescription());
-                        if(IsVersionNull)VersionTextField.setText(FileParser.getVersion());
+                        if(IsDescriptionNull)DescTextField.setText(FileParser.getDescription());
+                        if(IsVersionNull)VerTextField.setText(FileParser.getVersion());
                     }
                 }
             }
@@ -382,12 +386,12 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    private void onKeyReleased_Executable(KeyEvent event){
-        ExecutableFieldSet.validate();
+    private void onKeyReleasedExe(KeyEvent event){
+        ExeFieldSet.validate();
     }
     
     @FXML
-    private void DescriptionFileDropped(DragEvent event) {
+    private void DescFileDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
 	if(!board.hasFiles()){
             event.setDropCompleted(false);
@@ -396,8 +400,8 @@ public class RegisterFormController implements Initializable {
         final DescriptionFileParser FileParser = new DescriptionFileParser(board.getFiles().get(0).toPath());
         if(FileParser.isFine()){
             NameTextField.setText(FileParser.getName());
-            DescriptionTextField.setText(FileParser.getDescription());
-            VersionTextField.setText(FileParser.getVersion());
+            DescTextField.setText(FileParser.getDescription());
+            VerTextField.setText(FileParser.getVersion());
         }
         event.setDropCompleted(true);
     }
