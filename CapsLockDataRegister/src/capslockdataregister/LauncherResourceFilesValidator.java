@@ -131,6 +131,28 @@ class LauncherResourceFilesValidator extends Thread{
         return false;
     }
     
+     /**
+     * 指定されたパスのファイルがアイコンとしてランチャーで正常に表示できるか検証する.
+     * <p>表示可能な画像でも,アス比が1:1でないとfalseを返す</p>
+     * @param PanelPath 検証するファイルのパス.
+     * @return 正常に表示できるか否か.
+     */
+    final boolean isValidPanel(Path PanelPath){
+        if(!Files.isRegularFile(PanelPath))return false;
+        if(!PanelPath.startsWith(GameRootPath))return false;//ゲームのルートディレクトリ以下にない
+        if(Files.isExecutable(PanelPath))return false;//実行権限があったらおかしい
+        
+        final Image panel;
+        
+        try{
+            panel = new Image(PanelPath.toUri().toString());
+        }catch(NullPointerException | IllegalArgumentException ex){
+            return false;
+        }
+        
+        return panel.getHeight() == panel.getWidth();
+    }
+    
     /**
      * Verify images.
      * <p>Each path must be quoted by ".</p>
