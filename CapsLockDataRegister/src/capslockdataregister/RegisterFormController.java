@@ -9,7 +9,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -80,13 +82,11 @@ public class RegisterFormController implements Initializable {
             NG,
             WARN
         }
-        private final TextField InputField;
         private final ImageView StateView;
         private State state;
         private final Function<String, State> ValidatingFunction;
 
-        public FieldSet(State state, TextField InputField, ImageView StateView, Function<String, State> validator) {
-            this.InputField = InputField;
+        public FieldSet(State state, ImageView StateView, Function<String, State> validator) {
             this.StateView = StateView;
             setState(state);
             ValidatingFunction = validator;
@@ -106,43 +106,32 @@ public class RegisterFormController implements Initializable {
             }
         }
         
-        public final void validate(){
-            setState(ValidatingFunction.apply(InputField.getText()));
+        public final void validate(String RawString){
+            setState(ValidatingFunction.apply(RawString));
         }
         
         public final boolean isValid(){
             return state != State.NG;
         }
     }
-
-    private FieldSet NameFieldSet;
-    private FieldSet DescFieldSet;
-    private FieldSet ExeFieldSet;
-    private FieldSet VerFieldSet;
-    private FieldSet PanelFieldSet;
-    private FieldSet ImageFieldSet;
-    private FieldSet MovieFieldSet;
     
-    private List<FieldSet> FieldSetList;
+    private final Map<TextField, FieldSet> FieldMap = new HashMap<>();
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        NameFieldSet = new FieldSet(FieldSet.State.WARN, NameTextField, NameStateView, name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
-        DescFieldSet = new FieldSet(FieldSet.State.WARN, DescTextField, DescStateView, text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
-        
-        ExeFieldSet = new FieldSet(FieldSet.State.NG, ExeTextField, ExeStateView, 
+        FieldMap.put(NameTextField, new FieldSet(FieldSet.State.WARN, NameStateView, name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK));
+        FieldMap.put(DescTextField, new FieldSet(FieldSet.State.WARN, DescStateView, text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK));
+        FieldMap.put(ExeTextField, new FieldSet(FieldSet.State.NG, ExeStateView, 
                 FileName -> {
                     final Path ExePath = Paths.get(FileName);
                     return Files.isExecutable(ExePath) ? FieldSet.State.OK : FieldSet.State.NG;
                 }
-        );
+        ));
+        FieldMap.put(VerTextField, new FieldSet(FieldSet.State.WARN, VerStateView, ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK));
+        FieldMap.put(PanelTextField, new FieldSet(FieldSet.State.WARN, PanelStateView,
+                panel -> LauncherResourceFilesValidator.isSquareImage(panel) ? FieldSet.State.OK : FieldSet.State.WARN));
         
-        VerFieldSet = new FieldSet(FieldSet.State.WARN, VerTextField, VerStateView, ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK);
-        
-        PanelFieldSet = new FieldSet(FieldSet.State.WARN, PanelTextField, PanelStateView,
-                panel -> LauncherResourceFilesValidator.isSquareImage(panel) ? FieldSet.State.OK : FieldSet.State.WARN);
-        
-        ImageFieldSet = new FieldSet(FieldSet.State.WARN, ImageTextField, ImageStateView, 
+        FieldMap.put(ImageTextField, new FieldSet(FieldSet.State.WARN, ImageStateView, 
                 Images -> {
                     final String[] ImageStringArray = Images.split(",");
                     for(final String ImageString : ImageStringArray){
@@ -160,9 +149,9 @@ public class RegisterFormController implements Initializable {
                         }
                     }
                     return FieldSet.State.OK;
-                });
+                }));
         
-        MovieFieldSet = new FieldSet(FieldSet.State.WARN, MovieTextField, MovieStateView,
+        FieldMap.put(MovieTextField, new FieldSet(FieldSet.State.WARN, MovieStateView,
                 Movies -> {
                     final String[] MovieStringArray = Movies.split(",");
                     for(final String MovieString : MovieStringArray){
@@ -180,17 +169,7 @@ public class RegisterFormController implements Initializable {
                         }
                     }
                     return FieldSet.State.OK;
-                });
-        
-        FieldSetList = Collections.unmodifiableList(Arrays.asList(
-                NameFieldSet,
-                DescFieldSet,
-                ExeFieldSet,
-                VerFieldSet,
-                PanelFieldSet,
-                ImageFieldSet,
-                MovieFieldSet
-        ));
+                }));
     }
     
     void onLoad(WindowEvent event){
@@ -206,7 +185,7 @@ public class RegisterFormController implements Initializable {
         }catch(NullPointerException e){
             System.err.println(e);
             AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
-            FieldSetList.parallelStream().forEach(field -> field.InputField.clear());
+            FieldMap.forEach((field, dummy) -> field.clear());
             return;
         }
          
@@ -219,7 +198,7 @@ public class RegisterFormController implements Initializable {
         ImageTextField.setText(record.imageProperty().getValue());
         MovieTextField.setText(record.movieProperty().getValue());
         
-        FieldSetList.parallelStream().forEach(field -> field.validate());
+        FieldMap.forEach((field, checker) -> checker.validate(field.getText()));
     }
     
     final void setOwnStage(Stage stage){ThisStage = stage;}
@@ -268,10 +247,11 @@ public class RegisterFormController implements Initializable {
     
     private boolean IsValidInput(){
         boolean ReturnValue = true;
-
-        final Optional<FieldSet> InvalidField = FieldSetList.parallelStream()
-            .filter(field -> !field.isValid())
-            .findAny();
+        
+        final Optional<Map.Entry<TextField, FieldSet>> InvalidField = FieldMap.entrySet()
+                .parallelStream()
+                .filter(set -> !set.getValue().isValid())
+                .findAny();
         
         if(InvalidField.isPresent()){
             ErrorMsgLabel.setText("不正な入力項目があります");
@@ -331,9 +311,9 @@ public class RegisterFormController implements Initializable {
         final File ExePath = board.getFiles().get(0);
         if(ExePath != null){
             ExeTextField.setText(CurrentDirectory.relativize(ExePath.toPath()).toString());
-            ExeFieldSet.setState(FieldSet.State.OK);
+            FieldMap.get(ExeTextField).setState(FieldSet.State.OK);
         }else{
-            ExeFieldSet.setState(FieldSet.State.NG);
+            FieldMap.get(ExeTextField).setState(FieldSet.State.NG);
         }
 
         final Path GamesBaseDirectory = CurrentDirectory.relativize(ExePath.toPath()).subpath(0, 2);
@@ -387,7 +367,7 @@ public class RegisterFormController implements Initializable {
     
     @FXML
     private void onKeyReleasedExe(KeyEvent event){
-        ExeFieldSet.validate();
+        FieldMap.get(ExeTextField).validate(ExeTextField.getText());
     }
     
     @FXML
