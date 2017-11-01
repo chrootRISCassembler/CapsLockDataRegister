@@ -42,6 +42,19 @@ class LauncherResourceFilesValidator extends Thread{
     private ConcurrentHashMap<Path, ResourceType> PathDB = new ConcurrentHashMap<>();
     private WatchService watchdog;
     
+    
+    /**
+     * 新たにゲームを登録するときのValidatorのコンストラクタ.
+     */
+    LauncherResourceFilesValidator(){
+        GameRootPath = null;//新規登録を表すフラグとして使う
+    }
+    
+    
+    /**
+     * 登録済みゲーム用コンストラクタ.
+     * @param ExePath ゲームの実行ファイルパス
+     */
     LauncherResourceFilesValidator(String ExePath){
         GameRootPath = ResourceFilesInputWrapper.instance.CurrentDirectory.relativize(Paths.get(ExePath).toAbsolutePath()).subpath(0, 2);
 
