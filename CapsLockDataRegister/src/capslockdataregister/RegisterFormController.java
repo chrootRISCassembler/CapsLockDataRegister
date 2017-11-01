@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -366,8 +365,9 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    private void onKeyReleasedExe(KeyEvent event){
-        FieldMap.get(ExeTextField).validate(ExeTextField.getText());
+    private void onKeyReleased(KeyEvent event){
+        final TextField EventSource = (TextField)event.getSource();
+        FieldMap.get(EventSource).validate(EventSource.getText());
     }
     
     @FXML
