@@ -28,8 +28,6 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaException;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -131,44 +129,10 @@ public class RegisterFormController implements Initializable {
                 panel -> LauncherResourceFilesValidator.isSquareImage(panel) ? FieldSet.State.OK : FieldSet.State.WARN));
         
         FieldMap.put(ImageTextField, new FieldSet(FieldSet.State.WARN, ImageStateView, 
-                Images -> {
-                    final String[] ImageStringArray = Images.split(",");
-                    for(final String ImageString : ImageStringArray){
-                        final Path ImagePath;
-                        try{
-                            ImagePath = Paths.get(ImageString.substring(1, ImageString.length() - 1));
-                        }catch(IndexOutOfBoundsException e){
-                            return FieldSet.State.WARN;
-                        }
-                        if(!Files.isRegularFile(ImagePath))return FieldSet.State.WARN;
-                        try{
-                            new Image(ImagePath.toUri().toString());
-                        }catch(NullPointerException | IllegalArgumentException e){
-                            return FieldSet.State.WARN;
-                        }
-                    }
-                    return FieldSet.State.OK;
-                }));
+                Images -> LauncherResourceFilesValidator.areValidImages(Images) ? FieldSet.State.OK : FieldSet.State.WARN));
         
         FieldMap.put(MovieTextField, new FieldSet(FieldSet.State.WARN, MovieStateView,
-                Movies -> {
-                    final String[] MovieStringArray = Movies.split(",");
-                    for(final String MovieString : MovieStringArray){
-                        final Path MoviePath;
-                        try{
-                            MoviePath = Paths.get(MovieString.substring(1, MovieString.length() - 1));
-                        }catch(IndexOutOfBoundsException e){
-                            return FieldSet.State.WARN;
-                        }
-                        if(!Files.isRegularFile(MoviePath))return FieldSet.State.WARN;
-                        try{
-                            new Media(MoviePath.toUri().toString());
-                        }catch(NullPointerException | IllegalArgumentException | UnsupportedOperationException | MediaException e){
-                            return FieldSet.State.WARN;
-                        }
-                    }
-                    return FieldSet.State.OK;
-                }));
+                Movies -> LauncherResourceFilesValidator.areValidMoves(Movies) ? FieldSet.State.OK : FieldSet.State.WARN));
     }
     
     void onLoad(WindowEvent event){
