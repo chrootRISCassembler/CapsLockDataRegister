@@ -63,9 +63,6 @@ public class RegisterFormController implements Initializable {
     @FXML private Button RegisterButton;
     
     private Stage ThisStage;
-    
-    private final JSONArray imagePathArray = new JSONArray();
-    private final JSONArray moviePathArray = new JSONArray();
     private final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
     private LauncherResourceFilesValidator validator;
     
@@ -178,6 +175,11 @@ public class RegisterFormController implements Initializable {
        
         final GameRecord record;
         
+        final JSONArray imagePathArray = new JSONArray();
+        final JSONArray moviePathArray = new JSONArray();
+        GenerateJSONArray(imagePathArray, ImageTextField.getText());   
+        GenerateJSONArray(moviePathArray, MovieTextField.getText());
+        
         try{
             record = (GameRecord)ThisStage.getUserData();
             if(record == null)throw new NullPointerException();
@@ -209,8 +211,6 @@ public class RegisterFormController implements Initializable {
     }
     
     private boolean IsValidInput(){
-        boolean ReturnValue = true;
-        
         final Optional<Map.Entry<TextField, FieldSet>> InvalidField = FieldMap.entrySet()
                 .parallelStream()
                 .filter(set -> !set.getValue().isValid())
@@ -218,13 +218,9 @@ public class RegisterFormController implements Initializable {
         
         if(InvalidField.isPresent()){
             ErrorMsgLabel.setText("不正な入力項目があります");
-            ReturnValue = false;
+            return false;
         }
-        
-        GenerateJSONArray(imagePathArray, ImageTextField.getText());   
-        GenerateJSONArray(moviePathArray, MovieTextField.getText());
-        
-        return ReturnValue;
+        return true;
     }
     
     private void GenerateJSONArray(JSONArray target, String RawString){
