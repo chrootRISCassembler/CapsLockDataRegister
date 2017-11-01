@@ -35,16 +35,16 @@
       <Label text="動画ファイルパス" GridPane.rowIndex="7" />
       <Label fx:id="ErrorMsgLabel" text="errmsg" GridPane.rowIndex="8" />
       <Button fx:id="RegisterButton" mnemonicParsing="false" onMouseClicked="#Register" text="登録" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-      <TextField fx:id="NameTextField" onDragDropped="#DescFileDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="NameTextField" onDragDropped="#DescFileDropped" onDragOver="#TextFieldDragOver" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <TextField fx:id="ExeTextField" onDragDropped="#ExeDropped" onDragOver="#TextFieldDragOver" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <TextField fx:id="VerTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <TextField fx:id="ImageTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <TextField fx:id="MovieTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <TextField fx:id="VerTextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <TextField fx:id="ImageTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <TextField fx:id="MovieTextField" onDragDropped="#TextFieldDropped" onDragOver="#TextFieldDragOver" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="7" />
       <Label fx:id="AssignedUUIDLabel" text="uuid" GridPane.columnIndex="1" />
       <Label text="説明" GridPane.rowIndex="2" />
       <Label text="パネル画像ファイルパス" GridPane.rowIndex="5" />
-      <TextField fx:id="PanelTextField" onDragDropped="#PanelFileDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <TextField fx:id="DescTextField" onDragDropped="#DescFileDropped" onDragOver="#TextFieldDragOver" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <TextField fx:id="PanelTextField" onDragDropped="#PanelFileDropped" onDragOver="#TextFieldDragOver" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextField fx:id="DescTextField" onDragDropped="#DescFileDropped" onDragOver="#TextFieldDragOver" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <ImageView fx:id="NameStateView" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="10.0" right="10.0" />
