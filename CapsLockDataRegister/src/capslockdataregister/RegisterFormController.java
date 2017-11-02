@@ -123,7 +123,7 @@ public class RegisterFormController implements Initializable {
         ));
         FieldMap.put(VerTextField, new FieldSet(FieldSet.State.WARN, VerStateView, ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK));
         FieldMap.put(PanelTextField, new FieldSet(FieldSet.State.WARN, PanelStateView,
-                panel -> LauncherResourceFilesValidator.isSquareImage(panel) ? FieldSet.State.OK : FieldSet.State.WARN));
+                panel -> validator.isValidPanel(Paths.get(panel)) ? FieldSet.State.OK : FieldSet.State.WARN));
         
         FieldMap.put(ImageTextField, new FieldSet(FieldSet.State.WARN, ImageStateView, 
                 Images -> LauncherResourceFilesValidator.areValidImages(Images) ? FieldSet.State.OK : FieldSet.State.WARN));
