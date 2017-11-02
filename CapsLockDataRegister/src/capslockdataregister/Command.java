@@ -1,11 +1,14 @@
 package capslockdataregister;
 
 /**
- *
- * @author RISCassembler
+ * 開発者向けコンソールで実行できるコマンドの本体を内包するクラス.
+ * <p>インスタンスを作らせないようにabstract修飾している.
+ * このクラスを継承してはならない.</p>
+ * 
+ * <p>このクラス中の全ての関数はstaticにする.</p>
  */
 
-final class Command {
+abstract class Command{
     private Command(){
         System.err.println("CRITICAL : Instance of Command class is created.");
     }
