@@ -13,7 +13,7 @@ abstract class Command{
         System.err.println("CRITICAL : Instance of Command class is created.");
     }
     
-    static void dump(final String[] ParsedStringArray, MainFormController controller){
+    static final void dump(final String[] ParsedStringArray, MainFormController controller){
         controller.DisplayCollection.forEach(ele -> System.err.println(ele.geJSON()));
     }
 
