@@ -152,8 +152,12 @@ class LauncherResourceFilesValidator extends Thread{
      */
     final boolean isValidPanel(Path PanelPath){
         if(!Files.isRegularFile(PanelPath))return false;
-        if(!PanelPath.startsWith(GameRootPath))return false;//ゲームのルートディレクトリ以下にない
         if(Files.isExecutable(PanelPath))return false;//実行権限があったらおかしい
+        if(GameRootPath == null){
+            if(!PanelPath.startsWith(ResourceFilesInputWrapper.instance.CurrentDirectory))return false;//カレントディレクトリ以下にない
+        }else{
+            if(!PanelPath.startsWith(GameRootPath))return false;//ゲームのルートディレクトリ以下にない
+        }
         
         final Image panel;
         
