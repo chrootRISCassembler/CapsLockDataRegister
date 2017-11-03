@@ -133,18 +133,6 @@ class LauncherResourceFilesValidator extends Thread{
         this.interrupt();
     }
     
-    static final boolean isSquareImage(String ImagePath){
-        final Path PanelPath = Paths.get(ImagePath);
-        if(!Files.isRegularFile(PanelPath))return false;
-        
-        try{
-            final Image panel = new Image(PanelPath.toUri().toString());
-            return panel.getHeight() == panel.getWidth();
-        }catch(NullPointerException | IllegalArgumentException e){
-        }
-        return false;
-    }
-    
      /**
      * 指定されたパスのファイルがアイコンとしてランチャーで正常に表示できるか検証する.
      * <p>表示可能な画像でも,アス比が1:1でないとfalseを返す</p>
