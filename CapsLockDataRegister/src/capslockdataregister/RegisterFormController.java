@@ -331,6 +331,29 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
+    private final void onDragDropped_TextField(DragEvent event){
+
+        final TextField EventSource = (TextField)event.getSource();
+        System.err.println("DragDrop");
+        event.setDropCompleted(true);
+    }
+    
+    @FXML
+    private final void onDragOver_TextField(DragEvent event){
+        final Dragboard board = event.getDragboard();
+        if(board.hasFiles()){
+            final TextField EventSource = (TextField)event.getSource();
+            System.err.println("DragOver");
+            
+            for(final File file : board.getFiles()){
+                System.err.println(file);
+            }
+            
+            event.acceptTransferModes(TransferMode.COPY);
+        }
+    }
+    
+    @FXML
     private void DescFileDropped(DragEvent event) {
         Dragboard board = event.getDragboard();
 	if(!board.hasFiles()){
