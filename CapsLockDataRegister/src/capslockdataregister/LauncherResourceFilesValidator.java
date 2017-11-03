@@ -15,6 +15,7 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.nio.file.attribute.DosFileAttributeView;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -155,9 +156,13 @@ class LauncherResourceFilesValidator extends Thread{
         
         /*パネル画像ファイルはUnixパーミッションで　r--r--r-- であるべき*/
         
-        if(Files.isExecutable(PanelPath))return false;
         if(Files.isWritable(PanelPath))return false;
         if(!Files.isReadable(PanelPath))return false;
+        
+        {//Windowsのファイルシステムでは実行権限と読み取り権限を完全には切り離せない
+            DosFileAttributeView DOS_Attribute = Files.getFileAttributeView(PanelPath, DosFileAttributeView.class);
+            if(DOS_Attribute == null && Files.isExecutable(PanelPath))return false;
+        }
         
         if(GameRootPath == null){
             if(!PanelPath.startsWith(ResourceFilesInputWrapper.instance.CurrentDirectory))return false;//カレントディレクトリ以下にない
