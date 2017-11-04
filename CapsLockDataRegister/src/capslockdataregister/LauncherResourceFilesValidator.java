@@ -78,6 +78,32 @@ class LauncherResourceFilesValidator extends Thread{
     }
     
     /**
+     * ゲームの本体を基点として,ランチャーに必要なファイル群をかき集める.
+     * <p>ゲーム本体のパスからゲームのルートディレクトリを定め,そのディレクトリ以下からランチャーが使用するファイルを収集する.
+     * 収集したファイルはPathDBにキャッシュされる.</p>
+     * @param ExePath ゲーム本体のパス
+     */
+    final void crawl(Path ExePath){
+        GameRootPath = ResourceFilesInputWrapper.instance.toRelativePath(ExePath).subpath(0, 2);
+        try {
+            Files.walk(GameRootPath, FileVisitOption.FOLLOW_LINKS)
+                    .parallel()
+                    .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
+                    .peek(file -> System.err.println(file))
+                    .forEach(file -> PathDB.put(file, getResourceType(file.getFileName().toString())));
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+        
+        try {
+            watchdog = FileSystems.getDefault().newWatchService();
+            GameRootPath.register(watchdog, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+    }
+    
+    /**
      * ファイルがゲームのルートディレクトリ以下にに存在するか検証する.
      * <p>ゲームのルートディレクトリが定まっていない場合は"Games/"以下にあるかで検証する.</p>
      * @param path 検証するファイルパス
