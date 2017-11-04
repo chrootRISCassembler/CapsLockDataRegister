@@ -1,14 +1,14 @@
 package capslockdataregister;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- *
- * @author RISCassembler
+ * Descriptionファイルを読み込んでパースするクラス.
+ * <p>このクラスはイミュータブル.</p>
+ * <p>{@link capslockdataregister.DescriptionFileParser#isFine()}がfalseを返すときはメンバメソッドを呼び出してはならない.</p>
  */
 final class DescriptionFileParser {
     private String GameName = "";
@@ -27,15 +27,16 @@ final class DescriptionFileParser {
                 description.append(line);
             }
             GameDescription = description.toString();
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             System.err.println(ex);
-        } catch(IOException ex){
-            System.err.println(ex);
-        } finally{
             FineFlag = false;
         }
     }
     
+    /**
+     * Descriptionが正常にパースできたかを返す.
+     * <p>このメソッドがfalseを返すとき,get*系のメソッドの戻り値はもはや信用できない.</p>
+     */
     final boolean isFine(){return FineFlag;}
     final String getName(){return GameName;}
     final String getVersion(){return GameVersion;}
