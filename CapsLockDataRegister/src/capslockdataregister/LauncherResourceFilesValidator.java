@@ -77,6 +77,20 @@ class LauncherResourceFilesValidator extends Thread{
         }
     }
     
+    /**
+     * ファイルがゲームのルートディレクトリ以下にに存在するか検証する.
+     * <p>ゲームのルートディレクトリが定まっていない場合は"Games/"以下にあるかで検証する.</p>
+     * @param path 検証するファイルパス
+     * @return ゲームのディレクトリ以下又は"Games/"以下に位置すればtrue.それ以外はfalse.
+     */
+    final boolean isLocatedValidly(Path path){
+        if(GameRootPath == null){
+            return path.startsWith(ResourceFilesInputWrapper.instance.GamesDirectory);
+        }else{
+            return path.startsWith(GameRootPath);
+        }
+    }
+    
     boolean query(String FilePath){
         final Path CheckPath = Paths.get(FilePath);
         return PathDB.containsKey(CheckPath);
