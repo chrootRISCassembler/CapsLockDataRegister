@@ -7,7 +7,11 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- *
+ * ファイルパスの解決や検証を行う.
+ * <p>このクラスはシングルトン.</p>
+ * <code>ResourceFilesInputWrapper.instance.*</code>
+ * <p>として各メンバ,関数にアクセスする.</p>
+ * <p>このクラスは各ゲームと独立した処理を担当する.ゲームごとに異なる処理が求められる関数は{@link capslockdataregister.LauncherResourceFilesValidator}に実装する.</p>
  */
 enum ResourceFilesInputWrapper {
     instance;
@@ -44,5 +48,15 @@ enum ResourceFilesInputWrapper {
     
     void destroy(){
         LRUlist.forEach((dummy, validator) -> validator.killWatchdog());
+    }
+    
+    /**
+     * カレントディレクトリからの相対パスに変換する.
+     * <p>環境に依存しないように,引数に渡されたパスを相対パスに変換する.</p>
+     * @param path 変換するパス.
+     * @return カレントディレクトリからの相対パス.
+     */
+    final Path toRelativePath(Path path){
+        return CurrentDirectory.relativize(path);
     }
 }
