@@ -129,13 +129,13 @@ public class RegisterFormController implements Initializable {
         FieldMap.put(NameTextField, new FieldSet(FieldSet.State.WARN, NameStateView,
                 name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
                 files -> files.size() == 1,
-                files -> true
+                file -> DescFileHandler(file.get(0).toPath())
         ));
         
         FieldMap.put(DescTextField, new FieldSet(FieldSet.State.WARN, DescStateView,
                 text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
                 files -> files.size() == 1,
-                files -> true
+                file -> DescFileHandler(file.get(0).toPath())
         ));
         
         FieldMap.put(ExeTextField, new FieldSet(FieldSet.State.NG, ExeStateView, 
@@ -150,7 +150,7 @@ public class RegisterFormController implements Initializable {
         FieldMap.put(VerTextField, new FieldSet(FieldSet.State.WARN, VerStateView,
                 ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
                 files -> files.size() == 1,
-                files -> true
+                file -> DescFileHandler(file.get(0).toPath())
         ));
         
         FieldMap.put(PanelTextField, new FieldSet(FieldSet.State.WARN, PanelStateView,
@@ -426,20 +426,15 @@ public class RegisterFormController implements Initializable {
         event.consume();
     }
     
-    @FXML
-    private void DescFileDropped(DragEvent event) {
-        Dragboard board = event.getDragboard();
-	if(!board.hasFiles()){
-            event.setDropCompleted(false);
-            return;
-        }
-        final DescriptionFileParser FileParser = new DescriptionFileParser(board.getFiles().get(0).toPath());
+    private final boolean DescFileHandler(Path DescFile){
+        final DescriptionFileParser FileParser = new DescriptionFileParser(DescFile);
         if(FileParser.isFine()){
             NameTextField.setText(FileParser.getName());
             DescTextField.setText(FileParser.getDescription());
             VerTextField.setText(FileParser.getVersion());
+            return true;
         }
-        event.setDropCompleted(true);
+        return false;
     }
     
     private String ExtractAndToString(List<Path>PathList, char SecondChar){
