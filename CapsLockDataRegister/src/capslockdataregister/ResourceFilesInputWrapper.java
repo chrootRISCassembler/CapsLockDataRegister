@@ -2,6 +2,7 @@ package capslockdataregister;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -13,6 +14,7 @@ enum ResourceFilesInputWrapper {
     instance;
     
     final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
+    final Path GamesDirectory = Paths.get("./Games/");
     private final ThreadSafeLRU_list<UUID, LauncherResourceFilesValidator> LRUlist = new ThreadSafeLRU_list<UUID, LauncherResourceFilesValidator>(){
         @Override
         protected void onRemoveEntry(Map.Entry<UUID, LauncherResourceFilesValidator> eldest){
