@@ -158,7 +158,7 @@ public class RegisterFormController implements Initializable {
                 files -> files.size() == 1,
                 files -> {
                     final Path PanelPath = files.get(0).toPath();
-                    PanelTextField.setText(ResourceFilesInputWrapper.instance.CurrentDirectory.relativize(PanelPath).toString());
+                    PanelTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(PanelPath).toString());
                     return true;
                 }
         ));
