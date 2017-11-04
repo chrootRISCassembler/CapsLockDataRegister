@@ -38,8 +38,8 @@
       <TextField fx:id="NameTextField" onDragDropped="#onDragDropped_TextField" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <TextField fx:id="ExeTextField" onDragDropped="#ExeDropped" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <TextField fx:id="VerTextField" onDragDropped="#onDragDropped_TextField" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <TextField fx:id="ImageTextField" onDragDropped="#TextFieldDropped" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <TextField fx:id="MovieTextField" onDragDropped="#TextFieldDropped" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <TextField fx:id="ImageTextField" onDragDropped="#onDragDropped_TextField" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <TextField fx:id="MovieTextField" onDragDropped="#onDragDropped_TextField" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="7" />
       <Label fx:id="AssignedUUIDLabel" text="uuid" GridPane.columnIndex="1" />
       <Label text="説明" GridPane.rowIndex="2" />
       <Label text="パネル画像ファイルパス" GridPane.rowIndex="5" />

@@ -166,13 +166,19 @@ public class RegisterFormController implements Initializable {
         FieldMap.put(ImageTextField, new FieldSet(FieldSet.State.WARN, ImageStateView, 
                 Images -> LauncherResourceFilesValidator.areValidImages(Images) ? FieldSet.State.OK : FieldSet.State.WARN,
                 files -> true,
-                files -> true
+                files -> {
+                    ImageTextField.setText(MakeFileArray(files));
+                    return true;
+                }
         ));
         
         FieldMap.put(MovieTextField, new FieldSet(FieldSet.State.WARN, MovieStateView,
                 Movies -> LauncherResourceFilesValidator.areValidMoves(Movies) ? FieldSet.State.OK : FieldSet.State.WARN,
                 files -> true,
-                files -> true
+                files -> {
+                    MovieTextField.setText(MakeFileArray(files));
+                    return true;
+                }
         ));
     }
     
@@ -269,6 +275,12 @@ public class RegisterFormController implements Initializable {
         return true;
     }
     
+    private final String MakeFileArray(List<File> files){
+        return files.stream()
+                .map(file -> '\"' + ResourceFilesInputWrapper.instance.toRelativePath(file.toPath()).toString() + '\"')
+                .collect(Collectors.joining(", "));
+    }
+    
     private void GenerateJSONArray(JSONArray target, String RawString){
 
         String[] files = RawString.split(",");
@@ -277,23 +289,6 @@ public class RegisterFormController implements Initializable {
             File file = new File(element);
             if(file.exists())target.put(element);
         });
-    }
-    
-    @FXML
-    private void TextFieldDropped(DragEvent event) {
-	final Dragboard board = event.getDragboard();
-	if(board.hasFiles()) {
-            String DisplayString =  board.getFiles().stream()
-                    .filter(file -> file.isFile())
-                    .map(file -> CurrentDirectory.relativize(file.toPath()).toString())
-                    .collect(Collectors.joining(","));
-
-            ((TextField)event.getSource()).setText(DisplayString);
-            
-            event.setDropCompleted(true);
-	}else{
-            event.setDropCompleted(false);
-	}
     }
     
     @FXML
