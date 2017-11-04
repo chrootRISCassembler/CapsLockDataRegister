@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
@@ -79,11 +80,15 @@ public class RegisterFormController implements Initializable {
         private final ImageView StateView;
         private State state;
         private final Function<String, State> ValidatingFunction;
+        private final Predicate<List<File>> onDragOverPredicate;
+        private final Predicate<List<File>> onDragDroppedPredicate;
 
-        public FieldSet(State state, ImageView StateView, Function<String, State> validator) {
+        public FieldSet(State state, ImageView StateView, Function<String, State> validator, Predicate<List<File>> onDragOver, Predicate<List<File>> onDragDropped){
             this.StateView = StateView;
             setState(state);
             ValidatingFunction = validator;
+            onDragOverPredicate = onDragOver;
+            onDragDroppedPredicate = onDragDropped;
         }
         
         private void setState(State NewState){
@@ -104,6 +109,14 @@ public class RegisterFormController implements Initializable {
             setState(ValidatingFunction.apply(RawString));
         }
         
+        final boolean DragOver(List<File> files){
+            return onDragOverPredicate.test(files);
+        }
+        
+        final void DragDropped(){//一つでも受け付けられないファイルがあればfalse
+            
+        }
+        
         public final boolean isValid(){
             return state != State.NG;
         }
@@ -113,23 +126,50 @@ public class RegisterFormController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        FieldMap.put(NameTextField, new FieldSet(FieldSet.State.WARN, NameStateView, name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK));
-        FieldMap.put(DescTextField, new FieldSet(FieldSet.State.WARN, DescStateView, text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK));
+        FieldMap.put(NameTextField, new FieldSet(FieldSet.State.WARN, NameStateView,
+                name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
+                files -> true,
+                files -> true
+        ));
+        
+        FieldMap.put(DescTextField, new FieldSet(FieldSet.State.WARN, DescStateView,
+                text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
+                files -> true,
+                files -> true
+        ));
+        
         FieldMap.put(ExeTextField, new FieldSet(FieldSet.State.NG, ExeStateView, 
                 FileName -> {
                     final Path ExePath = Paths.get(FileName);
                     return Files.isExecutable(ExePath) ? FieldSet.State.OK : FieldSet.State.NG;
-                }
+                },
+                files -> true,
+                files -> true
         ));
-        FieldMap.put(VerTextField, new FieldSet(FieldSet.State.WARN, VerStateView, ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK));
+        
+        FieldMap.put(VerTextField, new FieldSet(FieldSet.State.WARN, VerStateView,
+                ver -> ver.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
+                files -> files.size() == 1,
+                files -> true
+        ));
+        
         FieldMap.put(PanelTextField, new FieldSet(FieldSet.State.WARN, PanelStateView,
-                panel -> validator.isValidPanel(Paths.get(panel)) ? FieldSet.State.OK : FieldSet.State.WARN));
+                panel -> validator.isValidPanel(Paths.get(panel)) ? FieldSet.State.OK : FieldSet.State.WARN,
+                files -> true,
+                files -> true
+        ));
         
         FieldMap.put(ImageTextField, new FieldSet(FieldSet.State.WARN, ImageStateView, 
-                Images -> LauncherResourceFilesValidator.areValidImages(Images) ? FieldSet.State.OK : FieldSet.State.WARN));
+                Images -> LauncherResourceFilesValidator.areValidImages(Images) ? FieldSet.State.OK : FieldSet.State.WARN,
+                files -> true,
+                files -> true
+        ));
         
         FieldMap.put(MovieTextField, new FieldSet(FieldSet.State.WARN, MovieStateView,
-                Movies -> LauncherResourceFilesValidator.areValidMoves(Movies) ? FieldSet.State.OK : FieldSet.State.WARN));
+                Movies -> LauncherResourceFilesValidator.areValidMoves(Movies) ? FieldSet.State.OK : FieldSet.State.WARN,
+                files -> true,
+                files -> true
+        ));
     }
     
     void onLoad(WindowEvent event){
@@ -335,7 +375,9 @@ public class RegisterFormController implements Initializable {
 
         final TextField EventSource = (TextField)event.getSource();
         System.err.println("DragDrop");
+        //validatorのDBを参照して処理を高速化
         event.setDropCompleted(true);
+        event.consume();
     }
     
     @FXML
@@ -345,12 +387,15 @@ public class RegisterFormController implements Initializable {
             final TextField EventSource = (TextField)event.getSource();
             System.err.println("DragOver");
             
+            //ここでファイルが検出できればvalidatorのDBにINSERT INTO
+            
             for(final File file : board.getFiles()){
                 System.err.println(file);
             }
             
-            event.acceptTransferModes(TransferMode.COPY);
+            if(FieldMap.get(EventSource).DragOver(board.getFiles()))event.acceptTransferModes(TransferMode.LINK);
         }
+        event.consume();
     }
     
     @FXML
