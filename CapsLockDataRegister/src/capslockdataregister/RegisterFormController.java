@@ -113,8 +113,8 @@ public class RegisterFormController implements Initializable {
             return onDragOverPredicate.test(files);
         }
         
-        final void DragDropped(){//一つでも受け付けられないファイルがあればfalse
-            
+        final boolean DragDropped(List<File> files){//一つでも受け付けられないファイルがあればfalse
+            return onDragDroppedPredicate.test(files);
         }
         
         public final boolean isValid(){
@@ -128,13 +128,13 @@ public class RegisterFormController implements Initializable {
     public void initialize(URL url, ResourceBundle rb){
         FieldMap.put(NameTextField, new FieldSet(FieldSet.State.WARN, NameStateView,
                 name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
-                files -> true,
+                files -> files.size() == 1,
                 files -> true
         ));
         
         FieldMap.put(DescTextField, new FieldSet(FieldSet.State.WARN, DescStateView,
                 text -> text.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
-                files -> true,
+                files -> files.size() == 1,
                 files -> true
         ));
         
@@ -143,7 +143,7 @@ public class RegisterFormController implements Initializable {
                     final Path ExePath = Paths.get(FileName);
                     return Files.isExecutable(ExePath) ? FieldSet.State.OK : FieldSet.State.NG;
                 },
-                files -> true,
+                files -> files.size() == 1,
                 files -> true
         ));
         
@@ -155,8 +155,12 @@ public class RegisterFormController implements Initializable {
         
         FieldMap.put(PanelTextField, new FieldSet(FieldSet.State.WARN, PanelStateView,
                 panel -> validator.isValidPanel(Paths.get(panel)) ? FieldSet.State.OK : FieldSet.State.WARN,
-                files -> true,
-                files -> true
+                files -> files.size() == 1,
+                files -> {
+                    final Path PanelPath = files.get(0).toPath();
+                    PanelTextField.setText(ResourceFilesInputWrapper.instance.CurrentDirectory.relativize(PanelPath).toString());
+                    return true;
+                }
         ));
         
         FieldMap.put(ImageTextField, new FieldSet(FieldSet.State.WARN, ImageStateView, 
@@ -199,6 +203,8 @@ public class RegisterFormController implements Initializable {
         MovieTextField.setText(record.movieProperty().getValue());
         
         FieldMap.forEach((field, checker) -> checker.validate(field.getText()));
+//        System.err.println(Files.isDirectory(ResourceFilesInputWrapper.instance.GamesDirectory));
+//        System.err.println(ResourceFilesInputWrapper.instance.CurrentDirectory);
     }
     
     final void setOwnStage(Stage stage){ThisStage = stage;}
@@ -370,30 +376,52 @@ public class RegisterFormController implements Initializable {
         FieldMap.get(EventSource).validate(EventSource.getText());
     }
     
+    
+    
     @FXML
     private final void onDragDropped_TextField(DragEvent event){
 
-        final TextField EventSource = (TextField)event.getSource();
         System.err.println("DragDrop");
-        //validatorのDBを参照して処理を高速化
+        //validatorのDBを参照して処理を高速化    
+        
+        final Dragboard board = event.getDragboard();
+        final TextField EventSource = (TextField)event.getSource();
+
+        //ここでファイルが検出できればvalidatorのDBにINSERT INTO
+
+//        for(final File file : board.getFiles()){
+//            System.err.println(file);
+//        }
+
+        FieldMap.get(EventSource).DragDropped(board.getFiles());
+        
         event.setDropCompleted(true);
         event.consume();
     }
     
     @FXML
     private final void onDragOver_TextField(DragEvent event){
+        System.err.println("DragOver");
         final Dragboard board = event.getDragboard();
         if(board.hasFiles()){
-            final TextField EventSource = (TextField)event.getSource();
-            System.err.println("DragOver");
             
             //ここでファイルが検出できればvalidatorのDBにINSERT INTO
             
-            for(final File file : board.getFiles()){
-                System.err.println(file);
-            }
+            Optional<Path> result = board.getFiles().stream()
+                    .parallel()
+                    .map(file -> file.toPath())
+                    .filter(path -> !validator.isLocatedValidly(path.toAbsolutePath()))
+                    .findAny();
             
-            if(FieldMap.get(EventSource).DragOver(board.getFiles()))event.acceptTransferModes(TransferMode.LINK);
+            if(!result.isPresent()){//ドロップしようとしているファイル中に一つでも「不正な位置のファイル」があれば受け付けない
+//                for(final File file : board.getFiles()){
+//                    System.err.println(file);
+//                }
+
+                final TextField EventSource = (TextField)event.getSource();
+                if(FieldMap.get(EventSource).DragOver(board.getFiles()))event.acceptTransferModes(TransferMode.LINK);
+                //acceptTransferModesでドラッグイベントを受け付けるようにしないとDragDroppedイベントが発生しない
+            }
         }
         event.consume();
     }
@@ -412,18 +440,6 @@ public class RegisterFormController implements Initializable {
             VerTextField.setText(FileParser.getVersion());
         }
         event.setDropCompleted(true);
-    }
-    
-    @FXML
-    private void PanelFileDropped(DragEvent event) {
-        Dragboard board = event.getDragboard();
-	if(board.hasFiles()) {
-            final File PanelImage = board.getFiles().get(0);
-            PanelTextField.setText(CurrentDirectory.relativize(PanelImage.toPath()).toString());
-            event.setDropCompleted(true);
-            return;
-        }
-        event.setDropCompleted(false);
     }
     
     private String ExtractAndToString(List<Path>PathList, char SecondChar){

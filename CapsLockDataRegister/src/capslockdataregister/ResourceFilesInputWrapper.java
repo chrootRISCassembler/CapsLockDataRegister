@@ -17,7 +17,7 @@ enum ResourceFilesInputWrapper {
     instance;
     
     final Path CurrentDirectory = Paths.get(".").toAbsolutePath().getParent();
-    final Path GamesDirectory = Paths.get("./Games/");
+    final Path GamesDirectory = Paths.get("./Games/").toAbsolutePath();
     private final ThreadSafeLRU_list<UUID, LauncherResourceFilesValidator> LRUlist = new ThreadSafeLRU_list<UUID, LauncherResourceFilesValidator>(){
         @Override
         protected void onRemoveEntry(Map.Entry<UUID, LauncherResourceFilesValidator> eldest){

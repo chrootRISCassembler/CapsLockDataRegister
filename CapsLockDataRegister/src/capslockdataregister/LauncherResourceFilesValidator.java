@@ -57,7 +57,7 @@ class LauncherResourceFilesValidator extends Thread{
      * @param ExePath ゲームの実行ファイルパス
      */
     LauncherResourceFilesValidator(String ExePath){
-        GameRootPath = ResourceFilesInputWrapper.instance.CurrentDirectory.relativize(Paths.get(ExePath).toAbsolutePath()).subpath(0, 2);
+        GameRootPath = ResourceFilesInputWrapper.instance.CurrentDirectory.relativize(Paths.get(ExePath).toAbsolutePath()).subpath(0, 2).toAbsolutePath();
 
         try {
             Files.walk(GameRootPath, FileVisitOption.FOLLOW_LINKS)
