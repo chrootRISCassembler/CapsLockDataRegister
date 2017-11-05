@@ -62,24 +62,7 @@ class LauncherResourceFilesValidator extends Thread{
      * @param ExePath ゲームの実行ファイルパス
      */
     LauncherResourceFilesValidator(String ExePath){
-        GameRootPath = ResourceFilesInputWrapper.instance.CurrentDirectory.relativize(Paths.get(ExePath).toAbsolutePath()).subpath(0, 2).toAbsolutePath();
-
-        try {
-            Files.walk(GameRootPath, FileVisitOption.FOLLOW_LINKS)
-                    .parallel()
-                    .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
-                    .peek(file -> System.err.println(file))
-                    .forEach(file -> PathDB.put(file.toAbsolutePath(), getResourceType(file.getFileName().toString())));
-        } catch (IOException ex) {
-            Logger.getLogger(LauncherResourceFilesValidator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        try {
-            watchdog = FileSystems.getDefault().newWatchService();
-            GameRootPath.register(watchdog, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-        } catch (IOException ex) {
-            Logger.getLogger(LauncherResourceFilesValidator.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        crawl(Paths.get(ExePath).toAbsolutePath());
     }
     
     /**
