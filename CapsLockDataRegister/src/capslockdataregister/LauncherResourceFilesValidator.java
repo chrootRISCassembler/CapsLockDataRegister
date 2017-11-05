@@ -41,6 +41,10 @@ class LauncherResourceFilesValidator extends Thread{
     }
     
     private Path GameRootPath;
+    
+    /**
+     * ファイルパスと,そのファイルの種類をキャッシュするKey-Valueストア.必ず絶対パスで保存する.
+     */
     private ConcurrentHashMap<Path, ResourceType> PathDB = new ConcurrentHashMap<>();
     private WatchService watchdog;
     
@@ -65,7 +69,7 @@ class LauncherResourceFilesValidator extends Thread{
                     .parallel()
                     .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
                     .peek(file -> System.err.println(file))
-                    .forEach(file -> PathDB.put(file, getResourceType(file.getFileName().toString())));
+                    .forEach(file -> PathDB.put(file.toAbsolutePath(), getResourceType(file.getFileName().toString())));
         } catch (IOException ex) {
             Logger.getLogger(LauncherResourceFilesValidator.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -91,7 +95,7 @@ class LauncherResourceFilesValidator extends Thread{
                     .parallel()
                     .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
                     .peek(file -> System.err.println(file))
-                    .forEach(file -> PathDB.put(file, getResourceType(file.getFileName().toString())));
+                    .forEach(file -> PathDB.put(file.toAbsolutePath(), getResourceType(file.getFileName().toString())));
         } catch (IOException ex) {
             System.err.println(ex);
         }
@@ -173,7 +177,7 @@ class LauncherResourceFilesValidator extends Thread{
                     Path child = GameRootPath.resolve(name);
                     System.out.format("%s: %s\n", event.kind().name(), child);
                     
-                    if(ev.kind() == ENTRY_CREATE)PathDB.put(ev.context(), validate(ev.context()));
+                    if(ev.kind() == ENTRY_CREATE)PathDB.put(ev.context().toAbsolutePath(), validate(ev.context()));
                     if(ev.kind() == ENTRY_MODIFY)System.err.println("MODIFY");
                     if(ev.kind() == ENTRY_DELETE)PathDB.remove(ev.context());
                 }
