@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
@@ -117,6 +118,14 @@ class LauncherResourceFilesValidator extends Thread{
         }
     }
     
+    Stream<Path> query(ResourceType type){
+        return PathDB.entrySet()
+                .stream()
+                .parallel()
+                .filter(KeyValue -> KeyValue.getValue() == type)
+                .map(KeyValue -> KeyValue.getKey());
+    }
+    
     boolean query(String FilePath){
         final Path CheckPath = Paths.get(FilePath);
         return PathDB.containsKey(CheckPath);
@@ -148,6 +157,11 @@ class LauncherResourceFilesValidator extends Thread{
     @Override
     public void run() {
         while(true){
+            if(watchdog == null)try{sleep(1000);}
+            catch (InterruptedException ex) {
+                System.err.println(ex);
+            }
+            
             try{
                 final WatchKey watchKey = watchdog.take();
                 for (WatchEvent<?> event: watchKey.pollEvents()) {

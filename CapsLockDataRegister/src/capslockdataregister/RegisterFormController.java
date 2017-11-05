@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -144,7 +145,19 @@ public class RegisterFormController implements Initializable {
                     return Files.isExecutable(ExePath) ? FieldSet.State.OK : FieldSet.State.NG;
                 },
                 files -> files.size() == 1,
-                files -> true
+                file -> {
+                    final Path exe = file.get(0).toPath();
+                    validator.crawl(exe);
+                    ExeTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(exe).toString());
+                    DescFileHandler(validator.query(LauncherResourceFilesValidator.ResourceType.description).findAny().get());
+                    
+                    PanelTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(
+                            validator.query(LauncherResourceFilesValidator.ResourceType.panel).findAny().get().toAbsolutePath()).toString());
+                    
+                    ImageTextField.setText(MakeFileArray(validator.query(LauncherResourceFilesValidator.ResourceType.image)));
+                    MovieTextField.setText(MakeFileArray(validator.query(LauncherResourceFilesValidator.ResourceType.movie)));
+                    return true;
+                }
         ));
         
         FieldMap.put(VerTextField, new FieldSet(FieldSet.State.WARN, VerStateView,
@@ -278,6 +291,11 @@ public class RegisterFormController implements Initializable {
     private final String MakeFileArray(List<File> files){
         return files.stream()
                 .map(file -> '\"' + ResourceFilesInputWrapper.instance.toRelativePath(file.toPath()).toString() + '\"')
+                .collect(Collectors.joining(", "));
+    }
+    
+    private final String MakeFileArray(Stream<Path> stream){
+        return stream.map(path -> '\"' + ResourceFilesInputWrapper.instance.toRelativePath(path).toString() + '\"')
                 .collect(Collectors.joining(", "));
     }
     
