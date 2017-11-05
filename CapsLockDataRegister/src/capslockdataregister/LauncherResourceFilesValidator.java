@@ -19,8 +19,6 @@ import java.nio.file.attribute.DosFileAttributeView;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
@@ -72,7 +70,7 @@ class LauncherResourceFilesValidator extends Thread{
      * @param ExePath ゲーム本体のパス
      */
     final void crawl(Path ExePath){
-        GameRootPath = ResourceFilesInputWrapper.instance.toRelativePath(ExePath).subpath(0, 2);
+        GameRootPath = ResourceFilesInputWrapper.instance.toRelativePath(ExePath).subpath(0, 2).toAbsolutePath();
         try {
             Files.walk(GameRootPath, FileVisitOption.FOLLOW_LINKS)
                     .parallel()
