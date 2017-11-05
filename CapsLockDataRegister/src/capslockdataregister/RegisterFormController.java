@@ -227,6 +227,8 @@ public class RegisterFormController implements Initializable {
     private void Register(){
         if(!IsValidInput())return;
         
+        ResourceFilesInputWrapper.instance.genJSONArray(ImageTextField.getText());
+        
         String GameName = NameTextField.getText();
         if(GameName.isEmpty()){
             final String ExeFileName = Paths.get(ExeTextField.getText()).getFileName().toString();

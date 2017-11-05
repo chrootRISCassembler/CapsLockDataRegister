@@ -1,10 +1,13 @@
 package capslockdataregister;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
+import org.json.JSONArray;
 
 /**
  * ファイルパスの解決や検証を行う.
@@ -58,5 +61,17 @@ enum ResourceFilesInputWrapper {
      */
     final Path toRelativePath(Path path){
         return CurrentDirectory.relativize(path);
+    }
+    
+    final JSONArray genJSONArray(String RawString){
+        String[] files = RawString.split(",");
+        
+        final JSONArray array = new JSONArray();
+            
+        Arrays.stream(files)
+                .peek(ele -> System.err.println(ele))
+                .forEach(ele -> array.put(ele));
+        
+        return array;
     }
 }
