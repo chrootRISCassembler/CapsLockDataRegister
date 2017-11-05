@@ -1,9 +1,7 @@
 package capslockdataregister;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -65,7 +63,6 @@ public class RegisterFormController implements Initializable {
     @FXML private Button RegisterButton;
     
     private Stage ThisStage;
-    private final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
     private LauncherResourceFilesValidator validator;
     
     static private final class FieldSet{
@@ -152,7 +149,7 @@ public class RegisterFormController implements Initializable {
                     DescFileHandler(validator.query(LauncherResourceFilesValidator.ResourceType.description).findAny().get());
                     
                     PanelTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(
-                            validator.query(LauncherResourceFilesValidator.ResourceType.panel).findAny().get().toAbsolutePath()).toString());
+                            validator.query(LauncherResourceFilesValidator.ResourceType.panel).findAny().get()).toString());
                     
                     ImageTextField.setText(MakeFileArray(validator.query(LauncherResourceFilesValidator.ResourceType.image)));
                     MovieTextField.setText(MakeFileArray(validator.query(LauncherResourceFilesValidator.ResourceType.movie)));
@@ -222,8 +219,6 @@ public class RegisterFormController implements Initializable {
         MovieTextField.setText(record.movieProperty().getValue());
         
         FieldMap.forEach((field, checker) -> checker.validate(field.getText()));
-//        System.err.println(Files.isDirectory(ResourceFilesInputWrapper.instance.GamesDirectory));
-//        System.err.println(ResourceFilesInputWrapper.instance.CurrentDirectory);
     }
     
     final void setOwnStage(Stage stage){ThisStage = stage;}
@@ -310,71 +305,6 @@ public class RegisterFormController implements Initializable {
     }
     
     @FXML
-    private void ExeDropped(DragEvent event) {
-        Dragboard board = event.getDragboard();
-	if(!board.hasFiles()){
-            event.setDropCompleted(false);
-            return;
-        }
-        
-        final File ExePath = board.getFiles().get(0);
-        if(ExePath != null){
-            ExeTextField.setText(CurrentDirectory.relativize(ExePath.toPath()).toString());
-            FieldMap.get(ExeTextField).setState(FieldSet.State.OK);
-        }else{
-            FieldMap.get(ExeTextField).setState(FieldSet.State.NG);
-        }
-
-        final Path GamesBaseDirectory = CurrentDirectory.relativize(ExePath.toPath()).subpath(0, 2);
-        System.err.println(GamesBaseDirectory.toString());
-
-        try {
-            final List<Path> CollectedFiles = Files.walk(GamesBaseDirectory, FileVisitOption.FOLLOW_LINKS)
-                    .parallel()
-                    .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
-                    .collect(Collectors.toList());
-            
-            {
-                final boolean IsNameNull = NameTextField.getText().isEmpty();
-                final boolean IsDescriptionNull = DescTextField.getText().isEmpty();
-                final boolean IsVersionNull = VerTextField.getText().isEmpty();
-                if(IsNameNull || IsDescriptionNull || IsVersionNull){
-                    Optional<Path> DescriptionFile = CollectedFiles.stream()
-                            .parallel()
-                            .filter(file -> file.getFileName().toString().charAt(2) == 'd')
-                            .findAny();
-                    if(DescriptionFile.isPresent()){
-                        final DescriptionFileParser FileParser = new DescriptionFileParser(DescriptionFile.get());
-                        if(IsNameNull)NameTextField.setText(FileParser.getName());
-                        if(IsDescriptionNull)DescTextField.setText(FileParser.getDescription());
-                        if(IsVersionNull)VerTextField.setText(FileParser.getVersion());
-                    }
-                }
-            }
-
-            if(PanelTextField.getText().isEmpty()){
-                Optional<Path> PanelFile = CollectedFiles.stream()
-                        .parallel()
-                        .filter(file -> file.getFileName().toString().charAt(2) == 'p')
-                        .findAny();
-                if(PanelFile.isPresent())PanelTextField.setText(PanelFile.get().toString());
-            }
-
-            if(ImageTextField.getText().isEmpty()){
-                ImageTextField.setText(ExtractAndToString(CollectedFiles, 'i'));
-            }
-
-            if(MovieTextField.getText().isEmpty()){
-                MovieTextField.setText(ExtractAndToString(CollectedFiles, 'm'));
-            }
-            
-        } catch (IOException ex) {
-            System.err.println(ex);
-        }
-        event.setDropCompleted(true);
-    }
-    
-    @FXML
     private void onKeyReleased(KeyEvent event){
         final TextField EventSource = (TextField)event.getSource();
         FieldMap.get(EventSource).validate(EventSource.getText());
@@ -384,8 +314,6 @@ public class RegisterFormController implements Initializable {
     
     @FXML
     private final void onDragDropped_TextField(DragEvent event){
-
-        System.err.println("DragDrop");
         //validatorのDBを参照して処理を高速化    
         
         final Dragboard board = event.getDragboard();
@@ -405,7 +333,6 @@ public class RegisterFormController implements Initializable {
     
     @FXML
     private final void onDragOver_TextField(DragEvent event){
-        System.err.println("DragOver");
         final Dragboard board = event.getDragboard();
         if(board.hasFiles()){
             
@@ -439,13 +366,5 @@ public class RegisterFormController implements Initializable {
             return true;
         }
         return false;
-    }
-    
-    private String ExtractAndToString(List<Path>PathList, char SecondChar){
-        return PathList.stream()
-                    .parallel()
-                    .filter(file -> file.getFileName().toString().charAt(2) == SecondChar)
-                    .map(file -> file.toString())
-                    .collect(Collectors.joining(","));
     }
 }
