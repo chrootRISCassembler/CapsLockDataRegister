@@ -3,10 +3,15 @@ package capslockdataregister;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 import org.json.JSONArray;
 
 /**
@@ -73,5 +78,53 @@ enum ResourceFilesInputWrapper {
                 .forEach(ele -> array.put(ele));
         
         return array;
+    }
+    
+    
+    final Stream<String> parseToStringStream(String RawString){
+        List<String> PathStringList = new ArrayList<>();
+        
+        boolean WaitingEndQuot = false;//トークンの終端の"を待機しているか
+        boolean IsEscaped = false;//次の文字がエスケープされているか
+        boolean IsWatingTokenFirst = false;//トークンの最初の有効な文字を待機しているか(始端の"の次の文字)
+        boolean ErrorToken = false;//トークンにエラーがあった
+        int TokenFirst = 0;
+        
+        for(int i = 0;i != RawString.length();++i){
+            final char ch = RawString.charAt(i);
+            switch(ch){
+                case '\"':
+                    if(IsEscaped){
+                        IsEscaped = false;
+                    }else{
+                        if(WaitingEndQuot){
+                            
+                            //substring here
+                            //check
+                        }
+                    }
+                break;
+                
+                case '\\':
+                    if(IsEscaped){
+                        
+                    }else{
+                        IsEscaped = true;
+                    }
+                break;
+                
+                default:
+                    if(IsWatingTokenFirst){
+                        TokenFirst = i;
+                        IsWatingTokenFirst = false;
+                    }
+                    
+                    if(IsEscaped){
+                        IsEscaped = false;
+                        continue;
+                    }
+            }
+        }
+        return PathStringList.stream();
     }
 }
