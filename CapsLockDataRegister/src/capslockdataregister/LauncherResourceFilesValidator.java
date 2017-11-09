@@ -209,21 +209,22 @@ class LauncherResourceFilesValidator extends Thread{
     }
     
     /**
-     * Verify images.
-     * <p>Each path must be quoted by ".</p>
-     * <p>Ex) "aaa", "bbb"</p>
-     * @param Images Array of path.
-     * @return Either all images are valid.
+     * 画像がランチャーで正常に表示できるか検証する.
+     * <p>個々のファイルパスは'"'で囲まれていなければならない.</p>
+     * <p>Ex) "Games/FooGame/__image__0.png", "Games/FooGame/__image__1.png"</p>
+     * <p>1つもパスが指定されていない又は異常なパスが1つ以上あるとき,この関数はfalseを返す.</p>
+     * @param Images "で囲まれた画像のパスの羅列.
+     * @return 指定された全ての画像が正常に表示できるか.
      */
     static final boolean areValidImages(String Images){
         if(Images.isEmpty())return false;
-        try{
-            for(final Path path : parseFiles(Images)){
-                if(!Files.isRegularFile(path))return false;
-                new Image(path.toUri().toString());
-            }
-        }catch(NullPointerException | IllegalArgumentException ex){
-            return false;
+        QuotedStringParser Parser = new QuotedStringParser(Images);
+        if(Parser.hasError())return false;
+        
+        for(String StrPath : Parser.get()){
+            final Path path = Paths.get(StrPath);
+            if(!Files.isRegularFile(path))return false;
+            //check perm here
         }
         return true;
     }
