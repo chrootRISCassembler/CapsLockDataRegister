@@ -5,7 +5,6 @@ import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
@@ -16,13 +15,9 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.DosFileAttributeView;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import javafx.scene.image.Image;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaException;
 
 /**
  *
@@ -248,61 +243,5 @@ class LauncherResourceFilesValidator extends Thread{
             //check perm here
         }
         return true;
-    }
-    
-    /**
-     * Parse String of path array.
-     * <p>Each path must be quoted by ".</p>
-     * <p>Ex) "aaa", "bbb"</p>
-     * @param source Array of path.
-     * @return Set of parsed file's Path.
-     * <h2>This function is incomplete.Someone fix it!</h2>
-     */
-    static final Set<Path> parseFiles(String source) throws InvalidPathException{
-        boolean InDoubleQuotation = false;
-        boolean IsEscaped = false;
-        boolean IsWatingTokenFirst = false;
-        int TokenFirst = 0;
-        
-        final Set<Path> PathSet = new HashSet<>();
-        
-        for(int i = 0;i != source.length();++i){
-            final char ch = source.charAt(i);
-            switch(ch){
-                case '\"':
-                    if(IsEscaped){
-                        IsEscaped = false;
-                        continue;
-                    }
-                    
-                    if(InDoubleQuotation){
-                        PathSet.add(Paths.get(source.substring(TokenFirst, i)));
-                        InDoubleQuotation = false;
-                    }else{
-                        InDoubleQuotation = true;
-                        IsWatingTokenFirst = true;
-                    }
-                break;
-                case ',':
-                    if(InDoubleQuotation)continue;
-                    
-                break;
-                case ' ':
-                    
-                break;
-                default:
-                    if(IsWatingTokenFirst){
-                        TokenFirst = i;
-                        IsWatingTokenFirst = false;
-                    }
-                    
-                    if(IsEscaped){
-                        IsEscaped = false;
-                        continue;
-                    }
-                    break;
-            }
-        }
-        return PathSet;
     }
 }
