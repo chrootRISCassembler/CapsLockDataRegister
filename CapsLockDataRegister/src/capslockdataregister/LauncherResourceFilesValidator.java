@@ -14,7 +14,6 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.nio.file.attribute.DosFileAttributeView;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import javafx.scene.image.Image;
@@ -174,23 +173,8 @@ class LauncherResourceFilesValidator extends Thread{
      * @return 正常に表示できるか否か.
      */
     final boolean isValidPanel(Path PanelPath){
-        if(!Files.isRegularFile(PanelPath))return false;
-        
-        /*パネル画像ファイルはUnixパーミッションで　r--r--r-- であるべき*/
-        
-        if(Files.isWritable(PanelPath))return false;
-        if(!Files.isReadable(PanelPath))return false;
-        
-        {//Windowsのファイルシステムでは実行権限と読み取り権限を完全には切り離せない
-            DosFileAttributeView DOS_Attribute = Files.getFileAttributeView(PanelPath, DosFileAttributeView.class);
-            if(DOS_Attribute == null && Files.isExecutable(PanelPath))return false;
-        }
-        
-        if(GameRootPath == null){
-            if(!PanelPath.startsWith(ResourceFilesInputWrapper.instance.CurrentDirectory))return false;//カレントディレクトリ以下にない
-        }else{
-            if(!PanelPath.startsWith(GameRootPath))return false;//ゲームのルートディレクトリ以下にない
-        }
+        if(!ResourceFilesInputWrapper.instance.hasLeastPrivilege(PanelPath))return false;
+        if(!isLocatedValidly(PanelPath.toAbsolutePath()))return false;
         
         final Image panel;
         
