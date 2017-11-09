@@ -56,6 +56,7 @@ public class MainFormController implements Initializable {
     @FXML private TableColumn<GameRecord, String> PanelCol;
     @FXML private TableColumn<GameRecord, String> ImageCol;
     @FXML private TableColumn<GameRecord, String> MovieCol;
+    @FXML private TableColumn<GameRecord, String> IDCol;
     @FXML private Label RecordNumLabel;
     @FXML private Button RemoveGameButton;
     @FXML private Button ReloadButton;
@@ -95,6 +96,7 @@ public class MainFormController implements Initializable {
         VersionCol.setCellValueFactory(new PropertyValueFactory<>("version"));
         ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
         MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
+        IDCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
          
         GameInfoView.setItems(DisplayCollection);
     }
@@ -231,7 +233,8 @@ public class MainFormController implements Initializable {
                     version,
                     panel,
                     new JSONArray(Images), 
-                    new JSONArray(Movies)
+                    new JSONArray(Movies),
+                    "1"
             ));
         }
         UpdateNumberDisplay();
