@@ -19,6 +19,7 @@ public final class GameRecord{
     private final SimpleStringProperty panel;
     private final SimpleStringProperty image;
     private final SimpleStringProperty movie;
+    private final SimpleStringProperty ID;
 
     private String toTextFieldString(String JSONArrayString){
         return JSONArrayString.substring(1, JSONArrayString.length() - 1).replace("\"", "");
@@ -34,6 +35,7 @@ public final class GameRecord{
         panel = new SimpleStringProperty(record.getString("panel"));
         image = new SimpleStringProperty(record.getJSONArray("image").join(","));
         movie = new SimpleStringProperty(record.getJSONArray("movie").join(","));
+        ID = new SimpleStringProperty(record.getString("ID"));
     }
 
     GameRecord(
@@ -44,7 +46,8 @@ public final class GameRecord{
             String VersionString,
             String PanelString,
             JSONArray ImageArray,
-            JSONArray MovieArray
+            JSONArray MovieArray,
+            String IDString
     ){
         uuid = new SimpleStringProperty(UUIDString);
         name = new SimpleStringProperty(NameString);
@@ -54,6 +57,7 @@ public final class GameRecord{
         panel = new SimpleStringProperty(PanelString);
         image = new SimpleStringProperty(toTextFieldString(ImageArray.toString()));
         movie = new SimpleStringProperty(toTextFieldString(MovieArray.toString()));
+        ID = new SimpleStringProperty(IDString);
 
         json = new JSONObject()
             .put("UUID", UUIDString)
@@ -63,7 +67,8 @@ public final class GameRecord{
             .put("version", VersionString)
             .put("panel", PanelString)
             .put("image", ImageArray)
-            .put("movie", MovieArray);
+            .put("movie", MovieArray)
+            .put("ID", IDString);
         System.err.println(json.toString());
     }
     
@@ -75,7 +80,8 @@ public final class GameRecord{
             String VersionString,
             String PanelString,
             JSONArray ImageArray,
-            JSONArray MovieArray
+            JSONArray MovieArray,
+            String IDString
     ){
         uuid.setValue(UUIDString);
         name.setValue(NameString);
@@ -85,6 +91,7 @@ public final class GameRecord{
         panel.setValue(PanelString);
         image.setValue(toTextFieldString(ImageArray.toString()));
         movie.setValue(toTextFieldString(MovieArray.toString()));
+        ID.setValue(IDString);
 
         json.put("UUID", UUIDString)
             .put("name", NameString)
@@ -93,7 +100,8 @@ public final class GameRecord{
             .put("version", VersionString)
             .put("panel", PanelString)
             .put("image", ImageArray)
-            .put("movie", MovieArray);
+            .put("movie", MovieArray)
+            .put("ID", IDString);
     }
     
     public final ReadOnlyStringProperty uuidProperty(){return uuid;}
@@ -104,5 +112,6 @@ public final class GameRecord{
     public final ReadOnlyStringProperty panelProperty(){return panel;}
     public final ReadOnlyStringProperty imageProperty(){return image;}
     public final ReadOnlyStringProperty movieProperty(){return movie;}
+    public final ReadOnlyStringProperty IDProperty(){return ID;}
     public final JSONObject geJSON(){return json;}
 }
