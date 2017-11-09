@@ -195,7 +195,7 @@ class LauncherResourceFilesValidator extends Thread{
      * @param Images "で囲まれた画像のパスの羅列.
      * @return 指定された全ての画像が正常に表示できるか.
      */
-    static final boolean areValidImages(String Images){
+    final boolean areValidImages(String Images){
         if(Images.isEmpty())return false;
         QuotedStringParser Parser = new QuotedStringParser(Images);
         if(Parser.hasError())return false;
@@ -216,7 +216,7 @@ class LauncherResourceFilesValidator extends Thread{
      * @param Movies '"'で囲まれた動画のパスの羅列.
      * @return 指定された全ての動画が正常に表示できるかどうか.
      */
-    static final boolean areValidMoves(String Movies){
+    final boolean areValidMoves(String Movies){
         if(Movies.isEmpty())return false;
         QuotedStringParser Parser = new QuotedStringParser(Movies);
         if(Parser.hasError())return false;

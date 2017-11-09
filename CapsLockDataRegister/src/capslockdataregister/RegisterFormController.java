@@ -174,7 +174,7 @@ public class RegisterFormController implements Initializable {
         ));
         
         FieldMap.put(ImageTextField, new FieldSet(FieldSet.State.WARN, ImageStateView, 
-                Images -> LauncherResourceFilesValidator.areValidImages(Images) ? FieldSet.State.OK : FieldSet.State.WARN,
+                Images -> validator.areValidImages(Images) ? FieldSet.State.OK : FieldSet.State.WARN,
                 files -> true,
                 files -> {
                     ImageTextField.setText(MakeFileArray(files));
@@ -183,7 +183,7 @@ public class RegisterFormController implements Initializable {
         ));
         
         FieldMap.put(MovieTextField, new FieldSet(FieldSet.State.WARN, MovieStateView,
-                Movies -> LauncherResourceFilesValidator.areValidMoves(Movies) ? FieldSet.State.OK : FieldSet.State.WARN,
+                Movies -> validator.areValidMoves(Movies) ? FieldSet.State.OK : FieldSet.State.WARN,
                 files -> true,
                 files -> {
                     MovieTextField.setText(MakeFileArray(files));
