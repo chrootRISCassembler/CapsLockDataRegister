@@ -15,11 +15,14 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import javafx.collections.FXCollections;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -60,6 +63,7 @@ public class RegisterFormController implements Initializable {
     @FXML private ImageView PanelStateView;
     @FXML private ImageView ImageStateView;
     @FXML private ImageView MovieStateView;
+    @FXML private ChoiceBox IDChoiceBox;
     @FXML private Button RegisterButton;
     
     private Stage ThisStage;
@@ -124,6 +128,11 @@ public class RegisterFormController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
+        {
+            List<Integer> Nlist = IntStream.rangeClosed(1, ResourceFilesInputWrapper.GAME_ID_MAX).boxed().collect(Collectors.toList());
+            IDChoiceBox.setItems(FXCollections.observableArrayList(Nlist));
+        }
+        
         FieldMap.put(NameTextField, new FieldSet(FieldSet.State.WARN, NameStateView,
                 name -> name.isEmpty() ? FieldSet.State.WARN : FieldSet.State.OK,
                 files -> files.size() == 1,
@@ -254,7 +263,8 @@ public class RegisterFormController implements Initializable {
                 VerTextField.getText().isEmpty() ? "1" : VerTextField.getText(),
                 PanelTextField.getText(),
                 imagePathArray,
-                moviePathArray
+                moviePathArray,
+                IDChoiceBox.getValue().toString()
             ));
             ThisStage.close();
             return;
@@ -267,7 +277,8 @@ public class RegisterFormController implements Initializable {
             VerTextField.getText().isEmpty() ? "1" : VerTextField.getText(),
             PanelTextField.getText(),
             imagePathArray,
-            moviePathArray
+            moviePathArray,
+            IDChoiceBox.getValue().toString()
         );
         ThisStage.close();
     }

@@ -23,6 +23,10 @@ enum ResourceFilesInputWrapper {
     final Path CurrentDirectory = Paths.get(".").toAbsolutePath().getParent();
     final Path GamesDirectory = Paths.get("./Games/").toAbsolutePath();
     final boolean isDOSFileSystem;
+    /**
+     * ゲームの登録IDの上限.登録画面からも参照される.
+     */
+    static final int GAME_ID_MAX = 50;
             
     private ResourceFilesInputWrapper(){
         final DosFileAttributeView DOSattr = Files.getFileAttributeView(GamesDirectory, DosFileAttributeView.class);

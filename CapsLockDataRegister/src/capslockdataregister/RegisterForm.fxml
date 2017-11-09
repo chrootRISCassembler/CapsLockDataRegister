@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.*?>
 <?import javafx.geometry.*?>
@@ -8,7 +9,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="344.0" prefWidth="600.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="capslockdataregister.RegisterFormController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="capslockdataregister.RegisterFormController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="74.0" prefWidth="117.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="133.0" prefWidth="410.0" />
@@ -23,6 +24,7 @@
       <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
@@ -33,8 +35,8 @@
       <Label text="バージョン" GridPane.rowIndex="4" />
       <Label text="画像ファイルパス" GridPane.rowIndex="6" />
       <Label text="動画ファイルパス" GridPane.rowIndex="7" />
-      <Label fx:id="ErrorMsgLabel" text="errmsg" GridPane.rowIndex="8" />
-      <Button fx:id="RegisterButton" mnemonicParsing="false" onMouseClicked="#Register" text="登録" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+      <Label fx:id="ErrorMsgLabel" text="errmsg" GridPane.rowIndex="9" />
+      <Button fx:id="RegisterButton" mnemonicParsing="false" onMouseClicked="#Register" text="登録" GridPane.columnIndex="1" GridPane.rowIndex="10" />
       <TextField fx:id="NameTextField" onDragDropped="#onDragDropped_TextField" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <TextField fx:id="ExeTextField" onDragDropped="#onDragDropped_TextField" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <TextField fx:id="VerTextField" onDragDropped="#onDragDropped_TextField" onDragOver="#onDragOver_TextField" onKeyReleased="#onKeyReleased" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -73,6 +75,19 @@
          <GridPane.margin>
             <Insets left="10.0" right="10.0" />
          </GridPane.margin></ImageView>
+      <Label text="作品ID" GridPane.rowIndex="8" />
+      <ChoiceBox fx:id="IDChoiceBox" prefWidth="40.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="8">
+         <GridPane.margin>
+            <Insets left="70.0" />
+         </GridPane.margin></ChoiceBox>
+      <Label text="P-" GridPane.columnIndex="1" GridPane.rowIndex="8">
+         <GridPane.margin>
+            <Insets left="50.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
