@@ -1,7 +1,9 @@
 package capslockdataregister;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.DosFileAttributeView;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
@@ -20,6 +22,13 @@ enum ResourceFilesInputWrapper {
     
     final Path CurrentDirectory = Paths.get(".").toAbsolutePath().getParent();
     final Path GamesDirectory = Paths.get("./Games/").toAbsolutePath();
+    final boolean isDOSFileSystem;
+            
+    private ResourceFilesInputWrapper(){
+        final DosFileAttributeView DOSattr = Files.getFileAttributeView(GamesDirectory, DosFileAttributeView.class);
+        isDOSFileSystem = DOSattr != null;
+    }
+    
     private final ThreadSafeLRU_list<UUID, LauncherResourceFilesValidator> LRUlist = new ThreadSafeLRU_list<UUID, LauncherResourceFilesValidator>(){
         @Override
         protected void onRemoveEntry(Map.Entry<UUID, LauncherResourceFilesValidator> eldest){
@@ -72,5 +81,22 @@ enum ResourceFilesInputWrapper {
                 .forEach(ele -> array.put(ele));
         
         return array;
+    }
+    
+    /**
+     * ファイルが最小の権限を付与されているかチェックする.
+     * <p>端的にはchmod 444になってるかチェック.
+     * 画像や動画などは読み込む権限だけあればいい.余計な権限があるとfalseを返す.
+     * 引数にディレクトリを渡すと必ずfalseを返す.</p>
+     * @param path 検査するファイルパス.
+     * @return 最小権限が付与されているか.
+     */
+    final boolean hasLeastPrivilege(Path path){
+        if(!Files.isRegularFile(path))return false;
+        
+        if(!Files.isReadable(path))return false;
+        if(Files.isWritable(path))return false;
+        
+        return isDOSFileSystem || !Files.isExecutable(path);
     }
 }
