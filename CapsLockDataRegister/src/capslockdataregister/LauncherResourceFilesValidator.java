@@ -232,20 +232,20 @@ class LauncherResourceFilesValidator extends Thread{
     /**
      * 動画がランチャーで正常に表示できるか検証する.
      * <p>個々のファイルパスは'"'で囲まれていなければならない.</p>
-     * <p>Ex) "aaa", "bbb"</p>
-     * <p>この関数は引数中に一つでも異常なパスを検出するとfalseを返す.一つもパスが指定されていないときもfalseを返す</p>
+     * <p>Ex) "Games/FooGame/__movie__0.png", "Games/FooGame/__movie__1.png"</p>
+     * <p>1つもパスが指定されていない又は異常なパスが1つ以上あるとき,この関数はfalseを返す.</p>
      * @param Movies '"'で囲まれた動画のパスの羅列.
-     * @return 全ての動画が正常に表示できるかどうか.
+     * @return 指定された全ての動画が正常に表示できるかどうか.
      */
     static final boolean areValidMoves(String Movies){
         if(Movies.isEmpty())return false;
-        try{
-            for(final Path path : parseFiles(Movies)){
-                if(!Files.isRegularFile(path))return false;
-                new Media(path.toUri().toString());
-            }
-        }catch(NullPointerException | IllegalArgumentException | UnsupportedOperationException | MediaException ex){
-            return false;
+        QuotedStringParser Parser = new QuotedStringParser(Movies);
+        if(Parser.hasError())return false;
+        
+        for(String StrPath : Parser.get()){
+            final Path path = Paths.get(StrPath);
+            if(!Files.isRegularFile(path))return false;
+            //check perm here
         }
         return true;
     }
