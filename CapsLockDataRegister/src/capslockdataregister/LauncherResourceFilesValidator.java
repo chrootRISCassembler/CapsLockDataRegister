@@ -202,8 +202,8 @@ class LauncherResourceFilesValidator extends Thread{
         
         for(String StrPath : Parser.get()){
             final Path path = Paths.get(StrPath);
-            if(!Files.isRegularFile(path))return false;
-            //check perm here
+            if(!ResourceFilesInputWrapper.instance.hasLeastPrivilege(path))return false;
+            if(!isLocatedValidly(path.toAbsolutePath()))return false;
         }
         return true;
     }
@@ -223,8 +223,8 @@ class LauncherResourceFilesValidator extends Thread{
         
         for(String StrPath : Parser.get()){
             final Path path = Paths.get(StrPath);
-            if(!Files.isRegularFile(path))return false;
-            //check perm here
+            if(!ResourceFilesInputWrapper.instance.hasLeastPrivilege(path))return false;
+            if(!isLocatedValidly(path.toAbsolutePath()))return false;
         }
         return true;
     }
