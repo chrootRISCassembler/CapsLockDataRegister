@@ -10,16 +10,16 @@ import org.json.JSONObject;
  * @author RISCassembler
  */
 public final class GameRecord{
-    private JSONObject json;
-    private final SimpleStringProperty uuid;
-    private final SimpleStringProperty name;
-    private final SimpleStringProperty description;
-    private final SimpleStringProperty executable;
-    private final SimpleStringProperty version;
-    private final SimpleStringProperty panel;
-    private final SimpleStringProperty image;
-    private final SimpleStringProperty movie;
-    private final SimpleStringProperty ID;
+    private final JSONObject json;
+    private final ReadOnlyStringProperty uuid;
+    private final ReadOnlyStringProperty name;
+    private final ReadOnlyStringProperty description;
+    private final ReadOnlyStringProperty executable;
+    private final ReadOnlyStringProperty version;
+    private final ReadOnlyStringProperty panel;
+    private final ReadOnlyStringProperty image;
+    private final ReadOnlyStringProperty movie;
+    private final ReadOnlyStringProperty ID;
 
     private String toTextFieldString(String JSONArrayString){
         return JSONArrayString.substring(1, JSONArrayString.length() - 1).replace("\"", "");
@@ -70,38 +70,6 @@ public final class GameRecord{
             .put("movie", MovieArray)
             .put("ID", IDString);
         System.err.println(json.toString());
-    }
-    
-    void Update(
-            String UUIDString,
-            String NameString,
-            String DescriptionString,
-            String ExecutableString,
-            String VersionString,
-            String PanelString,
-            JSONArray ImageArray,
-            JSONArray MovieArray,
-            String IDString
-    ){
-        uuid.setValue(UUIDString);
-        name.setValue(NameString);
-        description.setValue(DescriptionString);
-        executable.setValue(ExecutableString);
-        version.setValue(VersionString);
-        panel.setValue(PanelString);
-        image.setValue(toTextFieldString(ImageArray.toString()));
-        movie.setValue(toTextFieldString(MovieArray.toString()));
-        ID.setValue(IDString);
-
-        json.put("UUID", UUIDString)
-            .put("name", NameString)
-            .put("description", DescriptionString)
-            .put("executable", ExecutableString)
-            .put("version", VersionString)
-            .put("panel", PanelString)
-            .put("image", ImageArray)
-            .put("movie", MovieArray)
-            .put("ID", IDString);
     }
     
     public final ReadOnlyStringProperty uuidProperty(){return uuid;}

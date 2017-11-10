@@ -92,8 +92,8 @@ public class MainFormController implements Initializable {
         
         UUIDCol.setCellValueFactory(new PropertyValueFactory<>("uuid"));
         NameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        ExecutableCol.setCellValueFactory(new PropertyValueFactory<>("executable"));
-        VersionCol.setCellValueFactory(new PropertyValueFactory<>("version"));
+        ExecutableCol.setCellValueFactory(new PropertyValueFactory<>("exe"));
+        VersionCol.setCellValueFactory(new PropertyValueFactory<>("ver"));
         ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
         MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
         IDCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
@@ -152,12 +152,15 @@ public class MainFormController implements Initializable {
     }
     
     @FXML
-    private void onRecordDoubleClicked(){
-        RegisterWindow.setUserData(GameInfoView.getSelectionModel().getSelectedItem());
+    private final void onRecordDoubleClicked(){
+        final GameRecord SelectedGame = GameInfoView.getSelectionModel().getSelectedItem();       
+        RegisterWindow.setUserData(SelectedGame);
         RegisterWindow.setTitle("ゲーム情報変更");
         RegisterWindow.showAndWait();
+        
+        final GameRecord NewGameInfo = (GameRecord)RegisterWindow.getUserData();
+        DisplayCollection.set(GameInfoView.getSelectionModel().getSelectedIndex(), NewGameInfo);
         RegisterWindow.setUserData(null);
-        UpdateNumberDisplay();
     }
     
     @FXML

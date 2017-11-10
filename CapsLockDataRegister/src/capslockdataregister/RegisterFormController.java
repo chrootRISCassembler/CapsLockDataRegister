@@ -244,33 +244,13 @@ public class RegisterFormController implements Initializable {
             GameName = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
         }
        
-        final GameRecord record;
-        
         final JSONArray imagePathArray = new JSONArray();
         final JSONArray moviePathArray = new JSONArray();
         GenerateJSONArray(imagePathArray, ImageTextField.getText());   
         GenerateJSONArray(moviePathArray, MovieTextField.getText());
         
-        try{
-            record = (GameRecord)ThisStage.getUserData();
-            if(record == null)throw new NullPointerException();
-        }catch(NullPointerException e){
-            ThisStage.setUserData(new GameRecord(
-                AssignedUUIDLabel.getText(),
-                GameName,
-                DescTextField.getText(),
-                ExeTextField.getText(),
-                VerTextField.getText().isEmpty() ? "1" : VerTextField.getText(),
-                PanelTextField.getText(),
-                imagePathArray,
-                moviePathArray,
-                IDChoiceBox.getValue().toString()
-            ));
-            ThisStage.close();
-            return;
-        }
-
-        record.Update(AssignedUUIDLabel.getText(),
+        ThisStage.setUserData(new GameRecord(
+            AssignedUUIDLabel.getText(),
             GameName,
             DescTextField.getText(),
             ExeTextField.getText(),
@@ -279,7 +259,7 @@ public class RegisterFormController implements Initializable {
             imagePathArray,
             moviePathArray,
             IDChoiceBox.getValue().toString()
-        );
+        ));
         ThisStage.close();
     }
     
