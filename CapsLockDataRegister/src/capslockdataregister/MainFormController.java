@@ -1,21 +1,13 @@
 package capslockdataregister;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -163,82 +155,22 @@ public class MainFormController implements Initializable {
         RegisterWindow.setUserData(null);
     }
     
+    /**
+     * 一括登録ボタンが押された.
+     * <p>Gamesディレクトリ以下を検索してゲームの一括登録を行う.実行ファイルが一つもないゲームは登録されない.
+     * 現在の表にデータを追加するだけで,JSONへの書き出しは行わない.</p>
+     */
     @FXML
-    private void onAutoRegisterClicked(){
-        final Path CurrentDirectory = new File(".").getAbsoluteFile().toPath().getParent();
-
-        final List<Path> CollectedFiles;
+    private final void onAutoRegisterClicked(){
         try {
-            CollectedFiles = Files.walk(new File("Games").toPath(), FileVisitOption.FOLLOW_LINKS)
+            Files.list(ResourceFilesInputWrapper.instance.GamesDirectory)
                     .parallel()
-                    .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*|.*\\.bat"))
-                    .peek(file -> System.err.println(file))
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            System.err.println(e);
-            return;
-        }
-        
-        ArrayList<Path> executables = new ArrayList<>();
-        
-        Iterator<Path> ite = CollectedFiles.iterator();
-        while(ite.hasNext()){
-            final Path CheckFile = ite.next();
-            if(CheckFile.getFileName().toString().endsWith(".bat")){
-                executables.add(CheckFile);
-                ite.remove();
-            }
-        }
-        
-        for(Path exe : executables){
-            final Path GamesBaseDirectory = CurrentDirectory.relativize(exe.toAbsolutePath()).subpath(0, 2);
-            
-            String name = "";
-            String description = "";
-            String version = "1";
-            String panel = "";
-            List<Path> Images = new ArrayList<>();
-            List<Path> Movies = new ArrayList<>();
-            
-            for(Path file : CollectedFiles){
-                if(!file.startsWith(GamesBaseDirectory))continue;
-                String FileName = file.getFileName().toString();
-                switch(FileName.charAt(2)){
-                    case 'd':
-                        DescriptionFileParser FileParser =  new DescriptionFileParser(file);
-                        name = FileParser.getName();
-                        description = FileParser.getDescription();
-                        version = FileParser.getVersion();
-                        
-                        break;
-                    case 'p':
-                        panel = file.toString();
-                        break;
-                    case 'i':
-                        Images.add(file);
-                        break;
-                    case 'm':
-                        Movies.add(file);
-                        break;
-                }
-            }
-            
-            if(name.isEmpty()){
-                final String ExeFileName = exe.getFileName().toString();
-                name = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
-            }
-            
-            DisplayCollection.add(new GameRecord(
-                    UUID.randomUUID().toString(),
-                    name,
-                    description,
-                    exe.toString(),
-                    version,
-                    panel,
-                    new JSONArray(Images), 
-                    new JSONArray(Movies),
-                    "1"
-            ));
+                    .filter(path -> Files.isDirectory(path))
+                    .map(path -> new GameRecordBuilder(path))
+                    .filter(builder -> builder.isFine())
+                    .forEach(builder -> DisplayCollection.add(builder.build()));
+        } catch (IOException ex) {
+            System.err.println(ex);
         }
         UpdateNumberDisplay();
     }
