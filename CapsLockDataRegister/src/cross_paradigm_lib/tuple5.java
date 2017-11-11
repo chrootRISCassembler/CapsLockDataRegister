@@ -10,7 +10,7 @@ public class tuple5 <A, B, C, D, E> implements Ituple{
     C c;
     D d;
     E e;
-    tuple5(A a, B b, C c, D d, E e){
+    public tuple5(A a, B b, C c, D d, E e){
         this.a = a;
         this.b = b;
         this.c = c;

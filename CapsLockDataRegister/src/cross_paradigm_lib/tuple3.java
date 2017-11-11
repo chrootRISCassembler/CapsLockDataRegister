@@ -8,7 +8,7 @@ public class tuple3 <A, B, C> implements Ituple{
     A a;
     B b;
     C c;
-    tuple3(A a, B b, C c){
+    public tuple3(A a, B b, C c){
         this.a = a;
         this.b = b;
         this.c = c;

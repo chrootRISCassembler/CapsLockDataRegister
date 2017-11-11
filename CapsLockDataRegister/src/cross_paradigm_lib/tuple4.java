@@ -9,7 +9,7 @@ public class tuple4 <A, B, C, D> implements Ituple{
     B b;
     C c;
     D d;
-    tuple4(A a, B b, C c, D d){
+    public tuple4(A a, B b, C c, D d){
         this.a = a;
         this.b = b;
         this.c = c;

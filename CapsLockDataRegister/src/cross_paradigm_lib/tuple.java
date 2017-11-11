@@ -7,7 +7,7 @@ package cross_paradigm_lib;
 public final class tuple<A, B> implements Ituple{
     A a;
     B b;
-    tuple(A a, B b){
+    public tuple(A a, B b){
         this.a = a;
         this.b = b;
     }
