@@ -101,11 +101,19 @@ class GameRecordBuilder{
         final String DescStr;
         final String VerStr;
         
-        if(desc != null){
+        if(desc != null){//ロジックが汚い　要整理
             final DescriptionFileParser FileParser =  new DescriptionFileParser(desc);
-            NameStr = FileParser.getName();
-            DescStr = FileParser.getDescription();
-            VerStr = FileParser.getVersion();
+            if(FileParser.isFine()){
+                NameStr = FileParser.getName();
+                DescStr = FileParser.getDescription();
+                VerStr = FileParser.getVersion();
+            }else{
+                final String ExeFileName = exe.getFileName().toString();
+            
+                NameStr = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
+                DescStr = "";
+                VerStr = "1";
+            }
         }else{
             final String ExeFileName = exe.getFileName().toString();
             

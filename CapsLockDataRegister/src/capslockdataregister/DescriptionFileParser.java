@@ -2,6 +2,7 @@ package capslockdataregister;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -27,6 +28,9 @@ final class DescriptionFileParser {
                 description.append(line);
             }
             GameDescription = description.toString();
+        } catch(MalformedInputException ex) {
+            System.err.println("Wrong character encoding.This file is not UTF-8.");
+            FineFlag = false;
         } catch (IOException ex) {
             System.err.println(ex);
             FineFlag = false;
