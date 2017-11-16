@@ -15,9 +15,9 @@
         <columns>
           <TableColumn fx:id="UUIDCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="240.0" text="UUID" />
           <TableColumn fx:id="NameCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="165.0" text="ゲーム名" />
-            <TableColumn fx:id="DescriptionCol" maxWidth="1.7976931348623157E308" minWidth="0.0" onEditStart="#onRecordDoubleClicked" prefWidth="155.0" text="説明" />
-            <TableColumn fx:id="ExecutableCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="155.0" text="実行ファイルパス" />
-            <TableColumn fx:id="VersionCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="50.0" text="バージョン" />
+            <TableColumn fx:id="DescCol" maxWidth="1.7976931348623157E308" minWidth="0.0" onEditStart="#onRecordDoubleClicked" prefWidth="155.0" text="説明" />
+            <TableColumn fx:id="ExeCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="155.0" text="実行ファイルパス" />
+            <TableColumn fx:id="VerCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="50.0" text="バージョン" />
             <TableColumn fx:id="PanelCol" maxWidth="1.7976931348623157E308" onEditStart="#onRecordDoubleClicked" prefWidth="90.0" text="パネル画像" visible="false" />
             <TableColumn fx:id="ImageCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="90.0" text="画像ファイルパス" visible="false" />
             <TableColumn fx:id="MovieCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" onEditStart="#onRecordDoubleClicked" prefWidth="90.0" text="動画ファイルパス" visible="false" />

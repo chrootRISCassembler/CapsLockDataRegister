@@ -30,9 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * FXML Controller class
- *
- * @author RISCassembler
+ * メインフォームのコントローラークラス.
+ * <p>一括登録,JSONファイル書き出し,表を使った大まかなプレビューを提供</p>
  */
 public class MainFormController implements Initializable {
     
@@ -42,9 +41,9 @@ public class MainFormController implements Initializable {
     @FXML private TableView<GameRecord> GameInfoView;
     @FXML private TableColumn<GameRecord, String> UUIDCol;
     @FXML private TableColumn<GameRecord, String> NameCol;
-    @FXML private TableColumn<GameRecord, String> DescriptionCol;
-    @FXML private TableColumn<GameRecord, String> ExecutableCol;
-    @FXML private TableColumn<GameRecord, String> VersionCol;
+    @FXML private TableColumn<GameRecord, String> DescCol;
+    @FXML private TableColumn<GameRecord, String> ExeCol;
+    @FXML private TableColumn<GameRecord, String> VerCol;
     @FXML private TableColumn<GameRecord, String> PanelCol;
     @FXML private TableColumn<GameRecord, String> ImageCol;
     @FXML private TableColumn<GameRecord, String> MovieCol;
@@ -84,8 +83,8 @@ public class MainFormController implements Initializable {
         
         UUIDCol.setCellValueFactory(new PropertyValueFactory<>("uuid"));
         NameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        ExecutableCol.setCellValueFactory(new PropertyValueFactory<>("exe"));
-        VersionCol.setCellValueFactory(new PropertyValueFactory<>("ver"));
+        ExeCol.setCellValueFactory(new PropertyValueFactory<>("exe"));
+        VerCol.setCellValueFactory(new PropertyValueFactory<>("ver"));
         ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
         MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
         IDCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
