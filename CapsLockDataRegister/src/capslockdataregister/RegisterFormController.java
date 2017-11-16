@@ -155,13 +155,13 @@ public class RegisterFormController implements Initializable {
                     final Path exe = file.get(0).toPath();
                     validator.crawl(exe);
                     ExeTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(exe).toString());
-                    DescFileHandler(validator.query(LauncherResourceFilesValidator.ResourceType.description).findAny().get());
+                    DescFileHandler(validator.query(ResourceType.desc).findAny().get());
                     
                     PanelTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(
-                            validator.query(LauncherResourceFilesValidator.ResourceType.panel).findAny().get()).toString());
+                            validator.query(ResourceType.panel).findAny().get()).toString());
                     
-                    ImageTextField.setText(MakeFileArray(validator.query(LauncherResourceFilesValidator.ResourceType.image)));
-                    MovieTextField.setText(MakeFileArray(validator.query(LauncherResourceFilesValidator.ResourceType.movie)));
+                    ImageTextField.setText(MakeFileArray(validator.query(ResourceType.image)));
+                    MovieTextField.setText(MakeFileArray(validator.query(ResourceType.movie)));
                     return true;
                 }
         ));

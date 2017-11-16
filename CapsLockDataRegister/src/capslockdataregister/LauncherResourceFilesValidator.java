@@ -19,18 +19,10 @@ import java.util.stream.Stream;
 import javafx.scene.image.Image;
 
 /**
- *
+ * 主にRegisterFormControllerからのファイル検査要求に応えるクラス.
+ * <p>ファイルとその{@link capslockdataregister.ResourceType}をキャッシュしておくことで検査を速くする.</p>
  */
-
-class LauncherResourceFilesValidator extends Thread{
-    static enum ResourceType{
-        description,
-        executable,
-        panel,
-        image,
-        movie,
-        none
-    }
+final class LauncherResourceFilesValidator extends Thread{
     
     private Path GameRootPath;
     
@@ -70,7 +62,7 @@ class LauncherResourceFilesValidator extends Thread{
                     .parallel()
                     .filter(file -> file.getFileName().toString().matches("__(description|panel|image|movie)__.*"))
                     .peek(file -> System.err.println(file))
-                    .forEach(file -> PathDB.put(file.toAbsolutePath(), getResourceType(file.getFileName().toString())));
+                    .forEach(file -> PathDB.put(file.toAbsolutePath(), ResourceType.TypeSurjection(file)));
         } catch (IOException ex) {
             System.err.println(ex);
         }
@@ -110,22 +102,15 @@ class LauncherResourceFilesValidator extends Thread{
         return PathDB.containsKey(CheckPath);
     }
     
-    private ResourceType getResourceType(String FilePath){
-        switch(FilePath.charAt(2)){
-            case 'd':
-                return ResourceType.description;
-            case 'p':
-                return ResourceType.panel;
-            case 'i':
-                return ResourceType.image;
-            case 'm':
-                return ResourceType.movie;
-        }
-        return ResourceType.none;
-    }
-    
+    /**
+     * PathDBを参照して引数のファイルがどんな種類のファイルかを返す.
+     * <p>ランチャーで使用しないファイルは{@link capslockdataregister.ResourceType#none}が返る.</p>
+     * <h3>未実装</h3>
+     * @param path 種類を調べる対象ファイルパス
+     * @return 引数に渡されたファイルの種類
+     */
     ResourceType validate(Path path){
-        return getResourceType(path.toString());
+        return ResourceType.TypeSurjection(path);
     }
     
     void dump(){
