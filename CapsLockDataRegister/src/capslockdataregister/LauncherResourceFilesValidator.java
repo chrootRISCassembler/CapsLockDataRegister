@@ -46,7 +46,11 @@ final class LauncherResourceFilesValidator extends Thread{
      * @param ExePath ゲームの実行ファイルパス
      */
     LauncherResourceFilesValidator(String ExePath){
+        try{
         crawl(Paths.get(ExePath).toAbsolutePath());
+        }catch(Exception ex){
+            System.err.println(ex);
+        }
     }
     
     /**
@@ -64,7 +68,11 @@ final class LauncherResourceFilesValidator extends Thread{
                     .peek(file -> System.err.println(file))
                     .forEach(file -> PathDB.put(file.toAbsolutePath(), ResourceType.TypeSurjection(file)));
         } catch (IOException ex) {
+            System.err.println("walkfailed");
             System.err.println(ex);
+        } catch (Exception ex){
+            System.err.println(ex);
+            System.err.println("walkfailed");
         }
         
         try {
@@ -72,6 +80,9 @@ final class LauncherResourceFilesValidator extends Thread{
             GameRootPath.register(watchdog, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
         } catch (IOException ex) {
             System.err.println(ex);
+        } catch (Exception ex){
+            System.err.println(ex);
+            System.err.println("watchdog");
         }
     }
     

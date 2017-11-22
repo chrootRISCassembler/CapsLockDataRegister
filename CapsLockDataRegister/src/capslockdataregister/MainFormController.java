@@ -97,7 +97,10 @@ public class MainFormController implements Initializable {
     private boolean LoadJSONDatabase(){
         try(final BufferedReader reader = new BufferedReader(new FileReader("GamesInfo.json"))){
             final String JsonString = reader.readLine();
-            new JSONArray(JsonString).forEach(record -> DisplayCollection.add(new GameRecord((JSONObject)record)));
+            new JSONArray(JsonString).forEach(record -> {
+                final GameRecordBuilder builder = new GameRecordBuilder((JSONObject)record);
+                DisplayCollection.add(builder.build());
+                });
         }catch(FileNotFoundException ex){
             System.err.println(ex);
             return true;
@@ -132,7 +135,7 @@ public class MainFormController implements Initializable {
         }
         
         JSONArray array = new JSONArray();
-        DisplayCollection.forEach(record -> array.put(record.geJSON()));
+        DisplayCollection.forEach(record -> array.put(record.getJSON()));
         array.write(writer);
         
         try{

@@ -14,7 +14,7 @@ abstract class Command{
     }
     
     static final void dump(final String[] ParsedStringArray, MainFormController controller){
-        controller.DisplayCollection.forEach(ele -> System.err.println(ele.geJSON()));
+        controller.DisplayCollection.forEach(ele -> System.err.println(ele.getJSON()));
     }
 
     /**

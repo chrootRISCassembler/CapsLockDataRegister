@@ -9,7 +9,7 @@ import java.util.UUID;
  * <p>このクラスはイミュータブル.</p>
  * <p>nameとverはプロパティが同一のものを保持するためここでは保持しない</p>
  */
-public class GameSignature {
+abstract public class GameSignature {
     private final UUID uuid;
     private final String desc;
     private final Path exe;
@@ -35,4 +35,15 @@ public class GameSignature {
         this.movies = movies;
         this.ID = ID;
     }
+    
+    final UUID getUUID(){return uuid;}
+    abstract String getName();
+    final String getDesc(){return desc;}
+    final Path getExe(){return exe;}
+    abstract String getVer();
+    final Path getPanel(){return panel;}
+    final List<Path> getImages(){return images;}
+    final List<Path> getMovies(){return movies;}
+    final byte getID(){return ID;}
+    
 }

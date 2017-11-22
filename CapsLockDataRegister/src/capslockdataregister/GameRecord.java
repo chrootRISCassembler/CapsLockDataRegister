@@ -1,15 +1,10 @@
 package capslockdataregister;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -30,57 +25,6 @@ public final class GameRecord extends GameSignature{
 
     private String toTextFieldString(String JSONArrayString){
         return JSONArrayString.substring(1, JSONArrayString.length() - 1).replace("\"", "");
-    }
-    
-    GameRecord(JSONObject record){
-        json = record;
-        
-        final String UUIDStr = record.getString("UUID");
-        UUIDProperty = new SimpleStringProperty(UUIDStr);
-        
-        nameProperty = new SimpleStringProperty(record.getString("name"));
-        
-        final String DescStr = record.getString("description");
-        descProperty = new SimpleStringProperty(DescStr.isEmpty() ? "none" : "exist");
-        
-        final Path ExePath = Paths.get(record.getString("executable"));
-        exeProperty = new SimpleStringProperty(ExePath.getFileName().toString());
-        
-        verProperty = new SimpleStringProperty(record.getString("version"));
-        
-        final Path PanelPath;
-        final String PanelStr = record.getString("panel");
-        if(PanelStr.isEmpty()){
-            PanelPath = null;
-            panelProperty = new SimpleStringProperty("none");
-        }else{
-            PanelPath = Paths.get(PanelStr);
-            panelProperty = new SimpleStringProperty("exist");
-        }
-
-        final List<Path> images = record.getJSONArray("image").toList().stream()
-                .map(jsonobject -> jsonobject.toString())
-                .map(str -> Paths.get(str))
-                .collect(Collectors.toList());
-        imageProperty = new SimpleStringProperty(Integer.toString(images.size()));
-        
-        final List<Path> movies = record.getJSONArray("image").toList().stream()
-                .map(jsonobject -> jsonobject.toString())
-                .map(str -> Paths.get(str))
-                .collect(Collectors.toList());
-        movieProperty = new SimpleStringProperty(Integer.toString(movies.size()));
-        
-        final byte ID = (byte)record.getInt(DescStr);
-        IDProperty = new SimpleStringProperty(record.getString("ID"));
-        
-        super(UUID.fromString(UUIDStr),
-                DescStr,
-                ExePath,
-                PanelPath,
-                images,
-                movies,
-                ID
-        );
     }
 
     public GameRecord(
@@ -112,7 +56,7 @@ public final class GameRecord extends GameSignature{
             .put("description", desc)
             .put("executable", exe)
             .put("version", ver)
-            .put("panel", panel)
+            .put("panel", panel == null ? "" : panel)
             .put("image", images)
             .put("movie", movies)
             .put("ID", ID);
@@ -128,5 +72,15 @@ public final class GameRecord extends GameSignature{
     public final ReadOnlyStringProperty imageProperty(){return imageProperty;}
     public final ReadOnlyStringProperty movieProperty(){return movieProperty;}
     public final ReadOnlyStringProperty IDProperty(){return IDProperty;}
-    public final JSONObject geJSON(){return json;}
+    public final JSONObject getJSON(){return json;}
+    
+    @Override
+    final String getName(){
+        return nameProperty.getValue();
+    }
+    
+    @Override
+    final String getVer(){
+        return exeProperty.getValue();
+    }
 }

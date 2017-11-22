@@ -4,10 +4,11 @@ import cross_paradigm_lib.tuple;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-import org.json.JSONArray;
+import java.util.stream.Collectors;
 import org.json.JSONObject;
 
 /**
@@ -25,8 +26,8 @@ class GameRecordBuilder{
     private Path exe;
     private String ver;
     private Path panel;
-    private Set<Path> images = new HashSet<>();
-    private Set<Path> movies = new HashSet<>();
+    private List<Path> images;
+    private List<Path> movies;
     private byte ID;
     
     private Path MSEXE;
@@ -39,6 +40,9 @@ class GameRecordBuilder{
      * @param GameDir ゲームのルートディレクトリ
      */
     GameRecordBuilder(Path GameDir){
+        images = new ArrayList<>();
+        movies = new ArrayList<>();
+        
         try {
             Files.walk(GameDir)
                     .filter(path -> Files.isRegularFile(path))
@@ -60,7 +64,12 @@ class GameRecordBuilder{
                                 BatchFile = FileInfo.getB();
                                 break;
                             case desc:
-                                desc = FileInfo.getB();
+                                final DescriptionFileParser FileParser = new DescriptionFileParser(FileInfo.getB());
+                                if(FileParser.isFine()){
+                                    name = FileParser.getName();
+                                    desc = FileParser.getDescription();
+                                    ver = FileParser.getVersion();
+                                }
                                 break;
                             case panel:
                                 panel = FileInfo.getB();
@@ -91,15 +100,33 @@ class GameRecordBuilder{
     
     /**
      * 登録画面用のコンストラクタ.
+     * <p>各プロパティをsetterで登録してからbuild().</p>
      */
     GameRecordBuilder(){
+        isFine = false;
     }
     
     /**
      * 登録済み情報用のコンストラクタ.
      */
     GameRecordBuilder(JSONObject record){
+        this.uuid = UUID.fromString(record.getString("UUID"));
+        this.name = record.getString("name");
+        this.desc = record.getString("description");
+        this.exe = Paths.get(record.getString("executable"));
+        this.ver = record.getString("version");
+        this.panel = Paths.get(record.getString("panel"));
+        this.images = record.getJSONArray("image").toList().stream()
+                .map(jsonobject -> jsonobject.toString())
+                .map(str -> Paths.get(str))
+                .collect(Collectors.toList());
         
+        this.movies = record.getJSONArray("image").toList().stream()
+                .map(jsonobject -> jsonobject.toString())
+                .map(str -> Paths.get(str))
+                .collect(Collectors.toList());
+   
+        this.ID = (byte)record.getInt("ID");
     }
 
     /**
@@ -118,43 +145,24 @@ class GameRecordBuilder{
     final GameRecord build(){
         if(!isFine)return null;
         
-        final String NameStr;
-        final String DescStr;
-        final String VerStr;
-        
-        if(desc != null){//ロジックが汚い　要整理
-            final DescriptionFileParser FileParser =  new DescriptionFileParser(desc);
-            if(FileParser.isFine()){
-                NameStr = FileParser.getName();
-                DescStr = FileParser.getDescription();
-                VerStr = FileParser.getVersion();
-            }else{
-                final String ExeFileName = exe.getFileName().toString();
-            
-                NameStr = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
-                DescStr = "";
-                VerStr = "1";
-            }
-        }else{
+        if(uuid == null)uuid = UUID.randomUUID();
+        if(desc == null)desc = "";
+        if(name == null){
             final String ExeFileName = exe.getFileName().toString();
-            
-            NameStr = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
-            DescStr = "";
-            VerStr = "1";
+            name = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
         }
-
-        final String PanelStr = panel == null ? "" : panel.toString();
+        if(ver == null)ver = "";
         
         return new GameRecord(
-                    UUID.randomUUID().toString(),
-                    NameStr,
-                    DescStr,
-                    exe.toString(),
-                    VerStr,
-                    PanelStr,
-                    new JSONArray(images), 
-                    new JSONArray(movies),
-                    "1");
+                    uuid,
+                    name,
+                    desc,
+                    exe,
+                    ver,
+                    panel,
+                    images, 
+                    movies,
+                    ID);
     }
     
     final GameRecordBuilder setUUID(UUID uuid){
@@ -184,6 +192,16 @@ class GameRecordBuilder{
     
     final GameRecordBuilder setPanel(Path panel){
         this.panel = panel;
+        return this;
+    }
+    
+    final GameRecordBuilder setImages(List<Path> images){
+        this.images = images;
+        return this;
+    }
+        
+    final GameRecordBuilder setMovies(List<Path> movies){
+        this.movies = movies;
         return this;
     }
     

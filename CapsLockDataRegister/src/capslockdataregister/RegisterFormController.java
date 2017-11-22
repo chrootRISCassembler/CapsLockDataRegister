@@ -202,30 +202,35 @@ public class RegisterFormController implements Initializable {
     }
     
     void onLoad(WindowEvent event){
+        final GameSignature game;
         GameRecord record;
         
         try{
-            record = (GameRecord)ThisStage.getUserData();
-            if(record == null)throw new NullPointerException();
+            game = (GameSignature)ThisStage.getUserData();
+            if(game == null)throw new NullPointerException();
             validator = ResourceFilesInputWrapper.instance.add(
-                    UUID.fromString(record.uuidProperty().get()),
-                    () -> new LauncherResourceFilesValidator(record.executableProperty().get())
+                    game.getUUID(),
+                    () -> new LauncherResourceFilesValidator(game.getExe().toString())
             );
         }catch(NullPointerException e){
             System.err.println(e);
             AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
             FieldMap.forEach((field, dummy) -> field.clear());
             return;
+        }catch(Exception ex){
+            System.err.println("onload failed");
+            System.err.println(ex);
+            return;
         }
          
-        AssignedUUIDLabel.setText(record.uuidProperty().getValue());
-        NameTextField.setText(record.nameProperty().getValue());
-        DescTextField.setText(record.descriptionProperty().getValue());
-        ExeTextField.setText(record.executableProperty().getValue());
-        VerTextField.setText(record.versionProperty().getValue());
-        PanelTextField.setText(record.panelProperty().getValue());
-        ImageTextField.setText(record.imageProperty().getValue());
-        MovieTextField.setText(record.movieProperty().getValue());
+        AssignedUUIDLabel.setText(game.getUUID().toString());
+        NameTextField.setText(game.getName());
+        DescTextField.setText(game.getDesc());
+        ExeTextField.setText(game.getExe().toString());
+        VerTextField.setText(game.getVer());
+        PanelTextField.setText(game.getPanel().toString());
+        ImageTextField.setText(MakeFileArray(game.getImages().stream()));
+        MovieTextField.setText(MakeFileArray(game.getMovies().stream()));
         
         FieldMap.forEach((field, checker) -> checker.validate(field.getText()));
     }
@@ -243,23 +248,24 @@ public class RegisterFormController implements Initializable {
             final String ExeFileName = Paths.get(ExeTextField.getText()).getFileName().toString();
             GameName = ExeFileName.substring(0, ExeFileName.lastIndexOf("."));
         }
-       
-        final JSONArray imagePathArray = new JSONArray();
-        final JSONArray moviePathArray = new JSONArray();
-        GenerateJSONArray(imagePathArray, ImageTextField.getText());   
-        GenerateJSONArray(moviePathArray, MovieTextField.getText());
         
-        ThisStage.setUserData(new GameRecord(
-            AssignedUUIDLabel.getText(),
-            GameName,
-            DescTextField.getText(),
-            ExeTextField.getText(),
-            VerTextField.getText().isEmpty() ? "1" : VerTextField.getText(),
-            PanelTextField.getText(),
-            imagePathArray,
-            moviePathArray,
-            IDChoiceBox.getValue().toString()
-        ));
+        final QuotedStringParser ImageParser = new QuotedStringParser(ImageTextField.getText());
+        final QuotedStringParser MovieParser = new QuotedStringParser(MovieTextField.getText());
+
+        final GameRecordBuilder builder = new GameRecordBuilder();
+        builder.setUUID(UUID.fromString(AssignedUUIDLabel.getText()))
+                .setName(GameName)
+                .setDesc(DescTextField.getText())
+                .setExe(Paths.get(ExeTextField.getText()))
+                .setVer(VerTextField.getText().isEmpty() ? "1" : VerTextField.getText())
+                .setPanel(Paths.get(PanelTextField.getText()))
+                .setImages(ImageParser.get().stream().map(str -> Paths.get(str)).collect(Collectors.toList()))
+                .setMovies(MovieParser.get().stream().map(str -> Paths.get(str)).collect(Collectors.toList()))
+                .setID((byte)IDChoiceBox.getValue());
+        
+        if(!builder.canBuild())return;
+        
+        ThisStage.setUserData(builder.build());
         ThisStage.close();
     }
     
