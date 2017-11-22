@@ -88,8 +88,10 @@ public class MainFormController implements Initializable {
         
         UUIDCol.setCellValueFactory(new PropertyValueFactory<>("uuid"));
         NameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        DescCol.setCellValueFactory(new PropertyValueFactory<>("desc"));
         ExeCol.setCellValueFactory(new PropertyValueFactory<>("exe"));
         VerCol.setCellValueFactory(new PropertyValueFactory<>("ver"));
+        PanelCol.setCellValueFactory(new PropertyValueFactory<>("panel"));
         ImageCol.setCellValueFactory(new PropertyValueFactory<>("image"));
         MovieCol.setCellValueFactory(new PropertyValueFactory<>("movie"));
         IDCol.setCellValueFactory(new PropertyValueFactory<>("ID"));

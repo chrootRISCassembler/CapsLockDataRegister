@@ -45,7 +45,7 @@ public final class GameRecord extends GameSignature{
         descProperty = new SimpleStringProperty(desc.isEmpty() ? "none" : "exist");
         exeProperty = new SimpleStringProperty(exe.getFileName().toString());
         verProperty = new SimpleStringProperty(ver);
-        panelProperty = new SimpleStringProperty(panel == null ? "none" : "exist");
+        panelProperty = new SimpleStringProperty(panel == null ? "" : "exist");
         imageProperty = new SimpleStringProperty(Integer.toString(images.size()));
         movieProperty = new SimpleStringProperty(Integer.toString(movies.size()));
         IDProperty = new SimpleStringProperty(Integer.toString(ID));

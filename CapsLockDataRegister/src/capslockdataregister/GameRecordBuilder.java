@@ -27,7 +27,7 @@ class GameRecordBuilder{
     private String desc;
     private Path exe;
     private String ver;
-    private Path panel;
+    private Path panel = null;
     private List<Path> images;
     private List<Path> movies;
     private byte ID;
@@ -173,7 +173,11 @@ class GameRecordBuilder{
         this.desc = record.getString("description");
         this.exe = Paths.get(record.getString("executable"));
         this.ver = record.getString("version");
-        this.panel = Paths.get(record.getString("panel"));
+        
+        {
+            final Path PanelPath = Paths.get(record.getString("panel"));
+            this.panel = Files.isRegularFile(PanelPath) ? PanelPath : null;
+        }
         this.images = record.getJSONArray("image").toList().stream()
                 .map(jsonobject -> jsonobject.toString())
                 .map(str -> Paths.get(str))
