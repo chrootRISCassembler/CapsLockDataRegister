@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
 
@@ -44,6 +46,14 @@ class GameRecordBuilder{
         movies = new ArrayList<>();
         
         try {
+            ResourceFilesInputWrapper.instance.LogWriter.write(GameDir.toString());
+            ResourceFilesInputWrapper.instance.LogWriter.newLine();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
             Files.walk(GameDir)
                     .filter(path -> Files.isRegularFile(path))
                     .filter(path -> path.getFileName().toString().matches("__(description|panel|image|movie)__.*|.*\\.(exe|jar|sh|bat)"))
@@ -69,7 +79,18 @@ class GameRecordBuilder{
                                     name = FileParser.getName();
                                     desc = FileParser.getDescription();
                                     ver = FileParser.getVersion();
+                                }else{
+                                    try {
+                                        ResourceFilesInputWrapper.instance.LogWriter.write("\t");
+                                        ResourceFilesInputWrapper.instance.LogWriter.write(FileInfo.getA().toString());
+                                        ResourceFilesInputWrapper.instance.LogWriter.write(" is wrong.This file may be not UTF-8.");
+                                        ResourceFilesInputWrapper.instance.LogWriter.newLine();
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
+                                
+
                                 break;
                             case panel:
                                 panel = FileInfo.getB();
@@ -95,6 +116,43 @@ class GameRecordBuilder{
             exe = BatchFile;
         }else{
             isFine = false;//実行できるファイルが一つも見つからなかった.
+            return;
+        }
+        
+        if(desc == null){
+            try {
+                ResourceFilesInputWrapper.instance.LogWriter.write("\tDescFile NotFound");
+                ResourceFilesInputWrapper.instance.LogWriter.newLine();
+            } catch (IOException ex) {
+                Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if(panel == null){
+            try {
+                ResourceFilesInputWrapper.instance.LogWriter.write("\tPanelFile NotFound");
+                ResourceFilesInputWrapper.instance.LogWriter.newLine();
+            } catch (IOException ex) {
+                Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+         if(images.size() == 0){
+            try {
+                ResourceFilesInputWrapper.instance.LogWriter.write("\tImageFile NotFound");
+                ResourceFilesInputWrapper.instance.LogWriter.newLine();
+            } catch (IOException ex) {
+                Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+         
+        if(movies.size() == 0){
+            try {
+                ResourceFilesInputWrapper.instance.LogWriter.write("\tMovieFile NotFound");
+                ResourceFilesInputWrapper.instance.LogWriter.newLine();
+            } catch (IOException ex) {
+                Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     

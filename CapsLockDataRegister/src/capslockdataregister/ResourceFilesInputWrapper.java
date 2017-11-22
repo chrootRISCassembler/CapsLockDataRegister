@@ -1,5 +1,7 @@
 package capslockdataregister;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +25,10 @@ enum ResourceFilesInputWrapper {
     final Path CurrentDirectory = Paths.get(".").toAbsolutePath().getParent();
     final Path GamesDirectory = Paths.get("./Games/").toAbsolutePath();
     final boolean isDOSFileSystem;
+    
+    final Path LogFile = Paths.get("./reglog");
+    BufferedWriter LogWriter;
+    
     /**
      * ゲームの登録IDの上限.登録画面からも参照される.
      */
@@ -31,6 +37,12 @@ enum ResourceFilesInputWrapper {
     private ResourceFilesInputWrapper(){
         final DosFileAttributeView DOSattr = Files.getFileAttributeView(GamesDirectory, DosFileAttributeView.class);
         isDOSFileSystem = DOSattr != null;
+        
+        try {
+            LogWriter = Files.newBufferedWriter(LogFile);
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
     }
     
     private final ThreadSafeLRU_list<UUID, LauncherResourceFilesValidator> LRUlist = new ThreadSafeLRU_list<UUID, LauncherResourceFilesValidator>(){
