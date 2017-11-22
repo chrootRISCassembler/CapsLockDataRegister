@@ -84,7 +84,7 @@ enum ResourceFilesInputWrapper {
      * @return カレントディレクトリからの相対パス.
      */
     final Path toRelativePath(Path path){
-        return CurrentDirectory.relativize(path);
+        return CurrentDirectory.relativize(path.toAbsolutePath());
     }
     
     final JSONArray genJSONArray(String RawString){

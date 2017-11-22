@@ -228,7 +228,10 @@ public class RegisterFormController implements Initializable {
         DescTextField.setText(game.getDesc());
         ExeTextField.setText(game.getExe().toString());
         VerTextField.setText(game.getVer());
-        PanelTextField.setText(game.getPanel().toString());
+        {
+            final Path panel = game.getPanel();
+            PanelTextField.setText(panel == null ? "" : panel.toString());
+        }
         ImageTextField.setText(MakeFileArray(game.getImages().stream()));
         MovieTextField.setText(MakeFileArray(game.getMovies().stream()));
         
