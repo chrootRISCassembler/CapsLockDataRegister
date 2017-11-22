@@ -166,7 +166,7 @@ public class MainFormController implements Initializable {
                     .parallel()
                     .filter(path -> Files.isDirectory(path))
                     .map(path -> new GameRecordBuilder(path))
-                    .filter(builder -> builder.isFine())
+                    .filter(builder -> builder.canBuild())
                     .forEach(builder -> DisplayCollection.add(builder.build()));
         } catch (IOException ex) {
             System.err.println(ex);
