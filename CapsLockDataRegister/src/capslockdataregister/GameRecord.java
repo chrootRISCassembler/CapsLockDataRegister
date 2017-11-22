@@ -42,7 +42,7 @@ public final class GameRecord extends GameSignature{
         
         UUIDProperty = new SimpleStringProperty(uuid.toString());
         nameProperty = new SimpleStringProperty(name);
-        descProperty = new SimpleStringProperty(desc.isEmpty() ? "none" : "exist");
+        descProperty = new SimpleStringProperty(desc.isEmpty() ? "" : "exist");
         exeProperty = new SimpleStringProperty(exe.getFileName().toString());
         verProperty = new SimpleStringProperty(ver);
         panelProperty = new SimpleStringProperty(panel == null ? "" : "exist");
@@ -65,9 +65,9 @@ public final class GameRecord extends GameSignature{
     
     public final ReadOnlyStringProperty uuidProperty(){return UUIDProperty;}
     public final ReadOnlyStringProperty nameProperty(){return nameProperty;}
-    public final ReadOnlyStringProperty descriptionProperty(){return descProperty;}
-    public final ReadOnlyStringProperty executableProperty(){return exeProperty;}
-    public final ReadOnlyStringProperty versionProperty(){return verProperty;}
+    public final ReadOnlyStringProperty descProperty(){return descProperty;}
+    public final ReadOnlyStringProperty exeProperty(){return exeProperty;}
+    public final ReadOnlyStringProperty verProperty(){return verProperty;}
     public final ReadOnlyStringProperty panelProperty(){return panelProperty;}
     public final ReadOnlyStringProperty imageProperty(){return imageProperty;}
     public final ReadOnlyStringProperty movieProperty(){return movieProperty;}
