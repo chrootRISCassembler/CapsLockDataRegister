@@ -296,23 +296,11 @@ public class RegisterFormController implements Initializable {
                 .collect(Collectors.joining(", "));
     }
     
-    private void GenerateJSONArray(JSONArray target, String RawString){
-
-        String[] files = RawString.split(",");
-            
-        Arrays.stream(files).forEach(element -> {
-            File file = new File(element);
-            if(file.exists())target.put(element);
-        });
-    }
-    
     @FXML
     private void onKeyReleased(KeyEvent event){
         final TextField EventSource = (TextField)event.getSource();
         FieldMap.get(EventSource).validate(EventSource.getText());
     }
-    
-    
     
     @FXML
     private final void onDragDropped_TextField(DragEvent event){
