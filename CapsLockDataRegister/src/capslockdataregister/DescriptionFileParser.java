@@ -33,7 +33,9 @@ final class DescriptionFileParser {
         if(lines != null){
             GameName = lines.get(0);
             GameVersion = lines.get(1);
-            GameDescription = lines.stream().collect(Collectors.joining());
+            GameDescription = lines.stream()
+                    .skip(2)
+                    .collect(Collectors.joining());
             return;
         }
         
@@ -51,7 +53,9 @@ final class DescriptionFileParser {
         
         GameName = lines.get(0);
         GameVersion = lines.get(1);
-        GameDescription = lines.stream().collect(Collectors.joining());
+        GameDescription = lines.stream()
+                .skip(2)
+                .collect(Collectors.joining());
     }
     
     /**

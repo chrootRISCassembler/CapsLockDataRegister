@@ -16,7 +16,6 @@ abstract public class GameSignature {
     private final Path panel;
     private final List<Path> images;
     private final List<Path> movies;
-    private final byte ID;
 
     GameSignature(
             UUID uuid,
@@ -24,8 +23,7 @@ abstract public class GameSignature {
             Path exe,
             Path panel,
             List<Path> images,
-            List<Path> movies,
-            byte ID){
+            List<Path> movies){
         
         this.uuid = uuid;
         this.desc = desc;
@@ -33,7 +31,6 @@ abstract public class GameSignature {
         this.panel = panel;
         this.images = images;
         this.movies = movies;
-        this.ID = ID;
     }
     
     final UUID getUUID(){return uuid;}
@@ -44,6 +41,6 @@ abstract public class GameSignature {
     final Path getPanel(){return panel;}
     final List<Path> getImages(){return images;}
     final List<Path> getMovies(){return movies;}
-    final byte getID(){return ID;}
+    abstract String getID();
     
 }

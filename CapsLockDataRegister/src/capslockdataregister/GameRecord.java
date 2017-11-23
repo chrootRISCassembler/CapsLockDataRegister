@@ -36,9 +36,9 @@ public final class GameRecord extends GameSignature{
             Path panel,
             List<Path> images,
             List<Path> movies,
-            byte ID
+            String ID
     ){
-        super(uuid, desc, exe, panel, images, movies, ID);
+        super(uuid, desc, exe, panel, images, movies);
         
         UUIDProperty = new SimpleStringProperty(uuid.toString());
         nameProperty = new SimpleStringProperty(name);
@@ -48,7 +48,7 @@ public final class GameRecord extends GameSignature{
         panelProperty = new SimpleStringProperty(panel == null ? "" : "exist");
         imageProperty = new SimpleStringProperty(Integer.toString(images.size()));
         movieProperty = new SimpleStringProperty(Integer.toString(movies.size()));
-        IDProperty = new SimpleStringProperty(Integer.toString(ID));
+        IDProperty = new SimpleStringProperty(ID);
 
         json = new JSONObject()
             .put("UUID", uuid)
@@ -59,7 +59,7 @@ public final class GameRecord extends GameSignature{
             .put("panel", panel == null ? "" : panel)
             .put("image", images)
             .put("movie", movies)
-            .put("ID", Integer.toString(ID));
+            .put("ID", ID);
         System.err.println(json.toString());
     }
     
@@ -82,5 +82,10 @@ public final class GameRecord extends GameSignature{
     @Override
     final String getVer(){
         return exeProperty.getValue();
+    }
+    
+    @Override
+    final String getID(){
+        return IDProperty.getValue();
     }
 }

@@ -30,7 +30,7 @@ class GameRecordBuilder{
     private Path panel = null;
     private List<Path> images;
     private List<Path> movies;
-    private byte ID;
+    private String ID = "0";
     
     private Path MSEXE;
     private Path JavaArchive;
@@ -188,15 +188,20 @@ class GameRecordBuilder{
                 .map(str -> Paths.get(str))
                 .collect(Collectors.toList());
    
-        this.ID = (byte)record.getInt("ID");
+        this.ID = record.getString("ID");
     }
 
     /**
      * 正常にGameRecordが生成できるかを返す.
      * この関数がfalseを返すとき,このクラスオブジェクトは直ちに破棄されるべき.
      */
-    final boolean canBuild() {
-        return isFine;
+    final boolean canBuild(){
+        if(isFine)return true;
+        if(exe != null){
+            isFine = true;
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -267,7 +272,7 @@ class GameRecordBuilder{
         return this;
     }
     
-    final GameRecordBuilder setID(byte ID){
+    final GameRecordBuilder setID(String ID){
         this.ID = ID;
         return this;
     }

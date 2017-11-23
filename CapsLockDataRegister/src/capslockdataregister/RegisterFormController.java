@@ -5,7 +5,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,6 @@ import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import org.json.JSONArray;
 
 /**
  * ゲーム登録フォームのFXMLコントローラーclass.
@@ -129,7 +127,11 @@ public class RegisterFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb){
         {
-            List<Integer> Nlist = IntStream.rangeClosed(1, ResourceFilesInputWrapper.GAME_ID_MAX).boxed().collect(Collectors.toList());
+            List<String> Nlist = IntStream.
+                    rangeClosed(1, ResourceFilesInputWrapper.GAME_ID_MAX)
+                    .boxed()
+                    .map(integer -> integer.toString())
+                    .collect(Collectors.toList());
             IDChoiceBox.setItems(FXCollections.observableArrayList(Nlist));
         }
         
@@ -254,8 +256,6 @@ public class RegisterFormController implements Initializable {
         
         final QuotedStringParser ImageParser = new QuotedStringParser(ImageTextField.getText());
         final QuotedStringParser MovieParser = new QuotedStringParser(MovieTextField.getText());
-
-        final String IDstr = (String)IDChoiceBox.getValue();
         
         final GameRecordBuilder builder = new GameRecordBuilder();
         builder.setUUID(UUID.fromString(AssignedUUIDLabel.getText()))
@@ -266,9 +266,12 @@ public class RegisterFormController implements Initializable {
                 .setPanel(Paths.get(PanelTextField.getText()))
                 .setImages(ImageParser.get().stream().map(str -> Paths.get(str)).collect(Collectors.toList()))
                 .setMovies(MovieParser.get().stream().map(str -> Paths.get(str)).collect(Collectors.toList()))
-                .setID(Integer.getInteger(IDChoiceBox.getValue().toString()).byteValue());
+                .setID((String)IDChoiceBox.getValue());
         
-        if(!builder.canBuild())return;
+        if(!builder.canBuild()){
+            System.err.println("Can't build Record.");
+            return;
+        }
         
         ThisStage.setUserData(builder.build());
         ThisStage.close();
