@@ -56,7 +56,7 @@ class GameRecordBuilder{
         try {
             Files.walk(GameDir)
                     .filter(path -> Files.isRegularFile(path))
-                    .filter(path -> path.getFileName().toString().matches("__(description|panel|image|movie)__.*|.*\\.(exe|jar|sh|bat)"))
+                    .filter(path -> path.getFileName().toString().matches(".*__(description|panel|image|movie)__.*|.*\\.(exe|jar|sh|bat)"))
                     .map(path -> ResourceFilesInputWrapper.instance.toRelativePath(path).normalize())
                     .map(path -> new tuple<>(ResourceType.TypeSurjection(path), path))
                     .forEach(FileInfo -> {

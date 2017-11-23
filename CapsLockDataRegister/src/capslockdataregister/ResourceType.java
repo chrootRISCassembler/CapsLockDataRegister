@@ -28,16 +28,15 @@ enum ResourceType {
      * ファイル名からリソースファイルの種類を返す.
      */
     static final ResourceType TypeSurjection(String FileName){
-        if(FileName.matches("__(description|panel|image|movie)__.*")){
-            switch(FileName.charAt(2)){
-                case 'd':
-                    return desc;
-                case 'p':
-                    return panel;
-                case 'i':
-                    return image;
-                case 'm':
-                    return movie;
+        if(FileName.matches(".*__(description|panel|image|movie)__.*")){
+            if(FileName.matches(".*__description__.*")){
+                return desc;
+            }else if(FileName.matches(".*__panel__.*")){
+                return panel; 
+            }else if(FileName.matches(".*__image__.*")){
+                return image;
+            }else{
+                return movie;
             }
         }
         
