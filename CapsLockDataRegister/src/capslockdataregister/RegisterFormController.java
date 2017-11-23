@@ -255,6 +255,8 @@ public class RegisterFormController implements Initializable {
         final QuotedStringParser ImageParser = new QuotedStringParser(ImageTextField.getText());
         final QuotedStringParser MovieParser = new QuotedStringParser(MovieTextField.getText());
 
+        final String IDstr = (String)IDChoiceBox.getValue();
+        
         final GameRecordBuilder builder = new GameRecordBuilder();
         builder.setUUID(UUID.fromString(AssignedUUIDLabel.getText()))
                 .setName(GameName)
@@ -264,7 +266,7 @@ public class RegisterFormController implements Initializable {
                 .setPanel(Paths.get(PanelTextField.getText()))
                 .setImages(ImageParser.get().stream().map(str -> Paths.get(str)).collect(Collectors.toList()))
                 .setMovies(MovieParser.get().stream().map(str -> Paths.get(str)).collect(Collectors.toList()))
-                .setID((byte)IDChoiceBox.getValue());
+                .setID(Integer.getInteger(IDChoiceBox.getValue().toString()).byteValue());
         
         if(!builder.canBuild())return;
         

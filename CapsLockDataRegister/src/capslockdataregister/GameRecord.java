@@ -59,7 +59,7 @@ public final class GameRecord extends GameSignature{
             .put("panel", panel == null ? "" : panel)
             .put("image", images)
             .put("movie", movies)
-            .put("ID", ID);
+            .put("ID", Integer.toString(ID));
         System.err.println(json.toString());
     }
     
