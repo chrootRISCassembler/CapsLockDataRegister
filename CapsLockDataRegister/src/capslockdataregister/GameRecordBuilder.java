@@ -183,7 +183,7 @@ class GameRecordBuilder{
                 .map(str -> Paths.get(str))
                 .collect(Collectors.toList());
         
-        this.movies = record.getJSONArray("image").toList().stream()
+        this.movies = record.getJSONArray("movie").toList().stream()
                 .map(jsonobject -> jsonobject.toString())
                 .map(str -> Paths.get(str))
                 .collect(Collectors.toList());
