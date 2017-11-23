@@ -1,10 +1,11 @@
 package capslockdataregister;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.MalformedInputException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Descriptionファイルを読み込んでパースするクラス.
@@ -18,23 +19,39 @@ final class DescriptionFileParser {
     private boolean FineFlag = true;
     
     DescriptionFileParser(Path path){
-        try(final BufferedReader LineReader = Files.newBufferedReader(path)){
-            GameName = LineReader.readLine();
-            GameVersion = LineReader.readLine();
-
-            StringBuilder description = new StringBuilder();
-            String line;
-            while((line = LineReader.readLine()) != null){
-                description.append(line);
-            }
-            GameDescription = description.toString();
-        } catch(MalformedInputException ex) {
-            System.err.println("Wrong character encoding.This file is not UTF-8.");
-            FineFlag = false;
+        List<String> lines = null;
+        
+        try{
+            lines = Files.readAllLines(path);//UTF-8で全行読み込み
         } catch (IOException ex) {
+            System.err.println("Failed to read by UTF-8");
+        } catch (SecurityException ex){
             System.err.println(ex);
             FineFlag = false;
         }
+        
+        if(lines != null){
+            GameName = lines.get(0);
+            GameVersion = lines.get(1);
+            GameDescription = lines.stream().collect(Collectors.joining());
+            return;
+        }
+        
+        try{
+            lines = Files.readAllLines(path, Charset.forName("sjis"));//Shift_JISで全行読み込み
+        } catch (IOException ex) {
+            System.err.println("Failed to read by Shift-JIS");
+            FineFlag = false;
+            return;
+        } catch (SecurityException ex){
+            System.err.println(ex);
+            FineFlag = false;
+            return;
+        }
+        
+        GameName = lines.get(0);
+        GameVersion = lines.get(1);
+        GameDescription = lines.stream().collect(Collectors.joining());
     }
     
     /**
