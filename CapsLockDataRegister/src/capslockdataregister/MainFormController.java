@@ -1,13 +1,12 @@
 package capslockdataregister;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,7 +26,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import trivial_common_logger.LogHandler;
 
 /**
  * メインフォームのコントローラークラス.
@@ -93,31 +94,39 @@ public class MainFormController implements Initializable {
         IDCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
          
         GameInfoView.setItems(DisplayCollection);
+        
+        System.gc();
     }
     
     final void setOwnStage(Stage stage){ThisStage = stage;}
     
-    private boolean LoadJSONDatabase(){
-        try(final BufferedReader reader = new BufferedReader(new FileReader("GamesInfo.json"))){
-            final String JsonString = reader.readLine();
-            new JSONArray(JsonString).forEach(record -> {
+    /**
+     * 副作用でJSONファイルを読み込んで表に追加する.
+     */
+    private final void LoadJSONDatabase(){
+        try{
+            final String JSON_String = Files.newBufferedReader(Paths.get("./GamesInfo.json")).lines()
+                    .collect(Collectors.joining());
+            new JSONArray(JSON_String).forEach(record -> {
                 final GameRecordBuilder builder = new GameRecordBuilder((JSONObject)record);
                 DisplayCollection.add(builder.build());
                 });
-        }catch(FileNotFoundException ex){
-            TrivialLogger.inst.log("GamesInfo.json is not found", 1);
-            TrivialLogger.inst.log(ex, 1);
-            System.err.println(ex);
-            return true;
-        }catch(IOException ex){
-            TrivialLogger.inst.log("Failed to open GamesInfo.json", 1);
-            TrivialLogger.inst.log(ex, 1);
-            System.err.println(ex);
-            return false;
+            
+        } catch (SecurityException ex) {//セキュリティソフト等に読み込みを阻害されたとき
+            LogHandler.inst.severe("File-loading is blocked by security manager");
+            LogHandler.inst.DumpStackTrace(ex);
+        } catch (IOException ex) {
+            LogHandler.inst.severe("Failed to open ./GamesInfo.json");
+            LogHandler.inst.DumpStackTrace(ex);
+        } catch(JSONException ex){
+            ex.printStackTrace();
+            LogHandler.inst.severe("JSONException : ./GamesInfo.json");
+            LogHandler.inst.DumpStackTrace(ex);
+        } catch(Exception ex){
+            LogHandler.inst.DumpStackTrace(ex);
         }
         
         UpdateNumberDisplay();
-        return true;
     }
     
     @FXML

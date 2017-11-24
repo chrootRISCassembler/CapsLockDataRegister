@@ -8,10 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import trivial_common_logger.LogHandler;
 
 /**
- *
- * @author RISCassembler
+ * エントリポイント.
  */
 public final class CapsLockDataRegister extends Application {
 
@@ -19,7 +19,12 @@ public final class CapsLockDataRegister extends Application {
      * @param args the command line arguments
      */
     public static final void main(String[] args) {
-        launch(args);
+        try{
+            launch(args);
+        }catch(Exception ex){
+            LogHandler.inst.DumpStackTrace(ex);
+        }
+        
         ResourceFilesInputWrapper.instance.destroy();
         try {
             ResourceFilesInputWrapper.instance.LogWriter.flush();
@@ -30,17 +35,24 @@ public final class CapsLockDataRegister extends Application {
     
     @Override
     public final void start(Stage stage) throws Exception {
+        LogHandler.inst.finer("Application#start called.");
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainForm.fxml"));
+        final FXMLLoader loader;
+        try{
+            loader = new FXMLLoader(getClass().getResource("MainForm.fxml"));
+        }catch(Exception ex){
+            LogHandler.inst.severe("Failed to get resource.");
+            LogHandler.inst.DumpStackTrace(ex);
+            return;
+        }
         
-        Parent root;
+        final Parent root;
 
         try {
             root = loader.load();
         } catch (IOException ex) {
-            System.out.println(ex);
-            TrivialLogger.inst.log("Failed to load MainForm.fxml", 1);
-            TrivialLogger.inst.log(ex, 1);
+            LogHandler.inst.severe("Failed to load MainForm.fxml");
+            LogHandler.inst.DumpStackTrace(ex);
             return;
         }
         
@@ -49,6 +61,7 @@ public final class CapsLockDataRegister extends Application {
 
         stage.setScene(new Scene(root));
         stage.setTitle("CapsLockDataRegister ランチャー情報登録ツール");
+        LogHandler.inst.finest("try to display MainForm window.");
         stage.show();
     }
 }
