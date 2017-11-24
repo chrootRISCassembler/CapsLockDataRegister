@@ -43,6 +43,17 @@ enum TrivialLogger{
         }
     }
     
+    final void log(Object object, int level){
+        if(level <= logLevel){
+            try {
+                writer.write(object.toString());
+            } catch (IOException ex){
+                System.err.println("Can't write to log file.");
+                System.err.println(ex);
+            }
+        }
+    }
+    
     private static final int readLogLevel(){
         try{
             final Path conf = Paths.get("./register.conf");
