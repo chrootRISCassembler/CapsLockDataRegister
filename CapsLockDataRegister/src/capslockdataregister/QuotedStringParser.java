@@ -68,9 +68,12 @@ final class QuotedStringParser {
                 break;
                 
                 default:
-                    if(ParseState == State.WatingTokenFirst){
-                        TokenFirst = i;
-                        ParseState = State.WatingEndQuote;
+                    switch(ParseState){
+                        case WatingTokenFirst:
+                            TokenFirst = i;
+                        case Escaped://フォールスルー
+                            ParseState = State.WatingEndQuote;
+                            break;
                     }
             }
         }
