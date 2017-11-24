@@ -176,7 +176,7 @@ public class MainFormController implements Initializable {
     @FXML
     private final void onAutoRegisterClicked(){
         try {
-            Files.list(ResourceFilesInputWrapper.instance.GamesDirectory)
+            Files.list(PathUtil.inst.GamesDirectory)
                     .parallel()
                     .filter(path -> Files.isDirectory(path))
                     .map(path -> new GameRecordBuilder(path))

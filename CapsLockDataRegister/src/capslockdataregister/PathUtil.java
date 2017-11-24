@@ -15,12 +15,12 @@ import org.json.JSONArray;
 /**
  * ファイルパスの解決や検証を行う.
  * <p>このクラスはシングルトン.</p>
- * <code>ResourceFilesInputWrapper.instance.*</code>
+ * <code>PathUtil.inst.*</code>
  * <p>として各メンバ,関数にアクセスする.</p>
  * <p>このクラスは各ゲームと独立した処理を担当する.ゲームごとに異なる処理が求められる関数は{@link capslockdataregister.LauncherResourceFilesValidator}に実装する.</p>
  */
-enum ResourceFilesInputWrapper {
-    instance;
+enum PathUtil {
+    inst;
     
     final Path CurrentDirectory = Paths.get(".").toAbsolutePath().getParent();
     final Path GamesDirectory = Paths.get("./Games/").toAbsolutePath();
@@ -34,7 +34,7 @@ enum ResourceFilesInputWrapper {
      */
     static final int GAME_ID_MAX = 50;
             
-    private ResourceFilesInputWrapper(){
+    private PathUtil(){
         final DosFileAttributeView DOSattr = Files.getFileAttributeView(GamesDirectory, DosFileAttributeView.class);
         isDOSFileSystem = DOSattr != null;
         
@@ -56,10 +56,10 @@ enum ResourceFilesInputWrapper {
     /**
      * Add Validator to the cache and return that Validator.
      * <p>If Validator is already cached, CreatorLambda isn't evaluated.</p>
-     * <p>For use lazy evaluation, an instance of Validator should not be created expect here.</p>
+     * <p>For use lazy evaluation, an inst of Validator should not be created expect here.</p>
      * @param uuid UUID of a game.
-     * @param CreatorLambda lambda to create instance of Validator.
-     * @return created/cached instance of Validator.
+     * @param CreatorLambda lambda to create inst of Validator.
+     * @return created/cached inst of Validator.
      */
     LauncherResourceFilesValidator add(UUID uuid, Supplier<LauncherResourceFilesValidator> CreatorLambda){
         LauncherResourceFilesValidator retValidator = LRUlist.get(uuid);

@@ -25,9 +25,9 @@ public final class CapsLockDataRegister extends Application {
             LogHandler.inst.DumpStackTrace(ex);
         }
         
-        ResourceFilesInputWrapper.instance.destroy();
+        PathUtil.inst.destroy();
         try {
-            ResourceFilesInputWrapper.instance.LogWriter.flush();
+            PathUtil.inst.LogWriter.flush();
         } catch (IOException ex) {
             Logger.getLogger(CapsLockDataRegister.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -128,7 +128,7 @@ public class RegisterFormController implements Initializable {
     public void initialize(URL url, ResourceBundle rb){
         {
             List<String> Nlist = IntStream.
-                    rangeClosed(1, ResourceFilesInputWrapper.GAME_ID_MAX)
+                    rangeClosed(1, PathUtil.GAME_ID_MAX)
                     .boxed()
                     .map(integer -> integer.toString())
                     .collect(Collectors.toList());
@@ -156,10 +156,10 @@ public class RegisterFormController implements Initializable {
                 file -> {
                     final Path exe = file.get(0).toPath();
                     validator.crawl(exe);
-                    ExeTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(exe).toString());
+                    ExeTextField.setText(PathUtil.inst.toRelativePath(exe).toString());
                     DescFileHandler(validator.query(ResourceType.desc).findAny().get());
                     
-                    PanelTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(
+                    PanelTextField.setText(PathUtil.inst.toRelativePath(
                             validator.query(ResourceType.panel).findAny().get()).toString());
                     
                     ImageTextField.setText(MakeFileArray(validator.query(ResourceType.image)));
@@ -179,7 +179,7 @@ public class RegisterFormController implements Initializable {
                 files -> files.size() == 1,
                 files -> {
                     final Path PanelPath = files.get(0).toPath();
-                    PanelTextField.setText(ResourceFilesInputWrapper.instance.toRelativePath(PanelPath).toString());
+                    PanelTextField.setText(PathUtil.inst.toRelativePath(PanelPath).toString());
                     return true;
                 }
         ));
@@ -210,7 +210,7 @@ public class RegisterFormController implements Initializable {
         try{
             game = (GameSignature)ThisStage.getUserData();
             if(game == null)throw new NullPointerException();
-            validator = ResourceFilesInputWrapper.instance.add(
+            validator = PathUtil.inst.add(
                     game.getUUID(),
                     () -> new LauncherResourceFilesValidator(game.getExe().toString())
             );
@@ -246,7 +246,7 @@ public class RegisterFormController implements Initializable {
     private void Register(){
         if(!IsValidInput())return;
         
-        ResourceFilesInputWrapper.instance.genJSONArray(ImageTextField.getText());
+        PathUtil.inst.genJSONArray(ImageTextField.getText());
         
         String GameName = NameTextField.getText();
         if(GameName.isEmpty()){
@@ -292,12 +292,12 @@ public class RegisterFormController implements Initializable {
     
     private final String MakeFileArray(List<File> files){
         return files.stream()
-                .map(file -> '\"' + ResourceFilesInputWrapper.instance.toRelativePath(file.toPath()).toString() + '\"')
+                .map(file -> '\"' + PathUtil.inst.toRelativePath(file.toPath()).toString() + '\"')
                 .collect(Collectors.joining(", "));
     }
     
     private final String MakeFileArray(Stream<Path> stream){
-        return stream.map(path -> '\"' + ResourceFilesInputWrapper.instance.toRelativePath(path).toString() + '\"')
+        return stream.map(path -> '\"' + PathUtil.inst.toRelativePath(path).toString() + '\"')
                 .collect(Collectors.joining(", "));
     }
     

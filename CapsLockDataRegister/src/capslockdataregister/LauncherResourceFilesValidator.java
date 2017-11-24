@@ -60,7 +60,7 @@ final class LauncherResourceFilesValidator extends Thread{
      * @param ExePath ゲーム本体のパス
      */
     final void crawl(Path ExePath){
-        GameRootPath = ResourceFilesInputWrapper.instance.toRelativePath(ExePath).subpath(0, 2).toAbsolutePath();
+        GameRootPath = PathUtil.inst.toRelativePath(ExePath).subpath(0, 2).toAbsolutePath();
         try {
             Files.walk(GameRootPath, FileVisitOption.FOLLOW_LINKS)
                     .parallel()
@@ -94,7 +94,7 @@ final class LauncherResourceFilesValidator extends Thread{
      */
     final boolean isLocatedValidly(Path path){
         if(GameRootPath == null){
-            return path.startsWith(ResourceFilesInputWrapper.instance.GamesDirectory);
+            return path.startsWith(PathUtil.inst.GamesDirectory);
         }else{
             return path.startsWith(GameRootPath);
         }
@@ -169,7 +169,7 @@ final class LauncherResourceFilesValidator extends Thread{
      * @return 正常に表示できるか否か.
      */
     final boolean isValidPanel(Path PanelPath){
-        if(!ResourceFilesInputWrapper.instance.hasLeastPrivilege(PanelPath))return false;
+        if(!PathUtil.inst.hasLeastPrivilege(PanelPath))return false;
         if(!isLocatedValidly(PanelPath.toAbsolutePath()))return false;
         
         final Image panel;
@@ -199,7 +199,7 @@ final class LauncherResourceFilesValidator extends Thread{
         for(String StrPath : Parser.get()){
             System.err.println(StrPath);
             final Path path = Paths.get(StrPath);
-            if(!ResourceFilesInputWrapper.instance.hasLeastPrivilege(path))return false;
+            if(!PathUtil.inst.hasLeastPrivilege(path))return false;
             if(!isLocatedValidly(path.toAbsolutePath()))return false;
         }
         return true;
@@ -220,7 +220,7 @@ final class LauncherResourceFilesValidator extends Thread{
         
         for(String StrPath : Parser.get()){
             final Path path = Paths.get(StrPath);
-            if(!ResourceFilesInputWrapper.instance.hasLeastPrivilege(path))return false;
+            if(!PathUtil.inst.hasLeastPrivilege(path))return false;
             if(!isLocatedValidly(path.toAbsolutePath()))return false;
         }
         return true;

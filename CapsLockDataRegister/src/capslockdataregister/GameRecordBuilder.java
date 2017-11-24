@@ -46,8 +46,8 @@ class GameRecordBuilder{
         movies = new ArrayList<>();
         
         try {
-            ResourceFilesInputWrapper.instance.LogWriter.write(GameDir.toString());
-            ResourceFilesInputWrapper.instance.LogWriter.newLine();
+            PathUtil.inst.LogWriter.write(GameDir.toString());
+            PathUtil.inst.LogWriter.newLine();
             
         } catch (IOException ex) {
             Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,7 +57,7 @@ class GameRecordBuilder{
             Files.walk(GameDir)
                     .filter(path -> Files.isRegularFile(path))
                     .filter(path -> path.getFileName().toString().matches(".*__(description|panel|image|movie)__.*|.*\\.(exe|jar|sh|bat)"))
-                    .map(path -> ResourceFilesInputWrapper.instance.toRelativePath(path).normalize())
+                    .map(path -> PathUtil.inst.toRelativePath(path).normalize())
                     .map(path -> new tuple<>(ResourceType.TypeSurjection(path), path))
                     .forEach(FileInfo -> {
                         switch(FileInfo.getA()){
@@ -81,10 +81,10 @@ class GameRecordBuilder{
                                     ver = FileParser.getVersion();
                                 }else{
                                     try {
-                                        ResourceFilesInputWrapper.instance.LogWriter.write("\t");
-                                        ResourceFilesInputWrapper.instance.LogWriter.write(FileInfo.getA().toString());
-                                        ResourceFilesInputWrapper.instance.LogWriter.write(" is wrong.This file may be not UTF-8.");
-                                        ResourceFilesInputWrapper.instance.LogWriter.newLine();
+                                        PathUtil.inst.LogWriter.write("\t");
+                                        PathUtil.inst.LogWriter.write(FileInfo.getA().toString());
+                                        PathUtil.inst.LogWriter.write(" is wrong.This file may be not UTF-8.");
+                                        PathUtil.inst.LogWriter.newLine();
                                     } catch (IOException ex) {
                                         Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -121,8 +121,8 @@ class GameRecordBuilder{
         
         if(desc == null){
             try {
-                ResourceFilesInputWrapper.instance.LogWriter.write("\tDescFile NotFound");
-                ResourceFilesInputWrapper.instance.LogWriter.newLine();
+                PathUtil.inst.LogWriter.write("\tDescFile NotFound");
+                PathUtil.inst.LogWriter.newLine();
             } catch (IOException ex) {
                 Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -130,8 +130,8 @@ class GameRecordBuilder{
         
         if(panel == null){
             try {
-                ResourceFilesInputWrapper.instance.LogWriter.write("\tPanelFile NotFound");
-                ResourceFilesInputWrapper.instance.LogWriter.newLine();
+                PathUtil.inst.LogWriter.write("\tPanelFile NotFound");
+                PathUtil.inst.LogWriter.newLine();
             } catch (IOException ex) {
                 Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -139,8 +139,8 @@ class GameRecordBuilder{
         
          if(images.size() == 0){
             try {
-                ResourceFilesInputWrapper.instance.LogWriter.write("\tImageFile NotFound");
-                ResourceFilesInputWrapper.instance.LogWriter.newLine();
+                PathUtil.inst.LogWriter.write("\tImageFile NotFound");
+                PathUtil.inst.LogWriter.newLine();
             } catch (IOException ex) {
                 Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -148,8 +148,8 @@ class GameRecordBuilder{
          
         if(movies.size() == 0){
             try {
-                ResourceFilesInputWrapper.instance.LogWriter.write("\tMovieFile NotFound");
-                ResourceFilesInputWrapper.instance.LogWriter.newLine();
+                PathUtil.inst.LogWriter.write("\tMovieFile NotFound");
+                PathUtil.inst.LogWriter.newLine();
             } catch (IOException ex) {
                 Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
             }
