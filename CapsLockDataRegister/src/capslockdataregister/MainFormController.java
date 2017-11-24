@@ -64,14 +64,13 @@ public class MainFormController implements Initializable {
     public void initialize(URL url, ResourceBundle rb){
         LoadJSONDatabase();
         
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterForm.fxml"));
-        Scene scene;
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterForm.fxml"));
+        final Scene scene;
         try {
             scene = new Scene(loader.load());
         } catch (IOException ex) {
-            System.out.println(ex);
-            TrivialLogger.inst.log("Failed to load RegisterForm.fxml", 1);
-            TrivialLogger.inst.log(ex, 1);
+            LogHandler.inst.severe("Failed to load RegisterForm.fxml");
+            LogHandler.inst.DumpStackTrace(ex);
             return;
         }
         
@@ -150,9 +149,8 @@ public class MainFormController implements Initializable {
             DisplayCollection.forEach(record -> array.put(record.getJSON()));
             array.write(writer);
         } catch (IOException ex) {
-            System.out.println(ex);
-            TrivialLogger.inst.log("Failed to open GamesInfo.json", 1);
-            TrivialLogger.inst.log(ex, 1);
+            LogHandler.inst.severe("Failed to open ./GamesInfo.json");
+            LogHandler.inst.DumpStackTrace(ex);
         }
     }
     

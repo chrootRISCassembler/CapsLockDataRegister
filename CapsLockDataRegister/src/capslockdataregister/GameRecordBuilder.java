@@ -73,7 +73,7 @@ class GameRecordBuilder{
                                     desc = FileParser.getDescription();
                                     ver = FileParser.getVersion();
                                 }else{
-                                     LogHandler.inst.warning(FileInfo.getA().toString() + " is wrong.This file may be not UTF-8.");
+                                    LogHandler.inst.warning(FileInfo.getA().toString() + " is wrong.This file may be not UTF-8.");
                                 }
                                 break;
                             case panel:
@@ -98,15 +98,17 @@ class GameRecordBuilder{
             exe = ShellScript;
         }else if(BatchFile != null){
             exe = BatchFile;
-        }else{
-            isFine = false;//実行できるファイルが一つも見つからなかった.
-            return;
+        }else{//実行できるファイルが一つも見つからなかった.
+            LogHandler.inst.warning("There is no executable file in " + GameDir.toString());
+            isFine = false;
         }
         
-        if(desc == null)LogHandler.inst.fine("\tDescFile NotFound");
-        if(panel == null)LogHandler.inst.fine("\tPanelFile NotFound");
-        if(images.isEmpty())LogHandler.inst.fine("\tImageFile NotFound");
-        if(movies.isEmpty())LogHandler.inst.fine("\tMovieFile NotFound");
+        if(isFine){
+            if(desc == null)LogHandler.inst.fine("\tDescFile NotFound");
+            if(panel == null)LogHandler.inst.fine("\tPanelFile NotFound");
+            if(images.isEmpty())LogHandler.inst.fine("\tImageFile NotFound");
+            if(movies.isEmpty())LogHandler.inst.fine("\tMovieFile NotFound");
+        }
         
         LogHandler.inst.finest("Finished crawling in " + GameDir.toString());
     }
