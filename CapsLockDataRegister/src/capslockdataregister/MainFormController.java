@@ -136,25 +136,14 @@ public class MainFormController implements Initializable {
      */
     @FXML
     private final void onSaveClicked(){
-        FileWriter writer;
-        
-        try{
-            writer = new FileWriter("GamesInfo.json");
-        }catch(IOException ex){
+        try(FileWriter writer = new FileWriter("GamesInfo.json")){
+            JSONArray array = new JSONArray();
+            DisplayCollection.forEach(record -> array.put(record.getJSON()));
+            array.write(writer);
+        } catch (IOException ex) {
             System.out.println(ex);
             TrivialLogger.inst.log("Failed to open GamesInfo.json", 1);
             TrivialLogger.inst.log(ex, 1);
-            return;
-        }
-        
-        JSONArray array = new JSONArray();
-        DisplayCollection.forEach(record -> array.put(record.getJSON()));
-        array.write(writer);
-        
-        try{
-            writer.close();
-        }catch(IOException e){
-            System.out.println(e);
         }
     }
     
