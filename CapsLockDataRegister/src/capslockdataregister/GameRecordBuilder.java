@@ -8,10 +8,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
+import trivial_common_logger.LogHandler;
 
 /**
  * GameRecordのビルダー.
@@ -45,13 +44,7 @@ class GameRecordBuilder{
         images = new ArrayList<>();
         movies = new ArrayList<>();
         
-        try {
-            PathUtil.inst.LogWriter.write(GameDir.toString());
-            PathUtil.inst.LogWriter.newLine();
-            
-        } catch (IOException ex) {
-            Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        LogHandler.inst.config("Start crawling in " + GameDir.toString());
         
         try {
             Files.walk(GameDir)
@@ -80,17 +73,8 @@ class GameRecordBuilder{
                                     desc = FileParser.getDescription();
                                     ver = FileParser.getVersion();
                                 }else{
-                                    try {
-                                        PathUtil.inst.LogWriter.write("\t");
-                                        PathUtil.inst.LogWriter.write(FileInfo.getA().toString());
-                                        PathUtil.inst.LogWriter.write(" is wrong.This file may be not UTF-8.");
-                                        PathUtil.inst.LogWriter.newLine();
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
+                                     LogHandler.inst.warning(FileInfo.getA().toString() + " is wrong.This file may be not UTF-8.");
                                 }
-                                
-
                                 break;
                             case panel:
                                 panel = FileInfo.getB();
@@ -119,41 +103,12 @@ class GameRecordBuilder{
             return;
         }
         
-        if(desc == null){
-            try {
-                PathUtil.inst.LogWriter.write("\tDescFile NotFound");
-                PathUtil.inst.LogWriter.newLine();
-            } catch (IOException ex) {
-                Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        if(desc == null)LogHandler.inst.fine("\tDescFile NotFound");
+        if(panel == null)LogHandler.inst.fine("\tPanelFile NotFound");
+        if(images.isEmpty())LogHandler.inst.fine("\tImageFile NotFound");
+        if(movies.isEmpty())LogHandler.inst.fine("\tMovieFile NotFound");
         
-        if(panel == null){
-            try {
-                PathUtil.inst.LogWriter.write("\tPanelFile NotFound");
-                PathUtil.inst.LogWriter.newLine();
-            } catch (IOException ex) {
-                Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-         if(images.size() == 0){
-            try {
-                PathUtil.inst.LogWriter.write("\tImageFile NotFound");
-                PathUtil.inst.LogWriter.newLine();
-            } catch (IOException ex) {
-                Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-         
-        if(movies.size() == 0){
-            try {
-                PathUtil.inst.LogWriter.write("\tMovieFile NotFound");
-                PathUtil.inst.LogWriter.newLine();
-            } catch (IOException ex) {
-                Logger.getLogger(GameRecordBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        LogHandler.inst.finest("Finished crawling in " + GameDir.toString());
     }
     
     /**

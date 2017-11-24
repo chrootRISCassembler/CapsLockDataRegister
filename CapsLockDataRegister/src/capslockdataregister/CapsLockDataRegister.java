@@ -1,8 +1,6 @@
 package capslockdataregister;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,11 +24,7 @@ public final class CapsLockDataRegister extends Application {
         }
         
         PathUtil.inst.destroy();
-        try {
-            PathUtil.inst.LogWriter.flush();
-        } catch (IOException ex) {
-            Logger.getLogger(CapsLockDataRegister.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        LogHandler.inst.close();
     }
     
     @Override
