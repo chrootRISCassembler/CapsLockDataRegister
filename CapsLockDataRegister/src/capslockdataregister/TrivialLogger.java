@@ -13,10 +13,10 @@ import java.nio.file.Paths;
 enum TrivialLogger{
     inst;//インスタンス
 
-    static final byte QUIET = 0;
-    static final byte FULL = 1;
+    static final int QUIET = 0;
+    static final int FULL = 1;
     
-    private final byte logLevel;
+    private final int logLevel;
     
     private BufferedWriter writer;
     
@@ -32,7 +32,7 @@ enum TrivialLogger{
         }
     }
     
-    final void log(String msg, byte level){
+    final void log(String msg, int level){
         if(level <= logLevel){
             try {
                 writer.write(msg);
@@ -43,11 +43,11 @@ enum TrivialLogger{
         }
     }
     
-    private static final byte readLogLevel(){
+    private static final int readLogLevel(){
         try{
             final Path conf = Paths.get("./register.conf");
             final String firstLine = Files.newBufferedReader(conf).readLine();
-            final byte readLogLevel = Integer.getInteger(firstLine).byteValue();
+            final int readLogLevel = Integer.getInteger(firstLine);
             
             return readLogLevel < 0 || readLogLevel > FULL ? FULL : readLogLevel;
         }catch(Exception ex){
