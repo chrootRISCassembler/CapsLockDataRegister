@@ -106,6 +106,7 @@ public class MainFormController implements Initializable {
         try{
             final String JSON_String = Files.newBufferedReader(Paths.get("./GamesInfo.json")).lines()
                     .collect(Collectors.joining());
+            LogHandler.inst.finest("GamesInfo.json read successfully.");
             new JSONArray(JSON_String).forEach(record -> {
                 final GameRecordBuilder builder = new GameRecordBuilder((JSONObject)record);
                 DisplayCollection.add(builder.build());

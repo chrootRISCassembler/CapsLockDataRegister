@@ -21,7 +21,7 @@ enum PathUtil {
     inst;
     
     final Path CurrentDirectory = Paths.get(".").toAbsolutePath().getParent();
-    final Path GamesDirectory = Paths.get("./Games/").toAbsolutePath();
+    final Path GamesDirectory = Paths.get("./Games/").normalize().toAbsolutePath();
     final boolean isDOSFileSystem;
     
     /**

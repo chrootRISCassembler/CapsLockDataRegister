@@ -137,6 +137,8 @@ final class LauncherResourceFilesValidator extends Thread{
                 System.err.println(ex);
             }
             
+            if(watchdog == null)continue;
+            
             try{
                 final WatchKey watchKey = watchdog.take();
                 for (WatchEvent<?> event: watchKey.pollEvents()) {

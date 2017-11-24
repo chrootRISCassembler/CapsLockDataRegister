@@ -32,6 +32,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import trivial_common_logger.LogHandler;
 
 
 /**
@@ -204,6 +205,7 @@ public class RegisterFormController implements Initializable {
     }
     
     void onLoad(WindowEvent event){
+        System.out.println("onLoad");
         final GameSignature game;
         GameRecord record;
         
@@ -214,10 +216,13 @@ public class RegisterFormController implements Initializable {
                     game.getUUID(),
                     () -> new LauncherResourceFilesValidator(game.getExe().toString())
             );
-        }catch(NullPointerException e){
-            System.err.println(e);
-            AssignedUUIDLabel.setText((UUID.randomUUID()).toString());
+        }catch(NullPointerException ex){//新規ゲーム登録
+            LogHandler.inst.finer("RegisterForm is now new-game-mode");
             FieldMap.forEach((field, dummy) -> field.clear());
+            
+            final UUID uuid = UUID.randomUUID();
+            AssignedUUIDLabel.setText(uuid.toString());
+            validator = PathUtil.inst.add(uuid, () -> new LauncherResourceFilesValidator());
             return;
         }catch(Exception ex){
             System.err.println("onload failed");
