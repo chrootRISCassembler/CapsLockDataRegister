@@ -37,9 +37,10 @@ public final class CapsLockDataRegister extends Application {
 
         try {
             root = loader.load();
-        } catch (IOException e) {
-            System.out.println(e);
-            e.printStackTrace();
+        } catch (IOException ex) {
+            System.out.println(ex);
+            TrivialLogger.inst.log("Failed to load MainForm.fxml", 1);
+            TrivialLogger.inst.log(ex, 1);
             return;
         }
         

@@ -197,6 +197,7 @@ final class LauncherResourceFilesValidator extends Thread{
         if(Parser.hasError())return false;
         
         for(String StrPath : Parser.get()){
+            System.err.println(StrPath);
             final Path path = Paths.get(StrPath);
             if(!ResourceFilesInputWrapper.instance.hasLeastPrivilege(path))return false;
             if(!isLocatedValidly(path.toAbsolutePath()))return false;

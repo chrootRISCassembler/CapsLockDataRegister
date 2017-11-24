@@ -61,15 +61,16 @@ public class MainFormController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        if(!LoadJSONDatabase())System.err.println("failed");
+        LoadJSONDatabase();
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterForm.fxml"));
         Scene scene;
         try {
             scene = new Scene(loader.load());
-        } catch (IOException e) {
-            System.out.println(e);
-            e.printStackTrace();
+        } catch (IOException ex) {
+            System.out.println(ex);
+            TrivialLogger.inst.log("Failed to load RegisterForm.fxml", 1);
+            TrivialLogger.inst.log(ex, 1);
             return;
         }
         
@@ -104,9 +105,13 @@ public class MainFormController implements Initializable {
                 DisplayCollection.add(builder.build());
                 });
         }catch(FileNotFoundException ex){
+            TrivialLogger.inst.log("GamesInfo.json is not found", 1);
+            TrivialLogger.inst.log(ex, 1);
             System.err.println(ex);
             return true;
         }catch(IOException ex){
+            TrivialLogger.inst.log("Failed to open GamesInfo.json", 1);
+            TrivialLogger.inst.log(ex, 1);
             System.err.println(ex);
             return false;
         }
@@ -125,14 +130,20 @@ public class MainFormController implements Initializable {
         UpdateNumberDisplay();
     }
     
+    
+    /**
+     * JSONファイル書き出しボタンのイベントハンドラ.
+     */
     @FXML
-    private void onSaveClicked(){
+    private final void onSaveClicked(){
         FileWriter writer;
         
         try{
             writer = new FileWriter("GamesInfo.json");
-        }catch(IOException e){
-            System.out.println(e);
+        }catch(IOException ex){
+            System.out.println(ex);
+            TrivialLogger.inst.log("Failed to open GamesInfo.json", 1);
+            TrivialLogger.inst.log(ex, 1);
             return;
         }
         
