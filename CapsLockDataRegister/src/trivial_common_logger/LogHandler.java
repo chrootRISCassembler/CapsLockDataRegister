@@ -1,4 +1,4 @@
-package TrivialCmmonLogger;
+package trivial_common_logger;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -26,13 +26,13 @@ public enum LogHandler{
         logger = Logger.getLogger("DefaultLogger");
 
         try {
-            StackOutStream = new PrintStream(Files.newOutputStream(Paths.get("./LastStackTrace.log")));
+            StackOutStream = new PrintStream(Files.newOutputStream(Paths.get("./RegisterLastStackTrace.log")));
         } catch (IOException | SecurityException ex) {
             System.err.println(ex);
         }
         
         try {
-            handler = new FileHandler("log.txt", true);
+            handler = new FileHandler("RegisterLog.txt", true);
         } catch (IOException | SecurityException ex) {
             System.err.println(ex);
             System.exit(1);
