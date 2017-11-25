@@ -1,5 +1,6 @@
 package capslockdataregister;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -145,8 +146,8 @@ public class MainFormController implements Initializable {
      */
     @FXML
     private final void onSaveClicked(){
-        try(FileWriter writer = new FileWriter("GamesInfo.json")){
-            JSONArray array = new JSONArray();
+        try(final BufferedWriter writer = Files.newBufferedWriter(Paths.get("./GamesInfo.json"))){
+            final JSONArray array = new JSONArray();
             DisplayCollection.forEach(record -> array.put(record.getJSON()));
             array.write(writer);
         } catch (IOException ex) {
