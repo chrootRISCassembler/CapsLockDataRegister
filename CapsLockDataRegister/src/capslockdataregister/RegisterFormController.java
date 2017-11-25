@@ -241,6 +241,7 @@ public class RegisterFormController implements Initializable {
         }
         ImageTextField.setText(MakeFileArray(game.getImages().stream()));
         MovieTextField.setText(MakeFileArray(game.getMovies().stream()));
+        IDChoiceBox.setValue(game.getID());
         
         FieldMap.forEach((field, checker) -> checker.validate(field.getText()));
     }
