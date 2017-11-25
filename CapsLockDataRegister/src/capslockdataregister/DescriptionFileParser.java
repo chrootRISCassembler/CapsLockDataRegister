@@ -31,7 +31,11 @@ final class DescriptionFileParser {
         }
         
         if(lines != null){
-            GameName = lines.get(0);
+            if (lines.get(0).startsWith("\uFEFF")) {
+                GameName = lines.get(0).substring(1);//skip BOM of UTF-8
+            }else{
+                GameName = lines.get(0);
+            }
             GameVersion = lines.get(1);
             GameDescription = lines.stream()
                     .skip(2)
