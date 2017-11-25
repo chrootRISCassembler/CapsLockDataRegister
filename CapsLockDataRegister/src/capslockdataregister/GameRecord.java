@@ -81,7 +81,7 @@ public final class GameRecord extends GameSignature{
     
     @Override
     final String getVer(){
-        return exeProperty.getValue();
+        return verProperty.getValue();
     }
     
     @Override
